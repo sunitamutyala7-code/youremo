@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YouRemo — Share Your Emotions</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo" href="#home">
+    <span class="logo-icon">♡</span><span>You<span>Remo</span></span>
+  </a>
+  <nav>
+    <a class="active" href="#home">Home</a>
+    <a href="#explore">Explore</a>
+    <a href="#about">About</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="auth">
+    <button class="login">Log In</button>
+    <button class="signup">Sign Up</button>
+  </div>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">💜 <span>Your emotions. Your choice. Your space.</span></div>
+    <h1>Share Your<br><span>Emotions.</span><br>Connect<br>Through Feelings.</h1>
+    <p class="lead">YouRemo is a safe space where you can<br class="desktop"> express your emotions and decide whether<br class="desktop"> to keep them private or share with the world.</p>
+    <div class="hero-buttons">
+      <a class="primary" href="#share">✎ &nbsp; Share Your Emotion</a>
+      <a class="secondary" href="#explore">◉ &nbsp; Explore Emotions</a>
+    </div>
+    <div class="community">
+      <div class="faces"><span>👩🏻</span><span>👨🏽</span><span>👩🏾</span></div>
+      <p>Join thousands of people<br>expressing themselves freely <b>💜</b></p>
+    </div>
+  </div>
+
+  <div class="composer" id="share">
+    <div class="heart-circle">♥</div>
+    <h2>How are you feeling today?</h2>
+    <p class="composer-sub">Choose an emotion or write your own</p>
+
+    <div class="emotion-row">
+      <button class="emotion active" data-emotion="Happy"><i>😊</i><span>Happy</span></button>
+      <button class="emotion" data-emotion="Sad"><i>😢</i><span>Sad</span></button>
+      <button class="emotion" data-emotion="Angry"><i>😡</i><span>Angry</span></button>
+      <button class="emotion" data-emotion="Anxious"><i>😰</i><span>Anxious</span></button>
+      <button class="emotion" data-emotion="Loved"><i>🥰</i><span>Loved</span></button>
+      <button class="emotion" data-emotion="Calm"><i>😌</i><span>Calm</span></button>
+      <button class="emotion" data-emotion="More"><i>•••</i><span>More</span></button>
+    </div>
+
+    <div class="writebox">
+      <div class="write-title">✎ <span id="placeholder">Write what you're feeling...</span></div>
+      <textarea id="text" maxlength="1000"></textarea>
+      <small><span id="count">0</span>/1000</small>
+    </div>
+
+    <div class="privacy-options">
+      <button class="privacy">
+        <strong>🔒</strong><span><b>Private</b><small>Only you or selected people</small></span>
+      </button>
+      <button class="privacy chosen">
+        <strong>◎</strong><span><b>Public</b><small>Show to everyone</small></span><mark>✓</mark>
+      </button>
+    </div>
+
+    <button class="share-button" id="shareBtn">Share Emotion <b>➤</b></button>
+    <div class="privacy-note">♧ &nbsp; Your privacy is always our priority</div>
+    <div class="message" id="message"></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div><span class="stat-icon purple">♟</span><strong>10K+</strong><p><b>Active Users</b><small>People sharing daily</small></p></div>
+  <div><span class="stat-icon pink">▤</span><strong>25K+</strong><p><b>Emotions Shared</b><small>Stories from the heart</small></p></div>
+  <div><span class="stat-icon orange">♥</span><strong>5K+</strong><p><b>Connections Made</b><small>Through shared feelings</small></p></div>
+  <div><span class="stat-icon green">✓</span><strong>100%</strong><p><b>Safe &amp; Secure</b><small>Your privacy, our promise</small></p></div>
+</section>
+
+<section class="section" id="about">
+  <div class="title"><h2>Why <span>YouRemo?</span></h2><i></i></div>
+  <div class="cards">
+    <article><div class="feature-icon purple">◆</div><h3>Your Space, Your Rules</h3><p>You decide what to share and who can see it.</p></article>
+    <article><div class="feature-icon pink">◎</div><h3>Connect with Real People</h3><p>Discover that you're not alone. We all feel, we all heal.</p></article>
+    <article><div class="feature-icon green">🔒</div><h3>Private or Public</h3><p>Keep it private or share it with the world.</p></article>
+    <article><div class="feature-icon orange">♡</div><h3>Support &amp; Positivity</h3><p>React, support and spread positivity every day.</p></article>
+  </div>
+</section>
+
+<section class="section how" id="how">
+  <div class="title"><h2>How It Works</h2><i></i></div>
+  <div class="steps">
+    <article><div class="step-icon purple">✎</div><b>1. Express</b><p>Write how you feel and<br>choose an emotion.</p></article>
+    <article><div class="step-icon pink">🔐</div><b>2. Choose Privacy</b><p>Keep it private or share<br>it publicly.</p></article>
+    <article><div class="step-icon orange">↗</div><b>3. Share</b><p>Post your emotion and<br>be part of the community.</p></article>
+    <article><div class="step-icon green">♟</div><b>4. Connect</b><p>Read, relate and connect<br>with others.</p></article>
+  </div>
+</section>
+
+<section class="explore" id="explore">
+  <div class="title"><h2>Explore Emotions</h2><i></i></div>
+  <div class="explore-grid">
+    <article><span>💜</span><p>“Today I finally feel hopeful about tomorrow.”</p><small>Hopeful · 2 min ago</small></article>
+    <article><span>🌿</span><p>“Taking a moment to breathe and appreciate the little things.”</p><small>Calm · 8 min ago</small></article>
+    <article><span>❤️</span><p>“Grateful for the people who stayed when things were difficult.”</p><small>Grateful · 15 min ago</small></article>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <h2>A place for every feeling.</h2>
+  <p>Express yourself. Be heard. Connect with others.</p>
+  <a class="primary" href="#share">Get Started — It's Free</a>
+</section>
+</main>
+
+<footer><a class="logo" href="#home"><span class="logo-icon">♡</span><span>You<span>Remo</span></span></a><p>© 2026 YouRemo · Your emotions, your choice.</p></footer>
+<script src="script.js"></script>
+</body>
+</html>
