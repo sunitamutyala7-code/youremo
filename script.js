@@ -773,46 +773,52 @@ async function declineFriendRequest(requestId) {
 }
 
 
-// =====================================================
+// ============================================
 // LOAD MY FRIENDS
-// =====================================================
+// ============================================
 
 let loadingMyFriends = false;
 
 async function loadMyFriends() {
+
   if (loadingMyFriends) return;
 
   loadingMyFriends = true;
 
   try {
+
     const container =
       document.getElementById("myFriendsList");
 
     if (!container) return;
 
+    // Get logged-in user
     const {
       data: { user }
     } = await supabaseClient.auth.getUser();
 
-    // IMPORTANT: always reset count first
-    resetFriendCounts();
-
     if (!user) {
+
       container.innerHTML =
         "<p>Please login to see your friends.</p>";
+
       return;
     }
 
-    const { data: friendships, error } =
-      await supabaseClient
-        .from("friendships")
-        .select("friend_id")
-        .eq("user_id", user.id);
+    // Get friendships
+    const {
+      data: friendships,
+      error: friendshipsError
+    } = await supabaseClient
+      .from("friendships")
+      .select("friend_id")
+      .eq("user_id", user.id);
 
-    if (error) {
+    if (friendshipsError) {
+
       console.error(
         "Friends loading error:",
-        error
+        friendshipsError
       );
 
       container.innerHTML =
@@ -821,63 +827,96 @@ async function loadMyFriends() {
       return;
     }
 
-    // Remove duplicate IDs
-    const uniqueFriendIds =
-      [
-        ...new Set(
-          (friendships || []).map(
-            friendship =>
-              friendship.friend_id
-          )
+    // Remove duplicate friend IDs
+    const uniqueFriendIds = [
+      ...new Set(
+        (friendships || []).map(
+          friendship => friendship.friend_id
         )
-      ];
+      )
+    ];
 
     const totalFriends =
       uniqueFriendIds.length;
 
-    // Update both counts
+
+    // ============================================
+    // UPDATE FRIEND COUNTS
+    // ============================================
+
     const friendCount =
       document.getElementById("friendCount");
 
-   const profileFriendCount =
-  document.getElementById("profileFriendCount");
+    const profileFriendCount =
+      document.getElementById("profileFriendCount");
 
-if (friendCount) {
-  friendCount.textContent =
-    `${totalFriends} ${
-      totalFriends === 1 ? "Friend" : "Friends"
-    }`;
-}
+    if (friendCount) {
 
-if (profileFriendCount) {
-  profileFriendCount.textContent =
-    totalFriends;
-}
+      friendCount.textContent =
+        `${totalFriends} ${
+          totalFriends === 1
+            ? "Friend"
+            : "Friends"
+        }`;
+    }
 
+    if (profileFriendCount) {
+
+      profileFriendCount.textContent =
+        totalFriends;
+    }
+
+
+    // Clear existing cards
     container.innerHTML = "";
 
+
+    // ============================================
+    // NO FRIENDS
+    // ============================================
+
     if (uniqueFriendIds.length === 0) {
+
       container.innerHTML =
         "<p>You don't have any friends yet.</p>";
+
       return;
     }
 
+
+    // ============================================
+    // LOAD EACH FRIEND
+    // ============================================
+
     for (const friendId of uniqueFriendIds) {
-      const { data: profile, error: profileError } =
-        await supabaseClient
-          .from("profiles")
-          .select(
-            "id, full_name, username, avatar_url"
-          )
-          .eq("id", friendId)
-          .maybeSingle();
+
+      const {
+        data: profile,
+        error: profileError
+      } = await supabaseClient
+        .from("profiles")
+        .select(
+          "id, full_name, username, avatar_url"
+        )
+        .eq("id", friendId)
+        .maybeSingle();
+
 
       if (profileError) {
-        console.error(profileError);
+
+        console.error(
+          "Friend profile error:",
+          profileError
+        );
+
         continue;
       }
 
-      if (!profile) continue;
+
+      if (!profile) {
+        continue;
+      }
+
 
       const name =
         profile.full_name || "User";
@@ -885,8 +924,16 @@ if (profileFriendCount) {
       const username =
         profile.username || "username";
 
+      const avatarUrl =
+        profile.avatar_url || "";
+
       const firstLetter =
         name.charAt(0).toUpperCase();
+
+
+      // ============================================
+      // CREATE FRIEND CARD
+      // ============================================
 
       const card =
         document.createElement("div");
@@ -894,39 +941,91 @@ if (profileFriendCount) {
       card.className =
         "friend-card friend-clickable";
 
+
+      // Avatar
+      let avatarHTML;
+
+      if (avatarUrl) {
+
+        avatarHTML = `
+          <img
+            src="${avatarUrl}?v=${Date.now()}"
+            alt="Profile picture"
+          >
+        `;
+
+      } else {
+
+        avatarHTML =
+          firstLetter;
+
+      }
+
+
       card.innerHTML = `
-        <div class="profile-avatar">
-  ${
-    avatarUrl
-      ? `<img src="${avatarUrl}" alt="Profile picture">`
-      : firstLetter
-  }
-</div>
+
+        <div class="avatar">
+          ${avatarHTML}
+        </div>
+
         <div class="friend-info">
-          <h3>${name}</h3>
-          <p>@${username}</p>
+
+          <h3>
+            ${name}
+          </h3>
+
+          <p>
+            @${username}
+          </p>
+
         </div>
 
         <span class="friend-status">
           Friends ✓
         </span>
+
       `;
 
-      card.onclick = function () {
-  openFriendProfile(
-    profile.id,
-    name,
-    username,
-    profile.avatar_url
-  );
-};
+
+      // ============================================
+      // CLICK FRIEND
+      // ============================================
+
+      card.addEventListener(
+        "click",
+        function () {
+
+          openFriendProfile(
+            profile.id,
+            name,
+            username,
+            avatarUrl
+          );
+
+        }
+      );
+
 
       container.appendChild(card);
+
     }
 
+  } catch (error) {
+
+    console.error(
+      "Unexpected error loading friends:",
+      error
+    );
+
+    container.innerHTML =
+      "<p>Unable to load friends.</p>";
+
   } finally {
+
     loadingMyFriends = false;
+
   }
+
 }
 
 
