@@ -1,54 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="YouRemo is a welcoming space to express emotions, connect through feelings, and choose how you share.">
-<meta name="theme-color" content="#6d3ee8">
-<title>YouRemo — Your feelings belong here</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo — Feel. Share. Connect.</title>
+  <meta name="description" content="YouRemo helps you share how you feel and stay connected with friends.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
-<header class="topbar" id="home">
-  <a class="logo" href="#home" aria-label="YouRemo home"><span class="logo-mark">♥</span><span>You<span>Remo</span></span></a>
-  <nav class="nav" aria-label="Main navigation">
-    <a class="active" href="#home">Home</a><a href="#explore">Explore</a><a href="#about">Why YouRemo</a><a href="#how">How it works</a>
-  </nav>
-  <div class="auth"><button class="login" type="button">Log in</button><button class="signup" type="button">Get started</button></div>
-  <button class="menu" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button>
-</header>
-<div class="mobile-nav" id="mobileNav"><a href="#home">Home</a><a href="#explore">Explore</a><a href="#about">Why YouRemo</a><a href="#how">How it works</a></div>
-<main>
-<section class="hero">
-  <div class="hero-copy">
-    <div class="eyebrow"><span class="spark">✦</span> A kinder place to feel</div>
-    <h1>Your feelings are <span>worth sharing.</span></h1>
-    <p class="lead">Express what is on your mind, choose who gets to see it, and discover people who understand how you feel.</p>
-    <div class="hero-actions"><a class="primary" href="#share">Share your emotion <span>→</span></a><a class="secondary" href="#explore">Explore the community</a></div>
-    <div class="trust"><div class="avatar-stack"><span>😊</span><span>🌿</span><span>💜</span><span>✨</span></div><div><strong>10,000+ people</strong><small>finding a little more connection every day</small></div></div>
-  </div>
-  <div class="composer-wrap"><div class="glow"></div>
-    <div class="composer" id="share">
-      <div class="composer-head"><div class="heart-circle">♥</div><div><span class="mini-label">TODAY</span><h2>How are you feeling?</h2><p>There is no wrong answer.</p></div></div>
-      <div class="emotion-row" aria-label="Choose an emotion">
-        <button class="emotion active" data-emotion="Happy"><i>😊</i><span>Happy</span></button><button class="emotion" data-emotion="Sad"><i>😢</i><span>Sad</span></button><button class="emotion" data-emotion="Angry"><i>😡</i><span>Angry</span></button><button class="emotion" data-emotion="Anxious"><i>😰</i><span>Anxious</span></button><button class="emotion" data-emotion="Loved"><i>🥰</i><span>Loved</span></button><button class="emotion" data-emotion="Calm"><i>😌</i><span>Calm</span></button><button class="emotion" data-emotion="More"><i>•••</i><span>More</span></button>
+  <header class="nav">
+    <a class="brand" href="#home"><span class="brand-mark">Y</span><span>YouRemo</span></a>
+    <nav id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#friends">Friends</a>
+      <a href="#share">Share</a>
+      <a href="#community">Community</a>
+    </nav>
+    <button class="menu" id="menuBtn" aria-label="Open menu">☰</button>
+    <a class="nav-btn" href="#share">Get Started</a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow">A kinder way to connect</span>
+        <h1>Share how you feel.<br><span>Stay close to your people.</span></h1>
+        <p>YouRemo makes it simple to express your emotions, support your friends, and build meaningful connections every day.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#share">Share your emotion <span>→</span></a>
+          <a class="secondary" href="#friends">Meet your friends</a>
+        </div>
+        <div class="trust"><span class="avatars">● ● ●</span><span>Join a growing community of people who care.</span></div>
       </div>
-      <label class="writebox" for="text"><span class="write-title">✎ <span id="placeholder">Tell us what you're feeling...</span></span><textarea id="text" maxlength="1000" placeholder="Start writing here..."></textarea><small><span id="count">0</span>/1000</small></label>
-      <div class="privacy-options"><button class="privacy" data-privacy="Private" type="button"><strong>🔒</strong><span><b>Private</b><small>Just for you</small></span></button><button class="privacy chosen" data-privacy="Public" type="button"><strong>◎</strong><span><b>Public</b><small>Share with everyone</small></span><mark>✓</mark></button></div>
-      <button class="share-button" id="shareBtn" type="button">Share emotion <b>→</b></button><div class="privacy-note">🔐 You choose who sees your feelings.</div><div class="message" id="message" role="status"></div>
-    </div>
-  </div>
-</section>
-<section class="stats" aria-label="YouRemo community statistics"><div><strong>10K+</strong><span>Active people</span></div><div><strong>25K+</strong><span>Feelings shared</span></div><div><strong>5K+</strong><span>Connections made</span></div><div><strong>100%</strong><span>Privacy focused</span></div></section>
-<section class="section" id="about"><div class="section-heading"><span>WHY YOUREMO</span><h2>Feel seen. Feel heard. <em>Feel connected.</em></h2><p>YouRemo gives you a simple, thoughtful way to put your feelings into words.</p></div><div class="cards"><article><div class="feature-icon purple">✦</div><h3>Your space, your rules</h3><p>Share only what feels right. You are always in control.</p></article><article><div class="feature-icon pink">♡</div><h3>Real human connection</h3><p>Find stories and feelings that remind you that you are not alone.</p></article><article><div class="feature-icon green">🔒</div><h3>Privacy by choice</h3><p>Keep your thoughts private or open them up to the community.</p></article><article><div class="feature-icon orange">✚</div><h3>A little more kindness</h3><p>React, encourage others, and make someone's day brighter.</p></article></div></section>
-<section class="section how" id="how"><div class="section-heading"><span>HOW IT WORKS</span><h2>Four simple steps to <em>connect.</em></h2></div><div class="steps"><article><div class="step-number">01</div><h3>Express</h3><p>Choose an emotion and put your thoughts into words.</p></article><article><div class="step-number">02</div><h3>Choose privacy</h3><p>Decide whether your feeling stays private or goes public.</p></article><article><div class="step-number">03</div><h3>Share</h3><p>Post your emotion and give it a place to be heard.</p></article><article><div class="step-number">04</div><h3>Connect</h3><p>Discover, relate, support, and grow together.</p></article></div></section>
-<section class="explore" id="explore"><div class="section-heading"><span>FROM THE COMMUNITY</span><h2>Feelings people are <em>sharing.</em></h2></div><div class="explore-grid"><article><div class="post-top"><span>💜</span><small>Hopeful · 2 min ago</small></div><p>“Today I finally feel hopeful about tomorrow. Taking things one small step at a time.”</p><div class="post-actions">♡ 24 &nbsp;&nbsp; 💬 6</div></article><article><div class="post-top"><span>🌿</span><small>Calm · 8 min ago</small></div><p>“Taking a moment to breathe and appreciate the little things. I needed this pause.”</p><div class="post-actions">♡ 31 &nbsp;&nbsp; 💬 8</div></article><article><div class="post-top"><span>❤️</span><small>Grateful · 15 min ago</small></div><p>“Grateful for the people who stayed when things were difficult. Some connections really matter.”</p><div class="post-actions">♡ 46 &nbsp;&nbsp; 💬 11</div></article></div></section>
-<section class="contact"><span class="contact-badge">YOU BELONG HERE</span><h2>A place for every feeling.</h2><p>Come as you are. Share when you are ready.</p><a class="primary" href="#share">Get started — it’s free <span>→</span></a></section>
-</main>
-<footer><a class="logo" href="#home"><span class="logo-mark">♥</span><span>You<span>Remo</span></span></a><p>© 2026 YouRemo · Your emotions, your choice.</p><div><a href="#about">About</a><a href="#contact">Contact</a></div></footer>
-<script src="script.js"></script>
-</body></html>
+      <div class="hero-card">
+        <div class="orb"></div>
+        <div class="mood-card">
+          <span class="small">TODAY'S FEELING</span>
+          <div class="big-emoji">😊</div>
+          <h3>Feeling happy</h3>
+          <p>“Small moments can make a big day.”</p>
+          <div class="mini-row"><span>Shared with friends</span><strong>♡</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="share">
+      <div class="section-head">
+        <div><span class="eyebrow">Express yourself</span><h2>How are you feeling today?</h2></div>
+        <p>Pick a feeling. Add a thought. Share it with the people you trust.</p>
+      </div>
+      <div class="share-grid">
+        <div class="panel composer">
+          <div class="emotions" id="emotions">
+            <button data-mood="😊" class="selected">😊<small>Happy</small></button>
+            <button data-mood="😌">😌<small>Calm</small></button>
+            <button data-mood="🥰">🥰<small>Loved</small></button>
+            <button data-mood="😔">😔<small>Sad</small></button>
+            <button data-mood="😤">😤<small>Frustrated</small></button>
+            <button data-mood="😴">😴<small>Tired</small></button>
+          </div>
+          <textarea id="thought" placeholder="What's on your mind? (optional)"></textarea>
+          <div class="composer-bottom">
+            <span id="privacy">🔒 Friends only</span>
+            <button class="primary" id="shareBtn">Share feeling</button>
+          </div>
+          <p class="success" id="shareStatus"></p>
+        </div>
+        <div class="panel tip">
+          <span class="tip-icon">💜</span>
+          <h3>Your feelings deserve space.</h3>
+          <p>You choose what you share and who sees it. YouRemo is designed around gentle, positive connection.</p>
+          <div class="stat-row"><strong>100%</strong><span>You control your sharing</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section friends" id="friends">
+      <div class="section-head">
+        <div><span class="eyebrow">Your circle</span><h2>Stay connected with friends</h2></div>
+        <a class="text-link" href="#friends">Find more friends →</a>
+      </div>
+      <div class="friend-grid">
+        <article class="friend-card"><div class="avatar pink">A</div><div class="friend-info"><h3>Ananya <span class="online"></span></h3><p>😊 Feeling cheerful</p><small>Updated 12 min ago</small></div><button class="support">♡ Support</button></article>
+        <article class="friend-card"><div class="avatar blue">R</div><div class="friend-info"><h3>Rahul <span class="online"></span></h3><p>😌 Feeling calm</p><small>Updated 28 min ago</small></div><button class="support">♡ Support</button></article>
+        <article class="friend-card"><div class="avatar green">S</div><div class="friend-info"><h3>Sneha <span class="away"></span></h3><p>🥰 Feeling loved</p><small>Updated 1 hr ago</small></div><button class="support">♡ Support</button></article>
+        <article class="friend-card add-friend"><div class="plus">+</div><h3>Grow your circle</h3><p>Find people you know and share the little moments.</p><button class="secondary">Find friends</button></article>
+      </div>
+    </section>
+
+    <section class="section community" id="community">
+      <div class="community-box">
+        <div><span class="eyebrow">You are not alone</span><h2>Feel seen. Feel supported.</h2><p>Share your emotions and discover a community that listens without judgment.</p></div>
+        <a class="primary" href="#share">Join the conversation →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 YouRemo</span><span>Feel • Share • Connect</span></footer>
+  <script src="script.js"></script>
+</body>
+</html>
