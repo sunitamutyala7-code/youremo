@@ -1,16 +1,20 @@
-```javascript
-// ============================================================
-// YOUREMO - COMPLETE SCRIPT.JS
-// ============================================================
+// =====================================================
+// YouRemo - Complete script.js
+// =====================================================
 
 
-// ============================================================
-// SUPABASE CREDENTIALS
-// ============================================================
+// =====================================================
+// 1. SUPABASE CREDENTIALS
+// =====================================================
+// KEEP YOUR EXISTING CREDENTIALS HERE
 
-const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co";
+const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co/rest/v1/L";
+const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-wY";
 
-const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-w";
+
+// =====================================================
+// 2. SUPABASE CLIENT
+// =====================================================
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -18,9 +22,9 @@ const supabaseClient = window.supabase.createClient(
 );
 
 
-// ============================================================
-// NAVIGATION
-// ============================================================
+// =====================================================
+// 3. NAVIGATION
+// =====================================================
 
 function findFriends() {
   const section = document.getElementById("friends");
@@ -52,15 +56,15 @@ function learnMore() {
 }
 
 
-// ============================================================
-// LOGIN MODAL
-// ============================================================
+// =====================================================
+// 4. LOGIN MODAL
+// =====================================================
 
 function openAuth() {
   const modal = document.getElementById("authModal");
 
   if (!modal) {
-    alert("Login window not found.");
+    console.error("authModal not found");
     return;
   }
 
@@ -120,8 +124,7 @@ function showLogin() {
 
   if (switchText) {
     switchText.innerHTML =
-      "New to YouRemo? " +
-      "<span onclick=\"showSignup()\">Create Account</span>";
+      "Don't have an account? <span onclick=\"showSignup()\">Sign Up</span>";
   }
 }
 
@@ -146,12 +149,10 @@ function showSignup() {
 
   if (name) {
     name.style.display = "block";
-    name.placeholder = "Full name";
   }
 
   if (username) {
     username.style.display = "block";
-    username.placeholder = "Username";
   }
 
   if (email) {
@@ -169,40 +170,20 @@ function showSignup() {
 
   if (switchText) {
     switchText.innerHTML =
-      "Already have an account? " +
-      "<span onclick=\"showLogin()\">Login</span>";
+      "Already have an account? <span onclick=\"showLogin()\">Login</span>";
   }
 }
 
 
-// ============================================================
-// SIGN UP
-// ============================================================
+// =====================================================
+// 5. SIGN UP
+// =====================================================
 
 async function signUp() {
-  const nameElement =
-    document.getElementById("authName");
-
-  const usernameElement =
-    document.getElementById("authUsername");
-
-  const emailElement =
-    document.getElementById("authEmail");
-
-  const passwordElement =
-    document.getElementById("authPassword");
-
-  const name =
-    nameElement ? nameElement.value.trim() : "";
-
-  const username =
-    usernameElement ? usernameElement.value.trim() : "";
-
-  const email =
-    emailElement ? emailElement.value.trim() : "";
-
-  const password =
-    passwordElement ? passwordElement.value : "";
+  const name = document.getElementById("authName").value.trim();
+  const username = document.getElementById("authUsername").value.trim();
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
   if (!name || !username || !email || !password) {
     alert("Please fill in all fields.");
@@ -214,17 +195,16 @@ async function signUp() {
     return;
   }
 
-  const result =
-    await supabaseClient.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          full_name: name,
-          username: username
-        }
+  const result = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        full_name: name,
+        username: username
       }
-    });
+    }
+  });
 
   if (result.error) {
     console.error("Signup error:", result.error);
@@ -237,14 +217,13 @@ async function signUp() {
     return;
   }
 
-  const profileResult =
-    await supabaseClient
-      .from("profiles")
-      .insert({
-        id: result.data.user.id,
-        username: username,
-        full_name: name
-      });
+  const profileResult = await supabaseClient
+    .from("profiles")
+    .insert({
+      id: result.data.user.id,
+      username: username,
+      full_name: name
+    });
 
   if (profileResult.error) {
     console.error(
@@ -252,8 +231,14 @@ async function signUp() {
       profileResult.error
     );
 
-    alert(profileResult.error.message);
-    return;
+    if (
+      !profileResult.error.message
+        .toLowerCase()
+        .includes("duplicate")
+    ) {
+      alert(profileResult.error.message);
+      return;
+    }
   }
 
   alert("Account created successfully!");
@@ -264,33 +249,23 @@ async function signUp() {
 }
 
 
-// ============================================================
-// LOGIN
-// ============================================================
+// =====================================================
+// 6. LOGIN
+// =====================================================
 
 async function login() {
-  const emailElement =
-    document.getElementById("authEmail");
-
-  const passwordElement =
-    document.getElementById("authPassword");
-
-  const email =
-    emailElement ? emailElement.value.trim() : "";
-
-  const password =
-    passwordElement ? passwordElement.value : "";
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
   if (!email || !password) {
     alert("Please enter your email and password.");
     return;
   }
 
-  const result =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  const result = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
   if (result.error) {
     console.error("Login error:", result.error);
@@ -308,49 +283,48 @@ async function login() {
 }
 
 
-// ============================================================
-// LOGIN BUTTON
-// ============================================================
+// =====================================================
+// 7. LOGIN BUTTON
+// =====================================================
 
 async function updateLoginButton() {
-  const button =
-    document.getElementById("loginButton");
+  const button = document.getElementById("loginButton");
 
   if (!button) {
     return;
   }
 
-  const result =
-    await supabaseClient.auth.getSession();
+  const result = await supabaseClient.auth.getSession();
 
-  const session =
-    result.data.session;
-
-  if (!session) {
+  if (result.error) {
+    console.error(result.error);
     button.textContent = "Login";
-    button.onclick = openAuth;
     return;
   }
 
-  const user =
-    session.user;
+  const session = result.data.session;
+
+  if (!session) {
+    button.textContent = "Login";
+    return;
+  }
+
+  const user = session.user;
 
   const metadataName =
-    user.user_metadata
-      ? user.user_metadata.full_name
-      : null;
+    user.user_metadata &&
+    user.user_metadata.full_name;
 
   if (metadataName) {
     button.textContent = metadataName;
     return;
   }
 
-  const profileResult =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name, username")
-      .eq("id", user.id)
-      .maybeSingle();
+  const profileResult = await supabaseClient
+    .from("profiles")
+    .select("full_name, username")
+    .eq("id", user.id)
+    .maybeSingle();
 
   if (profileResult.error) {
     console.error(
@@ -362,38 +336,31 @@ async function updateLoginButton() {
     return;
   }
 
-  const profile =
-    profileResult.data;
+  const profile = profileResult.data;
 
   if (profile && profile.full_name) {
     button.textContent = profile.full_name;
-  }
-  else if (profile && profile.username) {
+  } else if (profile && profile.username) {
     button.textContent = profile.username;
-  }
-  else {
+  } else {
     button.textContent = "Account";
   }
 }
 
 
-// ============================================================
-// SEARCH FRIENDS
-// ============================================================
+// =====================================================
+// 8. SEARCH FRIENDS
+// =====================================================
 
 async function searchFriends() {
-  const input =
-    document.getElementById("friendSearch");
-
-  const results =
-    document.getElementById("friendResults");
+  const input = document.getElementById("friendSearch");
+  const results = document.getElementById("friendResults");
 
   if (!input || !results) {
     return;
   }
 
-  const searchText =
-    input.value.trim();
+  const searchText = input.value.trim();
 
   if (searchText.length < 2) {
     results.innerHTML = "";
@@ -403,8 +370,7 @@ async function searchFriends() {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const currentUser =
-    userResult.data.user;
+  const currentUser = userResult.data.user;
 
   if (!currentUser) {
     results.innerHTML =
@@ -412,23 +378,22 @@ async function searchFriends() {
     return;
   }
 
-  const usersResult =
-    await supabaseClient
-      .from("profiles")
-      .select("id, username, full_name")
-      .or(
-        "username.ilike.%" +
-        searchText +
-        "%,full_name.ilike.%" +
-        searchText +
-        "%"
-      )
-      .limit(20);
+  const result = await supabaseClient
+    .from("profiles")
+    .select("id, username, full_name")
+    .or(
+      "username.ilike.%" +
+      searchText +
+      "%,full_name.ilike.%" +
+      searchText +
+      "%"
+    )
+    .limit(20);
 
-  if (usersResult.error) {
+  if (result.error) {
     console.error(
       "Search error:",
-      usersResult.error
+      result.error
     );
 
     results.innerHTML =
@@ -437,8 +402,7 @@ async function searchFriends() {
     return;
   }
 
-  const users =
-    usersResult.data;
+  const users = result.data;
 
   results.innerHTML = "";
 
@@ -489,36 +453,33 @@ async function searchFriends() {
       name.charAt(0).toUpperCase();
 
     if (friendship) {
-      card.innerHTML =
-        '<div class="avatar">' +
-        firstLetter +
-        '</div>' +
+      card.innerHTML = `
+        <div class="avatar">${firstLetter}</div>
 
-        '<div>' +
-        '<h3>' + name + '</h3>' +
-        '<p>@' + username + '</p>' +
-        '</div>' +
+        <div>
+          <h3>${name}</h3>
+          <p>@${username}</p>
+        </div>
 
-        '<button disabled>' +
-        'Friends ✓' +
-        '</button>';
-    }
-    else {
-      card.innerHTML =
-        '<div class="avatar">' +
-        firstLetter +
-        '</div>' +
+        <button disabled>
+          Friends ✓
+        </button>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="avatar">${firstLetter}</div>
 
-        '<div>' +
-        '<h3>' + name + '</h3>' +
-        '<p>@' + username + '</p>' +
-        '</div>' +
+        <div>
+          <h3>${name}</h3>
+          <p>@${username}</p>
+        </div>
 
-        '<button ' +
-        'data-user-id="' + person.id + '" ' +
-        'onclick="addFriend(this)">' +
-        'Add Friend' +
-        '</button>';
+        <button
+          data-user-id="${person.id}"
+          onclick="addFriend(this)">
+          Add Friend
+        </button>
+      `;
     }
 
     results.appendChild(card);
@@ -526,9 +487,9 @@ async function searchFriends() {
 }
 
 
-// ============================================================
-// ADD FRIEND
-// ============================================================
+// =====================================================
+// 9. ADD FRIEND
+// =====================================================
 
 async function addFriend(button) {
   const receiverId =
@@ -542,8 +503,7 @@ async function addFriend(button) {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const user =
-    userResult.data.user;
+  const user = userResult.data.user;
 
   if (!user) {
     alert("Please login first.");
@@ -597,14 +557,17 @@ async function addFriend(button) {
       .limit(1)
       .maybeSingle();
 
-  if (requestResult.data) {
-    if (requestResult.data.status === "pending") {
+  const existingRequest =
+    requestResult.data;
+
+  if (existingRequest) {
+    if (existingRequest.status === "pending") {
       button.textContent = "Request Sent";
       button.disabled = true;
       return;
     }
 
-    if (requestResult.data.status === "accepted") {
+    if (existingRequest.status === "accepted") {
       button.textContent = "Friends ✓";
       button.disabled = true;
       return;
@@ -635,9 +598,9 @@ async function addFriend(button) {
 }
 
 
-// ============================================================
-// FRIEND REQUESTS
-// ============================================================
+// =====================================================
+// 10. LOAD FRIEND REQUESTS
+// =====================================================
 
 async function loadFriendRequests() {
   const container =
@@ -650,8 +613,7 @@ async function loadFriendRequests() {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const user =
-    userResult.data.user;
+  const user = userResult.data.user;
 
   if (!user) {
     container.innerHTML =
@@ -659,7 +621,7 @@ async function loadFriendRequests() {
     return;
   }
 
-  const requestResult =
+  const result =
     await supabaseClient
       .from("friend_requests")
       .select(
@@ -668,10 +630,10 @@ async function loadFriendRequests() {
       .eq("receiver_id", user.id)
       .eq("status", "pending");
 
-  if (requestResult.error) {
+  if (result.error) {
     console.error(
       "Request loading error:",
-      requestResult.error
+      result.error
     );
 
     container.innerHTML =
@@ -680,12 +642,11 @@ async function loadFriendRequests() {
     return;
   }
 
-  const requests =
-    requestResult.data || [];
+  const requests = result.data;
 
   container.innerHTML = "";
 
-  if (requests.length === 0) {
+  if (!requests || requests.length === 0) {
     container.innerHTML =
       "<p>No new friend requests.</p>";
     return;
@@ -703,14 +664,10 @@ async function loadFriendRequests() {
       profileResult.data;
 
     const name =
-      profile && profile.full_name
-        ? profile.full_name
-        : "User";
+      profile?.full_name || "User";
 
     const username =
-      profile && profile.username
-        ? profile.username
-        : "username";
+      profile?.username || "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
@@ -718,47 +675,42 @@ async function loadFriendRequests() {
     const card =
       document.createElement("div");
 
-    card.className =
-      "friend-card";
+    card.className = "friend-card";
 
-    card.innerHTML =
-      '<div class="avatar">' +
-      firstLetter +
-      '</div>' +
+    card.innerHTML = `
+      <div class="avatar">${firstLetter}</div>
 
-      '<div>' +
-      '<h3>' + name + '</h3>' +
-      '<p>@' + username + '</p>' +
-      '</div>' +
+      <div>
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
 
-      '<button onclick="acceptFriendRequest(\'' +
-      request.id +
-      '\')">' +
-      'Accept' +
-      '</button>' +
+      <button
+        onclick="acceptFriendRequest('${request.id}')">
+        Accept
+      </button>
 
-      '<button class="secondary-request" ' +
-      'onclick="declineFriendRequest(\'' +
-      request.id +
-      '\')">' +
-      'Decline' +
-      '</button>';
+      <button
+        class="secondary-request"
+        onclick="declineFriendRequest('${request.id}')">
+        Decline
+      </button>
+    `;
 
     container.appendChild(card);
   }
 }
 
 
-// ============================================================
-// ACCEPT FRIEND REQUEST
-// ============================================================
+// =====================================================
+// 11. ACCEPT FRIEND REQUEST
+// =====================================================
 
 async function acceptFriendRequest(requestId) {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const user =
-    userResult.data.user;
+  const user = userResult.data.user;
 
   if (!user) {
     alert("Please login first.");
@@ -773,38 +725,64 @@ async function acceptFriendRequest(requestId) {
       )
       .eq("id", requestId)
       .eq("receiver_id", user.id)
+      .eq("status", "pending")
       .single();
-
-  if (requestResult.error || !requestResult.data) {
-    alert("Friend request not found.");
-    return;
-  }
 
   const request =
     requestResult.data;
 
+  if (requestResult.error || !request) {
+    console.error(
+      "Request error:",
+      requestResult.error
+    );
+
+    alert("Friend request not found.");
+    return;
+  }
+
   const friendshipResult =
     await supabaseClient
       .from("friendships")
-      .insert([
-        {
-          user_id: user.id,
-          friend_id: request.sender_id
-        },
-        {
-          user_id: request.sender_id,
-          friend_id: user.id
-        }
-      ]);
+      .select("id")
+      .or(
+        "and(user_id.eq." +
+        user.id +
+        ",friend_id.eq." +
+        request.sender_id +
+        "),and(user_id.eq." +
+        request.sender_id +
+        ",friend_id.eq." +
+        user.id +
+        ")"
+      )
+      .limit(1)
+      .maybeSingle();
 
-  if (friendshipResult.error) {
-    console.error(
-      "Friendship error:",
-      friendshipResult.error
-    );
+  if (!friendshipResult.data) {
+    const insertResult =
+      await supabaseClient
+        .from("friendships")
+        .insert([
+          {
+            user_id: user.id,
+            friend_id: request.sender_id
+          },
+          {
+            user_id: request.sender_id,
+            friend_id: user.id
+          }
+        ]);
 
-    alert(friendshipResult.error.message);
-    return;
+    if (insertResult.error) {
+      console.error(
+        "Friendship error:",
+        insertResult.error
+      );
+
+      alert(insertResult.error.message);
+      return;
+    }
   }
 
   const updateResult =
@@ -817,27 +795,31 @@ async function acceptFriendRequest(requestId) {
       .eq("receiver_id", user.id);
 
   if (updateResult.error) {
+    console.error(
+      "Request update error:",
+      updateResult.error
+    );
+
     alert(updateResult.error.message);
     return;
   }
 
-  alert("Friend added successfully!");
+  alert("Friend added successfully! 🎉");
 
   await loadFriendRequests();
   await loadMyFriends();
 }
 
 
-// ============================================================
-// DECLINE FRIEND REQUEST
-// ============================================================
+// =====================================================
+// 12. DECLINE FRIEND REQUEST
+// =====================================================
 
 async function declineFriendRequest(requestId) {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const user =
-    userResult.data.user;
+  const user = userResult.data.user;
 
   if (!user) {
     alert("Please login first.");
@@ -867,9 +849,9 @@ async function declineFriendRequest(requestId) {
 }
 
 
-// ============================================================
-// MY FRIENDS
-// ============================================================
+// =====================================================
+// 13. LOAD MY FRIENDS
+// =====================================================
 
 async function loadMyFriends() {
   const container =
@@ -882,8 +864,7 @@ async function loadMyFriends() {
   const userResult =
     await supabaseClient.auth.getUser();
 
-  const user =
-    userResult.data.user;
+  const user = userResult.data.user;
 
   if (!user) {
     container.innerHTML =
@@ -912,22 +893,21 @@ async function loadMyFriends() {
   const friendships =
     result.data || [];
 
-  const uniqueFriendIds =
-    [...new Set(
+  const uniqueFriendIds = [
+    ...new Set(
       friendships.map(
-        function (item) {
-          return item.friend_id;
-        }
+        item => item.friend_id
       )
-    )];
+    )
+  ];
+
+  container.innerHTML = "";
 
   if (uniqueFriendIds.length === 0) {
     container.innerHTML =
       "<p>You don't have any friends yet.</p>";
     return;
   }
-
-  container.innerHTML = "";
 
   for (const friendId of uniqueFriendIds) {
     const profileResult =
@@ -938,6 +918,14 @@ async function loadMyFriends() {
         )
         .eq("id", friendId)
         .maybeSingle();
+
+    if (profileResult.error) {
+      console.error(
+        "Friend profile error:",
+        profileResult.error
+      );
+      continue;
+    }
 
     const profile =
       profileResult.data;
@@ -961,19 +949,18 @@ async function loadMyFriends() {
     card.className =
       "friend-card friend-clickable";
 
-    card.innerHTML =
-      '<div class="avatar">' +
-      firstLetter +
-      '</div>' +
+    card.innerHTML = `
+      <div class="avatar">${firstLetter}</div>
 
-      '<div class="friend-info">' +
-      '<h3>' + name + '</h3>' +
-      '<p>@' + username + '</p>' +
-      '</div>' +
+      <div class="friend-info">
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
 
-      '<span class="friend-status">' +
-      'Friends ✓' +
-      '</span>';
+      <span class="friend-status">
+        Friends ✓
+      </span>
+    `;
 
     card.onclick = function () {
       openFriendProfile(
@@ -988,9 +975,9 @@ async function loadMyFriends() {
 }
 
 
-// ============================================================
-// FRIEND PROFILE
-// ============================================================
+// =====================================================
+// 14. FRIEND PROFILE
+// =====================================================
 
 function openFriendProfile(
   userId,
@@ -1018,30 +1005,31 @@ function openFriendProfile(
   modal.className =
     "auth-modal";
 
-  modal.style.display =
-    "flex";
+  modal.style.display = "flex";
 
-  modal.innerHTML =
-    '<div class="auth-box friend-profile-box">' +
+  modal.innerHTML = `
+    <div class="auth-box friend-profile-box">
 
-    '<button class="close-auth" ' +
-    'onclick="closeFriendProfile()">' +
-    '×' +
-    '</button>' +
+      <button
+        class="close-auth"
+        onclick="closeFriendProfile()">
+        ×
+      </button>
 
-    '<div class="profile-avatar">' +
-    firstLetter +
-    '</div>' +
+      <div class="profile-avatar">
+        ${firstLetter}
+      </div>
 
-    '<h2>' + name + '</h2>' +
+      <h2>${name}</h2>
 
-    '<p>@' + username + '</p>' +
+      <p>@${username}</p>
 
-    '<p class="profile-friend-status">' +
-    '✓ You are friends' +
-    '</p>' +
+      <p class="profile-friend-status">
+        ✓ You are friends
+      </p>
 
-    '</div>';
+    </div>
+  `;
 
   document.body.appendChild(modal);
 }
@@ -1059,9 +1047,9 @@ function closeFriendProfile() {
 }
 
 
-// ============================================================
-// AUTH STATE
-// ============================================================
+// =====================================================
+// 15. AUTH STATE
+// =====================================================
 
 supabaseClient.auth.onAuthStateChange(
   function () {
@@ -1072,11 +1060,10 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-// ============================================================
-// START
-// ============================================================
+// =====================================================
+// 16. INITIAL LOAD
+// =====================================================
 
 updateLoginButton();
 loadFriendRequests();
 loadMyFriends();
-
