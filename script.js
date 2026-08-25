@@ -1085,3 +1085,133 @@ supabaseClient.auth.onAuthStateChange(
 updateLoginButton();
 loadFriendRequests();
 loadMyFriends();
+// ============================================
+// PROFILE PICTURE UPLOAD
+// ============================================
+
+async function uploadProfilePicture() {
+
+  const input = document.getElementById("avatarInput");
+
+  if (!input || !input.files || !input.files[0]) {
+    return;
+  }
+
+  const file = input.files[0];
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    input.value = "";
+    return;
+  }
+
+  // Allow only image files
+  if (!file.type.startsWith("image/")) {
+    alert("Please select an image file.");
+    input.value = "";
+    return;
+  }
+
+  // Limit image size to 5 MB
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Image must be smaller than 5 MB.");
+    input.value = "";
+    return;
+  }
+
+  const fileExtension =
+    file.name.split(".").pop().toLowerCase();
+
+  const filePath =
+    `${user.id}.${fileExtension}`;
+
+  // Upload to Supabase Storage
+  const {
+    error: uploadError
+  } = await supabaseClient.storage
+    .from("avatars")
+    .upload(filePath, file, {
+      upsert: true,
+      contentType: file.type
+    });
+
+  if (uploadError) {
+    console.error(
+      "Avatar upload error:",
+      uploadError
+    );
+
+    alert(uploadError.message);
+    input.value = "";
+    return;
+  }
+
+  // Get public URL
+  const {
+    data: publicUrlData
+  } = supabaseClient.storage
+    .from("avatars")
+    .getPublicUrl(filePath);
+
+  const avatarUrl =
+    publicUrlData.publicUrl;
+
+  // Save URL in profiles table
+  const {
+    error: profileError
+  } = await supabaseClient
+    .from("profiles")
+    .update({
+      avatar_url: avatarUrl
+    })
+    .eq("id", user.id);
+
+  if (profileError) {
+
+    console.error(
+      "Profile update error:",
+      profileError
+    );
+
+    alert(profileError.message);
+    input.value = "";
+    return;
+  }
+
+  // Show new picture immediately
+  const avatar =
+    document.getElementById("myProfileAvatar");
+
+  if (avatar) {
+
+    avatar.innerHTML = `
+      <img
+        src="${avatarUrl}"
+        alt="Profile picture"
+      >
+    `;
+
+  }
+
+  alert("Profile picture updated! 🎉");
+
+  input.value = "";
+}
+
+
+// Connect file input to upload function
+const avatarInput =
+  document.getElementById("avatarInput");
+
+if (avatarInput) {
+
+  avatarInput.addEventListener(
+    "change",
+    uploadProfilePicture
+  );
+
+}
