@@ -180,24 +180,33 @@ async function updateLoginButton() {
 
   if (!button) return;
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const { data } = await supabaseClient.auth.getSession();
 
-  if (!user) {
+  if (!data.session) {
     button.textContent = "Login";
     return;
   }
 
-  const { data: profile } = await supabaseClient
+  const user = data.session.user;
+
+  const { data: profile, error } = await supabaseClient
     .from("profiles")
     .select("full_name")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (profile) {
+  if (error) {
+    console.log("Profile error:", error);
+    return;
+  }
+
+  if (profile && profile.full_name) {
     button.textContent = profile.full_name;
   }
 }
+
+supabaseClient.auth.onAuthStateChange(function() {
+  updateLoginButton();
+});
 
 updateLoginButton();
