@@ -1398,3 +1398,23 @@ footer {
   line-height: 1;
   vertical-align: middle;
 }
+.friend-profile-box .profile-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4f46e5;
+  color: white;
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.friend-profile-box .profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
