@@ -161,21 +161,27 @@
       </div>
 
     </section>
-<section class="profile-section" id="profile">
+<!-- ================= MY PROFILE ================= -->
+
+<section
+  class="profile-section"
+  id="profile">
 
   <h2>My Profile</h2>
 
   <p class="section-text">
-    Manage your profile and profile picture.
+    Your YouRemo profile
   </p>
 
-  <div class="profile-card">
+  <div class="my-profile-card">
 
-    <div class="profile-avatar-large" id="myProfileAvatar">
+    <div
+      class="profile-avatar-large"
+      id="myProfileAvatar">
       ?
     </div>
 
-    <div class="profile-details">
+    <div class="my-profile-info">
 
       <h3 id="myProfileName">
         Your Name
@@ -185,22 +191,42 @@
         @username
       </p>
 
-      <label class="upload-avatar-btn">
-        Change Profile Picture
-        <input
-          type="file"
-          id="avatarInput"
-          accept="image/*"
-          hidden
-        >
-      </label>
+      <div class="profile-stats">
+
+        <div class="profile-stat">
+          <strong id="profileFriendCount">
+            0
+          </strong>
+          <span>Friends</span>
+        </div>
+
+      </div>
+
+      <div class="profile-actions">
+
+        <button
+          class="primary-btn"
+          onclick="openEditProfile()">
+          Edit Profile
+        </button>
+
+        <label class="upload-avatar-btn">
+          Change Photo
+          <input
+            type="file"
+            id="avatarInput"
+            accept="image/*"
+            hidden
+          >
+        </label>
+
+      </div>
 
     </div>
 
   </div>
 
 </section>
-
     <!-- ================= MY FRIENDS ================= -->
 
     <section
