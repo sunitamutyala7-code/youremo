@@ -1215,3 +1215,84 @@ if (avatarInput) {
   );
 
 }
+// ============================================
+// LOAD MY PROFILE
+// ============================================
+
+async function loadMyProfile() {
+
+  const avatar =
+    document.getElementById("myProfileAvatar");
+
+  const nameElement =
+    document.getElementById("myProfileName");
+
+  const usernameElement =
+    document.getElementById("myProfileUsername");
+
+  if (!avatar) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    return;
+  }
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .select(
+      "full_name, username, avatar_url"
+    )
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error(
+      "Profile loading error:",
+      error
+    );
+    return;
+  }
+
+  if (!profile) return;
+
+  const name =
+    profile.full_name || "User";
+
+  const username =
+    profile.username || "username";
+
+  if (nameElement) {
+    nameElement.textContent = name;
+  }
+
+  if (usernameElement) {
+    usernameElement.textContent =
+      "@" + username;
+  }
+
+  if (profile.avatar_url) {
+
+    avatar.innerHTML = `
+      <img
+        src="${profile.avatar_url}"
+        alt="Profile picture"
+      >
+    `;
+
+  } else {
+
+    avatar.textContent =
+      name.charAt(0).toUpperCase();
+
+  }
+}
+
+
+// Load profile when page starts
+loadMyProfile();
