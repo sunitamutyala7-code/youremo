@@ -124,41 +124,55 @@ async function searchFriends() {
   }
 
   for (const person of users) {
+
     if (person.id === currentUser.id) {
       continue;
     }
 
-    const { data: friendship } = await supabaseClient
-      .from("friendships")
-      .select("id")
-      .eq("user_id", currentUser.id)
-      .eq("friend_id", person.id)
-      .maybeSingle();
+    const { data: friendship, error: friendshipError } =
+      await supabaseClient
+        .from("friendships")
+        .select("id")
+        .eq("user_id", currentUser.id)
+        .eq("friend_id", person.id)
+        .maybeSingle();
+
+    if (friendshipError) {
+      console.error("Friendship check error:", friendshipError);
+    }
 
     const card = document.createElement("div");
     card.className = "friend-card";
-    card.dataset.userId = person.id;
 
     const name = person.full_name || "User";
     const username = person.username || "username";
     const firstLetter = name.charAt(0).toUpperCase();
 
     if (friendship) {
+
       card.innerHTML = `
         <div class="avatar">${firstLetter}</div>
+
         <div>
           <h3>${name}</h3>
           <p>@${username}</p>
         </div>
-        <button disabled>Friends ✓</button>
+
+        <button disabled>
+          Friends ✓
+        </button>
       `;
+
     } else {
+
       card.innerHTML = `
         <div class="avatar">${firstLetter}</div>
+
         <div>
           <h3>${name}</h3>
           <p>@${username}</p>
         </div>
+
         <button
           data-user-id="${person.id}"
           onclick="addFriend(this)">
@@ -170,15 +184,6 @@ async function searchFriends() {
     results.appendChild(card);
   }
 }
-
-  const {
-    data: { user: currentUser }
-  } = await supabaseClient.auth.getUser();
-
-  if (!currentUser) {
-    results.innerHTML = "<p>Please login first.</p>";
-    return;
-  }
 
   const { data: users, error } = await supabaseClient
     .from("profiles")
