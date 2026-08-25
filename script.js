@@ -1,141 +1,53 @@
-const menuBtn=document.getElementById("menuBtn");const nav=document.getElementById("navLinks");if(menuBtn)menuBtn.addEventListener("click",()=>nav.classList.toggle("open"));
-document.querySelectorAll("#navLinks a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
-document.querySelectorAll("#emotions button").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("#emotions button").forEach(b=>b.classList.remove("selected"));btn.classList.add("selected")}));
-document.querySelectorAll(".support").forEach(btn=>btn.addEventListener("click",()=>{btn.classList.toggle("sent");btn.textContent=btn.classList.contains("sent")?"✓ Support sent":"♡ Support"}));
-const shareBtn=document.getElementById("shareBtn"),status=document.getElementById("shareStatus");if(shareBtn)shareBtn.addEventListener("click",()=>{status.textContent="✓ Your feeling was shared with your friends.";setTimeout(()=>status.textContent="",3500)});
-/* =========================
-   FIND FRIENDS
-========================= */
+function findFriends() {
+  document.getElementById("friends").scrollIntoView({
+    behavior: "smooth"
+  });
 
-const friendsModal =
-  document.getElementById("friendsModal");
-
-const findFriends =
-  document.getElementById("findFriends");
-
-const closeFriends =
-  document.getElementById("closeFriends");
+  setTimeout(() => {
+    document.getElementById("friendSearch").focus();
+  }, 600);
+}
 
 
-/* OPEN MODAL */
-
-findFriends?.addEventListener("click", () => {
-
-  friendsModal.classList.add("show");
-
-});
+function learnMore() {
+  document.getElementById("about").scrollIntoView({
+    behavior: "smooth"
+  });
+}
 
 
-/* CLOSE MODAL */
+function searchFriends() {
+  const searchInput = document.getElementById("friendSearch");
+  const searchText = searchInput.value.toLowerCase().trim();
 
-closeFriends?.addEventListener("click", () => {
+  const friendCards = document.querySelectorAll(".friend-card");
 
-  friendsModal.classList.remove("show");
+  friendCards.forEach(function(card) {
+    const name = card.querySelector("h3").textContent.toLowerCase();
+    const username = card.querySelector("p").textContent.toLowerCase();
 
-});
-
-
-/* CLICK OUTSIDE */
-
-friendsModal?.addEventListener("click", (event) => {
-
-  if (event.target === friendsModal) {
-
-    friendsModal.classList.remove("show");
-
-  }
-
-});
-
-
-/* ESC KEY */
-
-document.addEventListener("keydown", (event) => {
-
-  if (event.key === "Escape") {
-
-    friendsModal?.classList.remove("show");
-
-  }
-
-});
-
-
-/* =========================
-   SEARCH FRIENDS
-========================= */
-
-const friendSearch =
-  document.getElementById("friendSearch");
-
-const emptySearch =
-  document.getElementById("emptySearch");
-
-
-friendSearch?.addEventListener("input", () => {
-
-  const search =
-    friendSearch.value
-      .toLowerCase()
-      .trim();
-
-  const friends =
-    document.querySelectorAll(".suggestion");
-
-  let found = 0;
-
-
-  friends.forEach((friend) => {
-
-    const name =
-      friend.dataset.name
-        .toLowerCase();
-
-    if (name.includes(search)) {
-
-      friend.style.display = "grid";
-
-      found++;
-
+    if (
+      name.includes(searchText) ||
+      username.includes(searchText)
+    ) {
+      card.style.display = "flex";
     } else {
-
-      friend.style.display = "none";
-
+      card.style.display = "none";
     }
-
   });
+}
 
 
-  if (found === 0) {
+function addFriend(button) {
+  button.textContent = "Request Sent";
+  button.disabled = true;
 
-    emptySearch.style.display = "block";
+  button.style.background = "#22a06b";
 
-  } else {
+  alert("Friend request sent!");
+}
 
-    emptySearch.style.display = "none";
 
-  }
-
+document.querySelector(".login-btn").addEventListener("click", function() {
+  alert("Login feature coming soon!");
 });
-
-
-/* =========================
-   ADD FRIEND
-========================= */
-
-document
-  .querySelectorAll(".add-btn")
-  .forEach((button) => {
-
-    button.addEventListener("click", () => {
-
-      button.textContent =
-        "✓ Request sent";
-
-      button.classList.add("requested");
-
-      button.disabled = true;
-
-    });
-
-  });
