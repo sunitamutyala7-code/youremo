@@ -147,7 +147,9 @@ async function searchFriends() {
         <p>@${user.username || "username"}</p>
       </div>
 
-      <button onclick="addFriend(this)">
+      <button
+        data-user-id="${user.id}"
+        onclick="addFriend(this)">
         Add Friend
       </button>
     `;
