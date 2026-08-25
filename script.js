@@ -856,127 +856,129 @@ async function declineFriendRequest(requestId) {
 // =====================================================
 // 13. LOAD MY FRIENDS
 // =====================================================
+// ============================================
+// MY FRIENDS - FIXED DUPLICATES
+// ============================================
+
+let loadingMyFriends = false;
 
 async function loadMyFriends() {
-  const container =
-    document.getElementById("myFriendsList");
 
-  if (!container) {
-    return;
-  }
+  if (loadingMyFriends) return;
 
-  const userResult =
-    await supabaseClient.auth.getUser();
+  loadingMyFriends = true;
 
-  const user = userResult.data.user;
+  try {
 
-  if (!user) {
-    container.innerHTML =
-      "<p>Please login to see your friends.</p>";
-    return;
-  }
+    const container = document.getElementById("myFriendsList");
 
-  const result =
-    await supabaseClient
+    if (!container) return;
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+      container.innerHTML =
+        "<p>Please login to see your friends.</p>";
+      return;
+    }
+
+    const {
+      data: friendships,
+      error
+    } = await supabaseClient
       .from("friendships")
       .select("friend_id")
       .eq("user_id", user.id);
 
-  if (result.error) {
-    console.error(
-      "Friends loading error:",
-      result.error
-    );
+    if (error) {
+      console.error("Friends loading error:", error);
+      container.innerHTML =
+        "<p>Unable to load friends.</p>";
+      return;
+    }
 
-    container.innerHTML =
-      "<p>Unable to load friends.</p>";
+    container.innerHTML = "";
 
-    return;
-  }
+    if (!friendships || friendships.length === 0) {
+      container.innerHTML =
+        "<p>You don't have any friends yet.</p>";
+      return;
+    }
 
-  const friendships =
-    result.data || [];
-
-  const uniqueFriendIds = [
-    ...new Set(
-      friendships.map(
-        item => item.friend_id
+    // Remove duplicate friend IDs
+    const uniqueFriendIds = [
+      ...new Set(
+        friendships.map(friend => friend.friend_id)
       )
-    )
-  ];
+    ];
 
-  container.innerHTML = "";
+    for (const friendId of uniqueFriendIds) {
 
-  if (uniqueFriendIds.length === 0) {
-    container.innerHTML =
-      "<p>You don't have any friends yet.</p>";
-    return;
-  }
-
-  for (const friendId of uniqueFriendIds) {
-    const profileResult =
-      await supabaseClient
+      const {
+        data: profile,
+        error: profileError
+      } = await supabaseClient
         .from("profiles")
-        .select(
-          "id, full_name, username"
-        )
+        .select("id, full_name, username")
         .eq("id", friendId)
         .maybeSingle();
 
-    if (profileResult.error) {
-      console.error(
-        "Friend profile error:",
-        profileResult.error
-      );
-      continue;
+      if (profileError) {
+        console.error(
+          "Friend profile error:",
+          profileError
+        );
+        continue;
+      }
+
+      if (!profile) continue;
+
+      const name = profile.full_name || "User";
+      const username = profile.username || "username";
+      const firstLetter =
+        name.charAt(0).toUpperCase();
+
+      const card = document.createElement("div");
+
+      card.className = "friend-card friend-clickable";
+
+      card.dataset.friendId = friendId;
+
+      card.innerHTML = `
+        <div class="avatar">
+          ${firstLetter}
+        </div>
+
+        <div class="friend-info">
+          <h3>${name}</h3>
+          <p>@${username}</p>
+        </div>
+
+        <span class="friend-status">
+          Friends ✓
+        </span>
+      `;
+
+      card.onclick = function () {
+        openFriendProfile(
+          profile.id,
+          name,
+          username
+        );
+      };
+
+      container.appendChild(card);
     }
 
-    const profile =
-      profileResult.data;
+  } finally {
 
-    if (!profile) {
-      continue;
-    }
+    loadingMyFriends = false;
 
-    const name =
-      profile.full_name || "User";
-
-    const username =
-      profile.username || "username";
-
-    const firstLetter =
-      name.charAt(0).toUpperCase();
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "friend-card friend-clickable";
-
-    card.innerHTML = `
-      <div class="avatar">${firstLetter}</div>
-
-      <div class="friend-info">
-        <h3>${name}</h3>
-        <p>@${username}</p>
-      </div>
-
-      <span class="friend-status">
-        Friends ✓
-      </span>
-    `;
-
-    card.onclick = function () {
-      openFriendProfile(
-        profile.id,
-        name,
-        username
-      );
-    };
-
-    container.appendChild(card);
   }
 }
+
 
 
 // =====================================================
