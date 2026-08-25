@@ -59,7 +59,7 @@ async function searchFriends() {
   data.forEach(function(user) {
     const card = document.createElement("div");
     card.className = "friend-card";
-
+    card.dataset.userId = user.id;
     const firstLetter =
       (user.full_name || user.username || "?")
         .charAt(0)
@@ -83,13 +83,45 @@ async function searchFriends() {
 }
 
 
-function addFriend(button) {
+async function addFriend(button) {
+  const receiverId = button.dataset.userId;
+
+  if (!receiverId) {
+    alert("User information is missing.");
+    return;
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
+
+  if (userError || !user) {
+    alert("Please login first.");
+    return;
+  }
+
+  if (user.id === receiverId) {
+    alert("You cannot add yourself.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("friend_requests")
+    .insert({
+      sender_id: user.id,
+      receiver_id: receiverId,
+      status: "pending"
+    });
+
+  if (error) {
+    console.error("Friend request error:", error);
+    alert(error.message);
+    return;
+  }
+
   button.textContent = "Request Sent";
   button.disabled = true;
-
-  button.style.background = "#22a06b";
-
-  alert("Friend request sent!");
 }
 
 
