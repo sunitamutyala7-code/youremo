@@ -823,3 +823,95 @@ supabaseClient.auth.onAuthStateChange(
 
 updateLoginButton();
 loadFriendRequests();
+async function loadMyFriends() {
+  const container = document.getElementById("myFriendsList");
+
+  if (!container) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    container.innerHTML =
+      "<p>Please login to see your friends.</p>";
+    return;
+  }
+
+  const { data: friendships, error } =
+    await supabaseClient
+      .from("friendships")
+      .select("friend_id")
+      .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Friends loading error:", error);
+
+    container.innerHTML =
+      "<p>Unable to load friends.</p>";
+
+    return;
+  }
+
+  if (!friendships || friendships.length === 0) {
+    container.innerHTML =
+      "<p>You don't have any friends yet.</p>";
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  for (const friendship of friendships) {
+
+    const { data: profile, error: profileError } =
+      await supabaseClient
+        .from("profiles")
+        .select("id, full_name, username")
+        .eq("id", friendship.friend_id)
+        .maybeSingle();
+
+    if (profileError) {
+      console.error(
+        "Friend profile error:",
+        profileError
+      );
+
+      continue;
+    }
+
+    if (!profile) continue;
+
+    const name =
+      profile.full_name || "User";
+
+    const username =
+      profile.username || "username";
+
+    const firstLetter =
+      name.charAt(0).toUpperCase();
+
+    const card =
+      document.createElement("div");
+
+    card.className = "friend-card";
+
+    card.innerHTML = `
+      <div class="avatar">
+        ${firstLetter}
+      </div>
+
+      <div>
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
+
+      <span class="friend-status">
+        Friends ✓
+      </span>
+    `;
+
+    container.appendChild(card);
+  }
+}
+loadMyFriends();
