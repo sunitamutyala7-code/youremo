@@ -900,7 +900,23 @@ async function loadMyFriends() {
     }
 
     container.innerHTML = "";
+const friendCountElement =
+  document.getElementById("friendCount");
 
+const uniqueFriendIds = [
+  ...new Set(
+    (friendships || []).map(
+      friend => friend.friend_id
+    )
+  )
+];
+
+if (friendCountElement) {
+  friendCountElement.textContent =
+    `${uniqueFriendIds.length} ${
+      uniqueFriendIds.length === 1 ? "Friend" : "Friends"
+    }`;
+}
     if (!friendships || friendships.length === 0) {
       container.innerHTML =
         "<p>You don't have any friends yet.</p>";
@@ -908,11 +924,7 @@ async function loadMyFriends() {
     }
 
     // Remove duplicate friend IDs
-    const uniqueFriendIds = [
-      ...new Set(
-        friendships.map(friend => friend.friend_id)
-      )
-    ];
+   
 
     for (const friendId of uniqueFriendIds) {
 
