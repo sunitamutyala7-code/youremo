@@ -909,13 +909,14 @@ if (profileFriendCount) {
         </span>
       `;
 
-      card.onclick = () => {
-        openFriendProfile(
-          profile.id,
-          name,
-          username
-        );
-      };
+      card.onclick = function () {
+  openFriendProfile(
+    profile.id,
+    name,
+    username,
+    profile.avatar_url
+  );
+};
 
       container.appendChild(card);
     }
