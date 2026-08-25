@@ -355,3 +355,58 @@ supabaseClient.auth.onAuthStateChange(function() {
 });
 
 updateLoginButton();
+async function acceptFriendRequest(requestId) {
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const { data: request, error: requestError } = await supabaseClient
+    .from("friend_requests")
+    .select("id, sender_id, receiver_id")
+    .eq("id", requestId)
+    .eq("receiver_id", user.id)
+    .single();
+
+  if (requestError || !request) {
+    alert("Friend request not found.");
+    return;
+  }
+
+  const { error: friendshipError } = await supabaseClient
+    .from("friendships")
+    .insert([
+      {
+        user_id: user.id,
+        friend_id: request.sender_id
+      },
+      {
+        user_id: request.sender_id,
+        friend_id: user.id
+      }
+    ]);
+
+  if (friendshipError) {
+    console.error("Friendship error:", friendshipError);
+    alert(friendshipError.message);
+    return;
+  }
+
+  const { error: updateError } = await supabaseClient
+    .from("friend_requests")
+    .update({ status: "accepted" })
+    .eq("id", requestId);
+
+  if (updateError) {
+    alert(updateError.message);
+    return;
+  }
+
+  alert("Friend added successfully! 🎉");
+
+  loadFriendRequests();
+}
