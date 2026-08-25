@@ -944,8 +944,7 @@ if (friendCountElement) {
     `${uniqueFriendIds.length} ${
       uniqueFriendIds.length === 1 ? "Friend" : "Friends"
     }`;
-}
-   const uniqueFriendIds = [
+}const uniqueFriendIds = [
   ...new Set(
     (friendships || []).map(
       friendship => friendship.friend_id
