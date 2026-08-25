@@ -7,9 +7,6 @@
 // ============================================================
 // 1. SUPABASE CREDENTIALS
 // ============================================================
-// PUT YOUR EXISTING VALUES ONLY IN THESE TWO LINES.
-// Do not create another supabaseClient anywhere else.
-// ============================================================
 
 const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co/rest/v1/";
 const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-w";
@@ -55,14 +52,14 @@ function learnMore() {
 
 
 // ============================================================
-// 3. LOGIN / SIGNUP MODAL
+// 3. LOGIN MODAL
 // ============================================================
 
 function openAuth() {
   const modal = document.getElementById("authModal");
 
   if (!modal) {
-    console.error("authModal was not found.");
+    console.error("authModal not found");
     return;
   }
 
@@ -96,8 +93,7 @@ function showLogin() {
   }
 
   if (subtitle) {
-    subtitle.textContent =
-      "Login to your YouRemo account";
+    subtitle.textContent = "Login to your YouRemo account";
   }
 
   if (name) {
@@ -123,8 +119,7 @@ function showLogin() {
 
   if (switchText) {
     switchText.innerHTML =
-      `Don't have an account?
-       <span onclick="showSignup()">Sign Up</span>`;
+      "New to YouRemo? <span onclick=\"showSignup()\">Create Account</span>";
   }
 }
 
@@ -172,8 +167,7 @@ function showSignup() {
 
   if (switchText) {
     switchText.innerHTML =
-      `Already have an account?
-       <span onclick="showLogin()">Login</span>`;
+      "Already have an account? <span onclick=\"showLogin()\">Login</span>";
   }
 }
 
@@ -183,17 +177,10 @@ function showSignup() {
 // ============================================================
 
 async function signUp() {
-  const name =
-    document.getElementById("authName")?.value.trim();
-
-  const username =
-    document.getElementById("authUsername")?.value.trim();
-
-  const email =
-    document.getElementById("authEmail")?.value.trim();
-
-  const password =
-    document.getElementById("authPassword")?.value;
+  const name = document.getElementById("authName").value.trim();
+  const username = document.getElementById("authUsername").value.trim();
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
   if (!name || !username || !email || !password) {
     alert("Please fill in all fields.");
@@ -205,13 +192,9 @@ async function signUp() {
     return;
   }
 
-  const {
-    data,
-    error
-  } = await supabaseClient.auth.signUp({
+  const result = await supabaseClient.auth.signUp({
     email: email,
     password: password,
-
     options: {
       data: {
         full_name: name,
@@ -220,41 +203,33 @@ async function signUp() {
     }
   });
 
-  if (error) {
-    console.error("Signup error:", error);
-    alert(error.message);
+  if (result.error) {
+    console.error("Signup error:", result.error);
+    alert(result.error.message);
     return;
   }
 
-  if (!data.user) {
+  if (!result.data.user) {
     alert("Account could not be created.");
     return;
   }
 
-  const {
-    error: profileError
-  } = await supabaseClient
+  const profileResult = await supabaseClient
     .from("profiles")
     .insert({
-      id: data.user.id,
+      id: result.data.user.id,
       username: username,
       full_name: name
     });
 
-  if (profileError) {
+  if (profileResult.error) {
     console.error(
       "Profile creation error:",
-      profileError
+      profileResult.error
     );
 
-    if (
-      !profileError.message
-        .toLowerCase()
-        .includes("duplicate")
-    ) {
-      alert(profileError.message);
-      return;
-    }
+    alert(profileResult.error.message);
+    return;
   }
 
   alert("Account created successfully!");
@@ -270,27 +245,23 @@ async function signUp() {
 // ============================================================
 
 async function login() {
-  const email =
-    document.getElementById("authEmail")?.value.trim();
-
-  const password =
-    document.getElementById("authPassword")?.value;
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
 
   if (!email || !password) {
     alert("Please enter your email and password.");
     return;
   }
 
-  const {
-    error
-  } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
+  const result =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
-  if (error) {
-    console.error("Login error:", error);
-    alert(error.message);
+  if (result.error) {
+    console.error("Login error:", result.error);
+    alert(result.error.message);
     return;
   }
 
@@ -305,7 +276,7 @@ async function login() {
 
 
 // ============================================================
-// 6. LOGIN BUTTON / USER NAME
+// 6. LOGIN BUTTON
 // ============================================================
 
 async function updateLoginButton() {
@@ -316,9 +287,11 @@ async function updateLoginButton() {
     return;
   }
 
-  const {
-    data: { session }
-  } = await supabaseClient.auth.getSession();
+  const result =
+    await supabaseClient.auth.getSession();
+
+  const session =
+    result.data.session;
 
   if (!session) {
     button.textContent = "Login";
@@ -329,32 +302,38 @@ async function updateLoginButton() {
   const user = session.user;
 
   const metadataName =
-    user.user_metadata?.full_name;
+    user.user_metadata &&
+    user.user_metadata.full_name;
 
   if (metadataName) {
     button.textContent = metadataName;
     return;
   }
 
-  const {
-    data: profile,
-    error
-  } = await supabaseClient
-    .from("profiles")
-    .select("full_name, username")
-    .eq("id", user.id)
-    .maybeSingle();
+  const profileResult =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name, username")
+      .eq("id", user.id)
+      .maybeSingle();
 
-  if (error) {
-    console.error("Profile error:", error);
+  if (profileResult.error) {
+    console.error(
+      "Profile error:",
+      profileResult.error
+    );
+
     button.textContent = "Account";
     return;
   }
 
-  if (profile?.full_name) {
+  const profile =
+    profileResult.data;
+
+  if (profile && profile.full_name) {
     button.textContent = profile.full_name;
   }
-  else if (profile?.username) {
+  else if (profile && profile.username) {
     button.textContent = profile.username;
   }
   else {
@@ -386,9 +365,11 @@ async function searchFriends() {
     return;
   }
 
-  const {
-    data: { user: currentUser }
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
+
+  const currentUser =
+    userResult.data.user;
 
   if (!currentUser) {
     results.innerHTML =
@@ -396,27 +377,33 @@ async function searchFriends() {
     return;
   }
 
-  const {
-    data: users,
-    error
-  } = await supabaseClient
-    .from("profiles")
-    .select(
-      "id, username, full_name"
-    )
-    .or(
-      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
-    )
-    .limit(20);
+  const usersResult =
+    await supabaseClient
+      .from("profiles")
+      .select("id, username, full_name")
+      .or(
+        "username.ilike.%" +
+        searchText +
+        "%,full_name.ilike.%" +
+        searchText +
+        "%"
+      )
+      .limit(20);
 
-  if (error) {
-    console.error("Search error:", error);
+  if (usersResult.error) {
+    console.error(
+      "Search error:",
+      usersResult.error
+    );
 
     results.innerHTML =
       "<p>Unable to search users.</p>";
 
     return;
   }
+
+  const users =
+    usersResult.data;
 
   results.innerHTML = "";
 
@@ -432,16 +419,26 @@ async function searchFriends() {
       continue;
     }
 
-    const {
-      data: friendship
-    } = await supabaseClient
-      .from("friendships")
-      .select("id")
-      .or(
-        `and(user_id.eq.${currentUser.id},friend_id.eq.${person.id}),and(user_id.eq.${person.id},friend_id.eq.${currentUser.id})`
-      )
-      .limit(1)
-      .maybeSingle();
+    const friendshipResult =
+      await supabaseClient
+        .from("friendships")
+        .select("id")
+        .or(
+          "and(user_id.eq." +
+          currentUser.id +
+          ",friend_id.eq." +
+          person.id +
+          "),and(user_id.eq." +
+          person.id +
+          ",friend_id.eq." +
+          currentUser.id +
+          ")"
+        )
+        .limit(1)
+        .maybeSingle();
+
+    const friendship =
+      friendshipResult.data;
 
     const card =
       document.createElement("div");
@@ -460,9 +457,7 @@ async function searchFriends() {
 
     if (friendship) {
       card.innerHTML = `
-        <div class="avatar">
-          ${firstLetter}
-        </div>
+        <div class="avatar">${firstLetter}</div>
 
         <div>
           <h3>${name}</h3>
@@ -476,9 +471,7 @@ async function searchFriends() {
     }
     else {
       card.innerHTML = `
-        <div class="avatar">
-          ${firstLetter}
-        </div>
+        <div class="avatar">${firstLetter}</div>
 
         <div>
           <h3>${name}</h3>
@@ -511,12 +504,13 @@ async function addFriend(button) {
     return;
   }
 
-  const {
-    data: { user },
-    error: userError
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
 
-  if (userError || !user) {
+  const user =
+    userResult.data.user;
+
+  if (!user) {
     alert("Please login first.");
     return;
   }
@@ -526,90 +520,82 @@ async function addFriend(button) {
     return;
   }
 
-  // Check existing friendship
-  const {
-    data: friendship
-  } = await supabaseClient
-    .from("friendships")
-    .select("id")
-    .or(
-      `and(user_id.eq.${user.id},friend_id.eq.${receiverId}),and(user_id.eq.${receiverId},friend_id.eq.${user.id})`
-    )
-    .limit(1)
-    .maybeSingle();
+  const friendshipResult =
+    await supabaseClient
+      .from("friendships")
+      .select("id")
+      .or(
+        "and(user_id.eq." +
+        user.id +
+        ",friend_id.eq." +
+        receiverId +
+        "),and(user_id.eq." +
+        receiverId +
+        ",friend_id.eq." +
+        user.id +
+        ")"
+      )
+      .limit(1)
+      .maybeSingle();
 
-  if (friendship) {
-    button.textContent =
-      "Friends ✓";
-
+  if (friendshipResult.data) {
+    button.textContent = "Friends ✓";
     button.disabled = true;
-
     return;
   }
 
-  // Check existing request
-  const {
-    data: existingRequest
-  } = await supabaseClient
-    .from("friend_requests")
-    .select("id, status")
-    .or(
-      `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
-    )
-    .limit(1)
-    .maybeSingle();
+  const requestResult =
+    await supabaseClient
+      .from("friend_requests")
+      .select("id, status")
+      .or(
+        "and(sender_id.eq." +
+        user.id +
+        ",receiver_id.eq." +
+        receiverId +
+        "),and(sender_id.eq." +
+        receiverId +
+        ",receiver_id.eq." +
+        user.id +
+        ")"
+      )
+      .limit(1)
+      .maybeSingle();
 
-  if (existingRequest) {
-    if (
-      existingRequest.status ===
-      "pending"
-    ) {
-      button.textContent =
-        "Request Sent";
-
+  if (requestResult.data) {
+    if (requestResult.data.status === "pending") {
+      button.textContent = "Request Sent";
       button.disabled = true;
-
       return;
     }
 
-    if (
-      existingRequest.status ===
-      "accepted"
-    ) {
-      button.textContent =
-        "Friends ✓";
-
+    if (requestResult.data.status === "accepted") {
+      button.textContent = "Friends ✓";
       button.disabled = true;
-
       return;
     }
   }
 
-  // Send friend request
-  const {
-    error
-  } = await supabaseClient
-    .from("friend_requests")
-    .insert({
-      sender_id: user.id,
-      receiver_id: receiverId,
-      status: "pending"
-    });
+  const insertResult =
+    await supabaseClient
+      .from("friend_requests")
+      .insert({
+        sender_id: user.id,
+        receiver_id: receiverId,
+        status: "pending"
+      });
 
-  if (error) {
+  if (insertResult.error) {
     console.error(
       "Friend request error:",
-      error
+      insertResult.error
     );
 
-    alert(error.message);
-
+    alert(insertResult.error.message);
     return;
   }
 
-  button.textContent =
-    "Request Sent";
-
+  button.textContent = "Request Sent";
   button.disabled = true;
 }
 
@@ -620,40 +606,37 @@ async function addFriend(button) {
 
 async function loadFriendRequests() {
   const container =
-    document.getElementById(
-      "friendRequests"
-    );
+    document.getElementById("friendRequests");
 
   if (!container) {
     return;
   }
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
+
+  const user =
+    userResult.data.user;
 
   if (!user) {
     container.innerHTML =
       "<p>Please login to see friend requests.</p>";
-
     return;
   }
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from("friend_requests")
-    .select(
-      "id, sender_id, receiver_id, status"
-    )
-    .eq("receiver_id", user.id)
-    .eq("status", "pending");
+  const requestResult =
+    await supabaseClient
+      .from("friend_requests")
+      .select(
+        "id, sender_id, receiver_id, status"
+      )
+      .eq("receiver_id", user.id)
+      .eq("status", "pending");
 
-  if (error) {
+  if (requestResult.error) {
     console.error(
       "Request loading error:",
-      error
+      requestResult.error
     );
 
     container.innerHTML =
@@ -662,36 +645,37 @@ async function loadFriendRequests() {
     return;
   }
 
+  const requests =
+    requestResult.data;
+
   container.innerHTML = "";
 
-  if (!data || data.length === 0) {
+  if (!requests || requests.length === 0) {
     container.innerHTML =
       "<p>No new friend requests.</p>";
-
     return;
   }
 
-  for (const request of data) {
-    const {
-      data: profile
-    } = await supabaseClient
-      .from("profiles")
-      .select(
-        "full_name, username"
-      )
-      .eq(
-        "id",
-        request.sender_id
-      )
-      .maybeSingle();
+  for (const request of requests) {
+    const profileResult =
+      await supabaseClient
+        .from("profiles")
+        .select("full_name, username")
+        .eq("id", request.sender_id)
+        .maybeSingle();
+
+    const profile =
+      profileResult.data;
 
     const name =
-      profile?.full_name ||
-      "User";
+      profile && profile.full_name
+        ? profile.full_name
+        : "User";
 
     const username =
-      profile?.username ||
-      "username";
+      profile && profile.username
+        ? profile.username
+        : "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
@@ -703,9 +687,7 @@ async function loadFriendRequests() {
       "friend-card";
 
     card.innerHTML = `
-      <div class="avatar">
-        ${firstLetter}
-      </div>
+      <div class="avatar">${firstLetter}</div>
 
       <div>
         <h3>${name}</h3>
@@ -734,101 +716,93 @@ async function loadFriendRequests() {
 // ============================================================
 
 async function acceptFriendRequest(requestId) {
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
+
+  const user =
+    userResult.data.user;
 
   if (!user) {
     alert("Please login first.");
     return;
   }
 
-  const {
-    data: request,
-    error: requestError
-  } = await supabaseClient
-    .from("friend_requests")
-    .select(
-      "id, sender_id, receiver_id"
-    )
-    .eq("id", requestId)
-    .eq("receiver_id", user.id)
-    .single();
+  const requestResult =
+    await supabaseClient
+      .from("friend_requests")
+      .select(
+        "id, sender_id, receiver_id"
+      )
+      .eq("id", requestId)
+      .eq("receiver_id", user.id)
+      .single();
 
-  if (requestError || !request) {
-    console.error(
-      "Request error:",
-      requestError
-    );
-
-    alert(
-      "Friend request not found."
-    );
-
+  if (requestResult.error || !requestResult.data) {
+    alert("Friend request not found.");
     return;
   }
 
-  // Check whether friendship already exists
-  const {
-    data: existingFriendship
-  } = await supabaseClient
-    .from("friendships")
-    .select("id")
-    .or(
-      `and(user_id.eq.${user.id},friend_id.eq.${request.sender_id}),and(user_id.eq.${request.sender_id},friend_id.eq.${user.id})`
-    )
-    .limit(1)
-    .maybeSingle();
+  const request =
+    requestResult.data;
 
-  if (!existingFriendship) {
-    const {
-      error: friendshipError
-    } = await supabaseClient
+  const existingResult =
+    await supabaseClient
       .from("friendships")
-      .insert([
-        {
-          user_id: user.id,
-          friend_id: request.sender_id
-        },
-        {
-          user_id: request.sender_id,
-          friend_id: user.id
-        }
-      ]);
+      .select("id")
+      .or(
+        "and(user_id.eq." +
+        user.id +
+        ",friend_id.eq." +
+        request.sender_id +
+        "),and(user_id.eq." +
+        request.sender_id +
+        ",friend_id.eq." +
+        user.id +
+        ")"
+      )
+      .limit(1)
+      .maybeSingle();
 
-    if (friendshipError) {
+  if (!existingResult.data) {
+    const friendshipResult =
+      await supabaseClient
+        .from("friendships")
+        .insert([
+          {
+            user_id: user.id,
+            friend_id: request.sender_id
+          },
+          {
+            user_id: request.sender_id,
+            friend_id: user.id
+          }
+        ]);
+
+    if (friendshipResult.error) {
       console.error(
         "Friendship error:",
-        friendshipError
+        friendshipResult.error
       );
 
       alert(
-        friendshipError.message
+        friendshipResult.error.message
       );
 
       return;
     }
   }
 
-  // Mark request as accepted
-  const {
-    error: updateError
-  } = await supabaseClient
-    .from("friend_requests")
-    .update({
-      status: "accepted"
-    })
-    .eq("id", requestId)
-    .eq("receiver_id", user.id);
+  const updateResult =
+    await supabaseClient
+      .from("friend_requests")
+      .update({
+        status: "accepted"
+      })
+      .eq("id", requestId)
+      .eq("receiver_id", user.id);
 
-  if (updateError) {
-    console.error(
-      "Request update error:",
-      updateError
-    );
-
-    alert(updateError.message);
-
+  if (updateResult.error) {
+    alert(updateResult.error.message);
     return;
   }
 
@@ -846,33 +820,33 @@ async function acceptFriendRequest(requestId) {
 // ============================================================
 
 async function declineFriendRequest(requestId) {
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
+
+  const user =
+    userResult.data.user;
 
   if (!user) {
     alert("Please login first.");
     return;
   }
 
-  const {
-    error
-  } = await supabaseClient
-    .from("friend_requests")
-    .update({
-      status: "declined"
-    })
-    .eq("id", requestId)
-    .eq("receiver_id", user.id);
+  const result =
+    await supabaseClient
+      .from("friend_requests")
+      .update({
+        status: "declined"
+      })
+      .eq("id", requestId)
+      .eq("receiver_id", user.id);
 
-  if (error) {
+  if (result.error) {
     console.error(
       "Decline error:",
-      error
+      result.error
     );
 
-    alert(error.message);
-
+    alert(result.error.message);
     return;
   }
 
@@ -886,40 +860,34 @@ async function declineFriendRequest(requestId) {
 
 async function loadMyFriends() {
   const container =
-    document.getElementById(
-      "myFriendsList"
-    );
+    document.getElementById("myFriendsList");
 
   if (!container) {
     return;
   }
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const userResult =
+    await supabaseClient.auth.getUser();
+
+  const user =
+    userResult.data.user;
 
   if (!user) {
     container.innerHTML =
       "<p>Please login to see your friends.</p>";
-
     return;
   }
 
-  const {
-    data: friendships,
-    error
-  } = await supabaseClient
-    .from("friendships")
-    .select("friend_id")
-    .eq(
-      "user_id",
-      user.id
-    );
+  const result =
+    await supabaseClient
+      .from("friendships")
+      .select("friend_id")
+      .eq("user_id", user.id);
 
-  if (error) {
+  if (result.error) {
     console.error(
       "Friends loading error:",
-      error
+      result.error
     );
 
     container.innerHTML =
@@ -928,63 +896,48 @@ async function loadMyFriends() {
     return;
   }
 
-  const uniqueFriendIds = [
-    ...new Set(
-      (friendships || []).map(
-        friendship =>
-          friendship.friend_id
-      )
-    )
-  ];
+  const friendships =
+    result.data || [];
 
-  if (
-    uniqueFriendIds.length === 0
-  ) {
+  const uniqueFriendIds =
+    [...new Set(
+      friendships.map(
+        function (friendship) {
+          return friendship.friend_id;
+        }
+      )
+    )];
+
+  if (uniqueFriendIds.length === 0) {
     container.innerHTML =
       "<p>You don't have any friends yet.</p>";
-
     return;
   }
 
   container.innerHTML = "";
 
-  for (
-    const friendId of uniqueFriendIds
-  ) {
-    const {
-      data: profile,
-      error: profileError
-    } = await supabaseClient
-      .from("profiles")
-      .select(
-        "id, full_name, username"
-      )
-      .eq(
-        "id",
-        friendId
-      )
-      .maybeSingle();
+  for (const friendId of uniqueFriendIds) {
+    const profileResult =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, full_name, username"
+        )
+        .eq("id", friendId)
+        .maybeSingle();
 
-    if (profileError) {
-      console.error(
-        "Friend profile error:",
-        profileError
-      );
-
-      continue;
-    }
+    const profile =
+      profileResult.data;
 
     if (!profile) {
       continue;
     }
 
     const name =
-      profile.full_name ||
-      "User";
+      profile.full_name || "User";
 
     const username =
-      profile.username ||
-      "username";
+      profile.username || "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
@@ -996,9 +949,7 @@ async function loadMyFriends() {
       "friend-card friend-clickable";
 
     card.innerHTML = `
-      <div class="avatar">
-        ${firstLetter}
-      </div>
+      <div class="avatar">${firstLetter}</div>
 
       <div class="friend-info">
         <h3>${name}</h3>
