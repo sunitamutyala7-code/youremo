@@ -862,21 +862,31 @@ async function loadMyFriends() {
 
   container.innerHTML = "";
 
-  for (const friendship of friendships) {
+  // Remove duplicate friend IDs
+  const uniqueFriendIds = [
+    ...new Set(
+      friendships.map(
+        friendship => friendship.friend_id
+      )
+    )
+  ];
 
-    const { data: profile, error: profileError } =
-      await supabaseClient
-        .from("profiles")
-        .select("id, full_name, username")
-        .eq("id", friendship.friend_id)
-        .maybeSingle();
+  for (const friendId of uniqueFriendIds) {
+
+    const {
+      data: profile,
+      error: profileError
+    } = await supabaseClient
+      .from("profiles")
+      .select("id, full_name, username")
+      .eq("id", friendId)
+      .maybeSingle();
 
     if (profileError) {
       console.error(
         "Friend profile error:",
         profileError
       );
-
       continue;
     }
 
