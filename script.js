@@ -56,9 +56,7 @@ function addFriend(button) {
 }
 
 
-document.querySelector(".login-btn").addEventListener("click", function() {
-  alert("Login feature coming soon!");
-});
+
 function openAuth() {
   const modal = document.getElementById("authModal");
   modal.style.display = "flex";
