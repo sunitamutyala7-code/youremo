@@ -22,7 +22,81 @@ function learnMore() {
     behavior: "smooth"
   });
 }
+async function loadFriendRequests() {
+  const container = document.getElementById("friendRequests");
 
+  if (!container) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    container.innerHTML = "<p>Please login to see friend requests.</p>";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("friend_requests")
+    .select(`
+      id,
+      sender_id,
+      status,
+      profiles:sender_id (
+        full_name,
+        username
+      )
+    `)
+    .eq("receiver_id", user.id)
+    .eq("status", "pending");
+
+  if (error) {
+    console.error("Request loading error:", error);
+    container.innerHTML = "<p>Unable to load friend requests.</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<p>No new friend requests.</p>";
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(function(request) {
+    const profile = request.profiles;
+
+    const card = document.createElement("div");
+    card.className = "friend-card";
+
+    const name = profile?.full_name || "User";
+    const username = profile?.username || "username";
+    const firstLetter = name.charAt(0).toUpperCase();
+
+    card.innerHTML = `
+      <div class="avatar">${firstLetter}</div>
+
+      <div>
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
+
+      <button onclick="acceptFriendRequest('${request.id}')">
+        Accept
+      </button>
+
+      <button
+        class="secondary-request"
+        onclick="declineFriendRequest('${request.id}')">
+        Decline
+      </button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+loadFriendRequests();
 
 async function searchFriends() {
   const searchInput = document.getElementById("friendSearch");
