@@ -97,6 +97,91 @@
   </main>
 
   <footer><span>© 2026 YouRemo</span><span>Feel • Share • Connect</span></footer>
-  <script src="script.js"></script>
+ <div class="modal-backdrop" id="friendsModal">
+  <div class="friends-modal">
+
+    <button class="modal-close" id="closeFriends">×</button>
+
+    <span class="eyebrow">Find your people</span>
+
+    <h2>Find friends on YouRemo</h2>
+
+    <p>
+      Search for people and send them a friend request.
+    </p>
+
+    <div class="search-box">
+      <span>⌕</span>
+      <input
+        id="friendSearch"
+        type="search"
+        placeholder="Search friends..."
+      >
+    </div>
+
+    <div class="suggestions">
+
+      <div class="suggestion" data-name="Meera Sharma">
+
+        <div class="avatar purple">
+          MS
+        </div>
+
+        <div>
+          <strong>Meera Sharma</strong>
+          <small>😊 Feeling good</small>
+        </div>
+
+        <button class="add-btn">
+          Add friend
+        </button>
+
+      </div>
+
+
+      <div class="suggestion" data-name="Arjun Rao">
+
+        <div class="avatar blue">
+          AR
+        </div>
+
+        <div>
+          <strong>Arjun Rao</strong>
+          <small>😌 Feeling calm</small>
+        </div>
+
+        <button class="add-btn">
+          Add friend
+        </button>
+
+      </div>
+
+
+      <div class="suggestion" data-name="Kavya Patel">
+
+        <div class="avatar peach">
+          KP
+        </div>
+
+        <div>
+          <strong>Kavya Patel</strong>
+          <small>💛 Needs support</small>
+        </div>
+
+        <button class="add-btn">
+          Add friend
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="empty-search" id="emptySearch">
+      No friends found.
+    </div>
+
+  </div>
+</div> 
+ <script src="script.js"></script>
 </body>
 </html>
