@@ -1079,4 +1079,4 @@ supabaseClient.auth.onAuthStateChange(
 updateLoginButton();
 loadFriendRequests();
 loadMyFriends();
-```
+
