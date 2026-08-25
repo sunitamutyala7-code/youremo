@@ -59,18 +59,3 @@ function addFriend(button) {
 document.querySelector(".login-btn").addEventListener("click", function() {
   alert("Login feature coming soon!");
 });
-async function testSupabase() {
-  const { data, error } = await supabaseClient
-    .from("profiles")
-    .select("*")
-    .limit(5);
-
-  if (error) {
-    console.error("Supabase error:", error);
-    return;
-  }
-
-  console.log("Supabase connected successfully:", data);
-}
-
-testSupabase();
