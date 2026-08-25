@@ -84,21 +84,97 @@ loadFriendRequests();
 
 async function searchFriends() {
   const searchInput = document.getElementById("friendSearch");
+  const results = document.getElementById("friendResults");
+
   const searchText = searchInput.value.trim();
 
-  const results = document.getElementById("friendResults");
-const {
-  data: { user: currentUser }
-} = await supabaseClient.auth.getUser();
-
-if (!currentUser) {
-  results.innerHTML = "<p>Please login first.</p>";
-  return;
-}
   if (searchText.length < 2) {
     results.innerHTML = "";
     return;
   }
+
+  const {
+    data: { user: currentUser }
+  } = await supabaseClient.auth.getUser();
+
+  if (!currentUser) {
+    results.innerHTML = "<p>Please login first.</p>";
+    return;
+  }
+
+  const { data: users, error } = await supabaseClient
+    .from("profiles")
+    .select("id, username, full_name")
+    .or(
+      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
+    )
+    .limit(20);
+
+  if (error) {
+    console.error("Search error:", error);
+    results.innerHTML = "<p>Unable to search users.</p>";
+    return;
+  }
+
+  results.innerHTML = "";
+
+  if (!users || users.length === 0) {
+    results.innerHTML = "<p>No users found.</p>";
+    return;
+  }
+
+  for (const person of users) {
+
+    if (person.id === currentUser.id) {
+      continue;
+    }
+
+    const { data: friendship } = await supabaseClient
+      .from("friendships")
+      .select("id")
+      .eq("user_id", currentUser.id)
+      .eq("friend_id", person.id)
+      .maybeSingle();
+
+    const card = document.createElement("div");
+    card.className = "friend-card";
+
+    const name = person.full_name || "User";
+    const username = person.username || "username";
+    const firstLetter = name.charAt(0).toUpperCase();
+
+    let buttonHTML;
+
+    if (friendship) {
+      buttonHTML = `
+        <button disabled>
+          Friends ✓
+        </button>
+      `;
+    } else {
+      buttonHTML = `
+        <button
+          data-user-id="${person.id}"
+          onclick="addFriend(this)">
+          Add Friend
+        </button>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="avatar">${firstLetter}</div>
+
+      <div>
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
+
+      ${buttonHTML}
+    `;
+
+    results.appendChild(card);
+  }
+}
 
   const { data, error } = await supabaseClient
     .from("profiles")
