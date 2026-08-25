@@ -6,46 +6,55 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-// ================================
-// YouRemo - Main Script
-// ================================
+// ============================================
+// YouRemo - Complete script.js
+// ============================================
+
+// ---------- SUPABASE ----------
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
-// ---------- FIND FRIENDS BUTTON ----------
+// ============================================
+// NAVIGATION
+// ============================================
 
 function findFriends() {
-  const friendsSection = document.getElementById("friends");
+  const section = document.getElementById("friends");
 
-  if (friendsSection) {
-    friendsSection.scrollIntoView({
+  if (section) {
+    section.scrollIntoView({
       behavior: "smooth"
     });
   }
 
   setTimeout(() => {
-    const searchInput = document.getElementById("friendSearch");
+    const input = document.getElementById("friendSearch");
 
-    if (searchInput) {
-      searchInput.focus();
+    if (input) {
+      input.focus();
     }
   }, 600);
 }
 
 
-// ---------- LEARN MORE ----------
-
 function learnMore() {
-  const aboutSection = document.getElementById("about");
+  const section = document.getElementById("about");
 
-  if (aboutSection) {
-    aboutSection.scrollIntoView({
+  if (section) {
+    section.scrollIntoView({
       behavior: "smooth"
     });
   }
 }
 
 
-// ---------- AUTH MODAL ----------
+// ============================================
+// LOGIN / SIGNUP MODAL
+// ============================================
 
 function openAuth() {
   const modal = document.getElementById("authModal");
@@ -67,9 +76,8 @@ function closeAuth() {
 }
 
 
-// ---------- LOGIN FORM ----------
-
 function showLogin() {
+
   const title = document.getElementById("authTitle");
   const subtitle = document.getElementById("authSubtitle");
   const name = document.getElementById("authName");
@@ -84,7 +92,8 @@ function showLogin() {
   }
 
   if (subtitle) {
-    subtitle.textContent = "Login to your YouRemo account";
+    subtitle.textContent =
+      "Login to your YouRemo account";
   }
 
   if (name) {
@@ -110,14 +119,14 @@ function showLogin() {
 
   if (switchText) {
     switchText.innerHTML =
-      `Don't have an account? <span onclick="showSignup()">Sign Up</span>`;
+      `Don't have an account?
+       <span onclick="showSignup()">Sign Up</span>`;
   }
 }
 
 
-// ---------- SIGN UP FORM ----------
-
 function showSignup() {
+
   const title = document.getElementById("authTitle");
   const subtitle = document.getElementById("authSubtitle");
   const name = document.getElementById("authName");
@@ -128,11 +137,13 @@ function showSignup() {
   const switchText = document.querySelector(".auth-switch");
 
   if (title) {
-    title.textContent = "Welcome to YouRemo";
+    title.textContent =
+      "Welcome to YouRemo";
   }
 
   if (subtitle) {
-    subtitle.textContent = "Create your account";
+    subtitle.textContent =
+      "Create your account";
   }
 
   if (name) {
@@ -154,30 +165,37 @@ function showSignup() {
   }
 
   if (button) {
-    button.textContent = "Create Account";
+    button.textContent =
+      "Create Account";
+
     button.onclick = signUp;
   }
 
   if (switchText) {
     switchText.innerHTML =
-      `Already have an account? <span onclick="showLogin()">Login</span>`;
+      `Already have an account?
+       <span onclick="showLogin()">Login</span>`;
   }
 }
 
 
-// ---------- SIGN UP ----------
+// ============================================
+// SIGN UP
+// ============================================
 
 async function signUp() {
 
-  const nameElement = document.getElementById("authName");
-  const usernameElement = document.getElementById("authUsername");
-  const emailElement = document.getElementById("authEmail");
-  const passwordElement = document.getElementById("authPassword");
+  const name =
+    document.getElementById("authName")?.value.trim();
 
-  const name = nameElement ? nameElement.value.trim() : "";
-  const username = usernameElement ? usernameElement.value.trim() : "";
-  const email = emailElement ? emailElement.value.trim() : "";
-  const password = passwordElement ? passwordElement.value : "";
+  const username =
+    document.getElementById("authUsername")?.value.trim();
+
+  const email =
+    document.getElementById("authEmail")?.value.trim();
+
+  const password =
+    document.getElementById("authPassword")?.value;
 
   if (!name || !username || !email || !password) {
     alert("Please fill in all fields.");
@@ -189,11 +207,20 @@ async function signUp() {
     return;
   }
 
-  const { data, error } =
-    await supabaseClient.auth.signUp({
-      email: email,
-      password: password
-    });
+  const {
+    data,
+    error
+  } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+
+    options: {
+      data: {
+        full_name: name,
+        username: username
+      }
+    }
+  });
 
   if (error) {
     console.error("Signup error:", error);
@@ -206,19 +233,30 @@ async function signUp() {
     return;
   }
 
-  const { error: profileError } =
-    await supabaseClient
-      .from("profiles")
-      .insert({
-        id: data.user.id,
-        username: username,
-        full_name: name
-      });
+  // Create profile
+  const {
+    error: profileError
+  } = await supabaseClient
+    .from("profiles")
+    .insert({
+      id: data.user.id,
+      username: username,
+      full_name: name
+    });
 
   if (profileError) {
-    console.error("Profile error:", profileError);
 
-    if (!profileError.message.toLowerCase().includes("duplicate")) {
+    console.error(
+      "Profile creation error:",
+      profileError
+    );
+
+    // Profile may already exist
+    if (
+      !profileError.message
+        .toLowerCase()
+        .includes("duplicate")
+    ) {
       alert(profileError.message);
       return;
     }
@@ -232,31 +270,29 @@ async function signUp() {
 }
 
 
-// ---------- LOGIN ----------
+// ============================================
+// LOGIN
+// ============================================
 
 async function login() {
 
-  const emailElement = document.getElementById("authEmail");
-  const passwordElement = document.getElementById("authPassword");
+  const email =
+    document.getElementById("authEmail")?.value.trim();
 
-  if (!emailElement || !passwordElement) {
-    alert("Login form not found.");
-    return;
-  }
-
-  const email = emailElement.value.trim();
-  const password = passwordElement.value;
+  const password =
+    document.getElementById("authPassword")?.value;
 
   if (!email || !password) {
     alert("Please enter your email and password.");
     return;
   }
 
-  const { error } =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  const {
+    error
+  } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
   if (error) {
     console.error("Login error:", error);
@@ -270,73 +306,108 @@ async function login() {
 
   await updateLoginButton();
   await loadFriendRequests();
+  await loadMyFriends();
 }
 
 
-// ---------- UPDATE LOGIN BUTTON ----------
+// ============================================
+// LOGIN BUTTON / USER NAME
+// ============================================
 
 async function updateLoginButton() {
 
-  const button = document.getElementById("loginButton");
+  const button =
+    document.getElementById("loginButton");
 
   if (!button) return;
 
-  const { data, error } =
-    await supabaseClient.auth.getSession();
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+
+    button.textContent = "Login";
+
+    return;
+  }
+
+  const user = session.user;
+
+  // First try Auth metadata
+  const metadataName =
+    user.user_metadata?.full_name;
+
+  if (metadataName) {
+
+    button.textContent =
+      metadataName;
+
+    return;
+  }
+
+  // Then try profiles table
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .select("full_name, username")
+    .eq("id", user.id)
+    .maybeSingle();
 
   if (error) {
-    console.error("Session error:", error);
+
+    console.error(
+      "Profile error:",
+      error
+    );
+
+    button.textContent =
+      "Account";
+
     return;
   }
 
-  if (!data.session) {
-    button.textContent = "Login";
-    return;
-  }
+  if (profile?.full_name) {
 
-  const user = data.session.user;
+    button.textContent =
+      profile.full_name;
 
-  const { data: profile, error: profileError } =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name, username")
-      .eq("id", user.id)
-      .maybeSingle();
+  } else if (profile?.username) {
 
-  if (profileError) {
-    console.error("Profile error:", profileError);
-    return;
-  }
+    button.textContent =
+      profile.username;
 
-  if (profile && profile.full_name) {
-    button.textContent = profile.full_name;
-  } else if (profile && profile.username) {
-    button.textContent = profile.username;
   } else {
-    button.textContent = "Account";
+
+    button.textContent =
+      "Account";
   }
 }
 
 
-// ---------- SEARCH FRIENDS ----------
+// ============================================
+// SEARCH FRIENDS
+// ============================================
 
 async function searchFriends() {
 
-  const searchInput =
+  const input =
     document.getElementById("friendSearch");
 
   const results =
     document.getElementById("friendResults");
 
-  if (!searchInput || !results) {
-    return;
-  }
+  if (!input || !results) return;
 
   const searchText =
-    searchInput.value.trim();
+    input.value.trim();
 
   if (searchText.length < 2) {
+
     results.innerHTML = "";
+
     return;
   }
 
@@ -345,22 +416,32 @@ async function searchFriends() {
   } = await supabaseClient.auth.getUser();
 
   if (!currentUser) {
+
     results.innerHTML =
       "<p>Please login first.</p>";
+
     return;
   }
 
-  const { data: users, error } =
-    await supabaseClient
-      .from("profiles")
-      .select("id, username, full_name")
-      .or(
-        `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
-      )
-      .limit(20);
+  const {
+    data: users,
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .select(
+      "id, username, full_name"
+    )
+    .or(
+      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
+    )
+    .limit(20);
 
   if (error) {
-    console.error("Search error:", error);
+
+    console.error(
+      "Search error:",
+      error
+    );
 
     results.innerHTML =
       "<p>Unable to search users.</p>";
@@ -380,13 +461,14 @@ async function searchFriends() {
 
   for (const person of users) {
 
+    // Don't show yourself
     if (person.id === currentUser.id) {
       continue;
     }
 
+    // Check friendship
     const {
-      data: friendship,
-      error: friendshipError
+      data: friendship
     } = await supabaseClient
       .from("friendships")
       .select("id")
@@ -396,17 +478,11 @@ async function searchFriends() {
       .limit(1)
       .maybeSingle();
 
-    if (friendshipError) {
-      console.error(
-        "Friendship check error:",
-        friendshipError
-      );
-    }
-
     const card =
       document.createElement("div");
 
-    card.className = "friend-card";
+    card.className =
+      "friend-card";
 
     const name =
       person.full_name || "User";
@@ -459,7 +535,9 @@ async function searchFriends() {
 }
 
 
-// ---------- ADD FRIEND ----------
+// ============================================
+// ADD FRIEND
+// ============================================
 
 async function addFriend(button) {
 
@@ -467,7 +545,11 @@ async function addFriend(button) {
     button.dataset.userId;
 
   if (!receiverId) {
-    alert("User information is missing.");
+
+    alert(
+      "User information is missing."
+    );
+
     return;
   }
 
@@ -477,15 +559,44 @@ async function addFriend(button) {
   } = await supabaseClient.auth.getUser();
 
   if (userError || !user) {
+
     alert("Please login first.");
+
     return;
   }
 
   if (user.id === receiverId) {
-    alert("You cannot add yourself.");
+
+    alert(
+      "You cannot add yourself."
+    );
+
     return;
   }
 
+  // Check existing friendship
+  const {
+    data: friendship
+  } = await supabaseClient
+    .from("friendships")
+    .select("id")
+    .or(
+      `and(user_id.eq.${user.id},friend_id.eq.${receiverId}),and(user_id.eq.${receiverId},friend_id.eq.${user.id})`
+    )
+    .limit(1)
+    .maybeSingle();
+
+  if (friendship) {
+
+    button.textContent =
+      "Friends ✓";
+
+    button.disabled = true;
+
+    return;
+  }
+
+  // Check existing request
   const {
     data: existingRequest
   } = await supabaseClient
@@ -499,7 +610,10 @@ async function addFriend(button) {
 
   if (existingRequest) {
 
-    if (existingRequest.status === "pending") {
+    if (
+      existingRequest.status ===
+      "pending"
+    ) {
 
       button.textContent =
         "Request Sent";
@@ -509,7 +623,10 @@ async function addFriend(button) {
       return;
     }
 
-    if (existingRequest.status === "accepted") {
+    if (
+      existingRequest.status ===
+      "accepted"
+    ) {
 
       button.textContent =
         "Friends ✓";
@@ -520,14 +637,16 @@ async function addFriend(button) {
     }
   }
 
-  const { error } =
-    await supabaseClient
-      .from("friend_requests")
-      .insert({
-        sender_id: user.id,
-        receiver_id: receiverId,
-        status: "pending"
-      });
+  // Send request
+  const {
+    error
+  } = await supabaseClient
+    .from("friend_requests")
+    .insert({
+      sender_id: user.id,
+      receiver_id: receiverId,
+      status: "pending"
+    });
 
   if (error) {
 
@@ -548,12 +667,16 @@ async function addFriend(button) {
 }
 
 
-// ---------- LOAD FRIEND REQUESTS ----------
+// ============================================
+// FRIEND REQUESTS
+// ============================================
 
 async function loadFriendRequests() {
 
   const container =
-    document.getElementById("friendRequests");
+    document.getElementById(
+      "friendRequests"
+    );
 
   if (!container) return;
 
@@ -569,14 +692,16 @@ async function loadFriendRequests() {
     return;
   }
 
-  const { data, error } =
-    await supabaseClient
-      .from("friend_requests")
-      .select(
-        "id, sender_id, receiver_id, status"
-      )
-      .eq("receiver_id", user.id)
-      .eq("status", "pending");
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("friend_requests")
+    .select(
+      "id, sender_id, receiver_id, status"
+    )
+    .eq("receiver_id", user.id)
+    .eq("status", "pending");
 
   if (error) {
 
@@ -607,15 +732,19 @@ async function loadFriendRequests() {
       data: profile
     } = await supabaseClient
       .from("profiles")
-      .select("full_name, username")
+      .select(
+        "full_name, username"
+      )
       .eq("id", request.sender_id)
       .maybeSingle();
 
     const name =
-      profile?.full_name || "User";
+      profile?.full_name ||
+      "User";
 
     const username =
-      profile?.username || "username";
+      profile?.username ||
+      "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
@@ -653,9 +782,13 @@ async function loadFriendRequests() {
 }
 
 
-// ---------- ACCEPT FRIEND REQUEST ----------
+// ============================================
+// ACCEPT FRIEND REQUEST
+// ============================================
 
-async function acceptFriendRequest(requestId) {
+async function acceptFriendRequest(
+  requestId
+) {
 
   const {
     data: { user }
@@ -694,6 +827,7 @@ async function acceptFriendRequest(requestId) {
     return;
   }
 
+  // Check whether friendship already exists
   const {
     data: existingFriendship
   } = await supabaseClient
@@ -705,6 +839,7 @@ async function acceptFriendRequest(requestId) {
     .limit(1)
     .maybeSingle();
 
+  // Create friendship if necessary
   if (!existingFriendship) {
 
     const {
@@ -737,6 +872,7 @@ async function acceptFriendRequest(requestId) {
     }
   }
 
+  // Mark request accepted
   const {
     error: updateError
   } = await supabaseClient
@@ -750,7 +886,7 @@ async function acceptFriendRequest(requestId) {
   if (updateError) {
 
     console.error(
-      "Update request error:",
+      "Request update error:",
       updateError
     );
 
@@ -764,12 +900,17 @@ async function acceptFriendRequest(requestId) {
   );
 
   await loadFriendRequests();
+  await loadMyFriends();
 }
 
 
-// ---------- DECLINE FRIEND REQUEST ----------
+// ============================================
+// DECLINE FRIEND REQUEST
+// ============================================
 
-async function declineFriendRequest(requestId) {
+async function declineFriendRequest(
+  requestId
+) {
 
   const {
     data: { user }
@@ -782,14 +923,15 @@ async function declineFriendRequest(requestId) {
     return;
   }
 
-  const { error } =
-    await supabaseClient
-      .from("friend_requests")
-      .update({
-        status: "declined"
-      })
-      .eq("id", requestId)
-      .eq("receiver_id", user.id);
+  const {
+    error
+  } = await supabaseClient
+    .from("friend_requests")
+    .update({
+      status: "declined"
+    })
+    .eq("id", requestId)
+    .eq("receiver_id", user.id);
 
   if (error) {
 
@@ -807,24 +949,16 @@ async function declineFriendRequest(requestId) {
 }
 
 
-// ---------- AUTH STATE ----------
+// ============================================
+// MY FRIENDS
+// ============================================
 
-supabaseClient.auth.onAuthStateChange(
-  function() {
-
-    updateLoginButton();
-    loadFriendRequests();
-
-  }
-);
-
-
-// ---------- START ----------
-
-updateLoginButton();
-loadFriendRequests();
 async function loadMyFriends() {
-  const container = document.getElementById("myFriendsList");
+
+  const container =
+    document.getElementById(
+      "myFriendsList"
+    );
 
   if (!container) return;
 
@@ -833,19 +967,27 @@ async function loadMyFriends() {
   } = await supabaseClient.auth.getUser();
 
   if (!user) {
+
     container.innerHTML =
       "<p>Please login to see your friends.</p>";
+
     return;
   }
 
-  const { data: friendships, error } =
-    await supabaseClient
-      .from("friendships")
-      .select("friend_id")
-      .eq("user_id", user.id);
+  const {
+    data: friendships,
+    error
+  } = await supabaseClient
+    .from("friendships")
+    .select("friend_id")
+    .eq("user_id", user.id);
 
   if (error) {
-    console.error("Friends loading error:", error);
+
+    console.error(
+      "Friends loading error:",
+      error
+    );
 
     container.innerHTML =
       "<p>Unable to load friends.</p>";
@@ -853,7 +995,11 @@ async function loadMyFriends() {
     return;
   }
 
-  if (!friendships || friendships.length === 0) {
+  if (
+    !friendships ||
+    friendships.length === 0
+  ) {
+
     container.innerHTML =
       "<p>You don't have any friends yet.</p>";
 
@@ -862,41 +1008,50 @@ async function loadMyFriends() {
 
   container.innerHTML = "";
 
-  // Remove duplicate friend IDs
+  // Remove duplicate IDs
   const uniqueFriendIds = [
     ...new Set(
       friendships.map(
-        friendship => friendship.friend_id
+        friendship =>
+          friendship.friend_id
       )
     )
   ];
 
-  for (const friendId of uniqueFriendIds) {
+  for (
+    const friendId of uniqueFriendIds
+  ) {
 
     const {
       data: profile,
       error: profileError
     } = await supabaseClient
       .from("profiles")
-      .select("id, full_name, username")
+      .select(
+        "id, full_name, username"
+      )
       .eq("id", friendId)
       .maybeSingle();
 
     if (profileError) {
+
       console.error(
         "Friend profile error:",
         profileError
       );
+
       continue;
     }
 
     if (!profile) continue;
 
     const name =
-      profile.full_name || "User";
+      profile.full_name ||
+      "User";
 
     const username =
-      profile.username || "username";
+      profile.username ||
+      "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
@@ -904,14 +1059,15 @@ async function loadMyFriends() {
     const card =
       document.createElement("div");
 
-    card.className = "friend-card";
+    card.className =
+      "friend-card friend-clickable";
 
     card.innerHTML = `
       <div class="avatar">
         ${firstLetter}
       </div>
 
-      <div>
+      <div class="friend-info">
         <h3>${name}</h3>
         <p>@${username}</p>
       </div>
@@ -921,7 +1077,122 @@ async function loadMyFriends() {
       </span>
     `;
 
+    // Open profile when clicked
+    card.onclick = function () {
+
+      openFriendProfile(
+        profile.id,
+        name,
+        username
+      );
+
+    };
+
     container.appendChild(card);
   }
 }
+
+
+// ============================================
+// FRIEND PROFILE
+// ============================================
+
+function openFriendProfile(
+  userId,
+  name,
+  username
+) {
+
+  const oldModal =
+    document.getElementById(
+      "friendProfileModal"
+    );
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  const firstLetter =
+    name.charAt(0).toUpperCase();
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "friendProfileModal";
+
+  modal.className =
+    "auth-modal";
+
+  modal.style.display =
+    "flex";
+
+  modal.innerHTML = `
+
+    <div class="auth-box friend-profile-box">
+
+      <button
+        class="close-auth"
+        onclick="closeFriendProfile()">
+        ×
+      </button>
+
+      <div class="profile-avatar">
+        ${firstLetter}
+      </div>
+
+      <h2>
+        ${name}
+      </h2>
+
+      <p>
+        @${username}
+      </p>
+
+      <p class="profile-friend-status">
+        ✓ You are friends
+      </p>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(modal);
+}
+
+
+function closeFriendProfile() {
+
+  const modal =
+    document.getElementById(
+      "friendProfileModal"
+    );
+
+  if (modal) {
+    modal.remove();
+  }
+}
+
+
+// ============================================
+// AUTH STATE
+// ============================================
+
+supabaseClient.auth.onAuthStateChange(
+  function () {
+
+    updateLoginButton();
+    loadFriendRequests();
+    loadMyFriends();
+
+  }
+);
+
+
+// ============================================
+// INITIAL LOAD
+// ============================================
+
+updateLoginButton();
+loadFriendRequests();
 loadMyFriends();
