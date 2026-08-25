@@ -171,6 +171,33 @@ async function login() {
     return;
   }
 
-  alert("Login successful!");
-  closeAuth();
+alert("Login successful!");
+closeAuth();
+updateLoginButton();
 }
+async function updateLoginButton() {
+  const button = document.getElementById("loginButton");
+
+  if (!button) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    button.textContent = "Login";
+    return;
+  }
+
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .single();
+
+  if (profile) {
+    button.textContent = profile.full_name;
+  }
+}
+
+updateLoginButton();
