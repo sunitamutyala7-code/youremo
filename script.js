@@ -1267,11 +1267,24 @@ async function loadMyProfile() {
 
   if (!avatar) return;
 
+  // Clear old account information first
+  avatar.innerHTML = "?";
+
+  if (nameElement) {
+    nameElement.textContent = "Your Name";
+  }
+
+  if (usernameElement) {
+    usernameElement.textContent = "@username";
+  }
+
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
-  if (!user) return;
+  if (!user) {
+    return;
+  }
 
   const {
     data: profile,
@@ -1283,46 +1296,52 @@ async function loadMyProfile() {
     .maybeSingle();
 
   if (error) {
-    console.error("Profile loading error:", error);
+    console.error(
+      "Profile loading error:",
+      error
+    );
     return;
   }
 
   if (!profile) return;
 
-  const name = profile.full_name || "User";
-  const username = profile.username || "username";
+  const name =
+    profile.full_name || "User";
 
+  const username =
+    profile.username || "username";
+
+  // Update name
   if (nameElement) {
     nameElement.textContent = name;
   }
 
+  // Update username
   if (usernameElement) {
-    usernameElement.textContent = "@" + username;
+    usernameElement.textContent =
+      "@" + username;
   }
 
-  if (profile.avatar_url) {
+  // Update picture
+  if (avatar) {
 
-    // Prevent browser from showing an old cached image
-    const freshAvatarUrl =
-      profile.avatar_url +
-      (profile.avatar_url.includes("?") ? "&" : "?") +
-      "v=" +
-      Date.now();
+    if (profile.avatar_url) {
 
-    avatar.innerHTML = `
-      <img
-        src="${freshAvatarUrl}"
-        alt="Profile picture"
-      >
-    `;
+      avatar.innerHTML = `
+        <img
+          src="${profile.avatar_url}?v=${Date.now()}"
+          alt="Profile picture"
+        >
+      `;
 
-  } else {
+    } else {
 
-    avatar.textContent =
-      name.charAt(0).toUpperCase();
+      avatar.textContent =
+        name.charAt(0).toUpperCase();
+
+    }
   }
 }
-
 // Load profile when page starts
 loadMyProfile();
 
