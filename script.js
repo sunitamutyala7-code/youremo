@@ -70,16 +70,21 @@ function closeAuth() {
 
 function showLogin() {
   document.getElementById("authTitle").textContent = "Welcome Back";
-  document.getElementById("authSubtitle").textContent = "Login to your YouRemo account";
+  document.getElementById("authSubtitle").textContent =
+    "Login to your YouRemo account";
 
-  document.getElementById("authName").style.display = "none";
+  document.getElementById("authName").style.display = "block";
   document.getElementById("authUsername").style.display = "none";
+  document.getElementById("authEmail").style.display = "block";
+  document.getElementById("authPassword").style.display = "block";
+
+  document.getElementById("authName").placeholder = "Your name (optional)";
 
   document.querySelector(".auth-submit").textContent = "Login";
   document.querySelector(".auth-submit").onclick = login;
 
   document.querySelector(".auth-switch").innerHTML =
-    'Don\'t have an account? <span onclick="showSignup()">Sign Up</span>';
+    'Don\\'t have an account? <span onclick="showSignup()">Sign Up</span>';
 }
 
 function showSignup() {
