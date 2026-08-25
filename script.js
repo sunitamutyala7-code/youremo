@@ -24,24 +24,61 @@ function learnMore() {
 }
 
 
-function searchFriends() {
+async function searchFriends() {
   const searchInput = document.getElementById("friendSearch");
-  const searchText = searchInput.value.toLowerCase().trim();
+  const searchText = searchInput.value.trim();
 
-  const friendCards = document.querySelectorAll(".friend-card");
+  const results = document.getElementById("friendResults");
 
-  friendCards.forEach(function(card) {
-    const name = card.querySelector("h3").textContent.toLowerCase();
-    const username = card.querySelector("p").textContent.toLowerCase();
+  if (searchText.length < 2) {
+    results.innerHTML = "";
+    return;
+  }
 
-    if (
-      name.includes(searchText) ||
-      username.includes(searchText)
-    ) {
-      card.style.display = "flex";
-    } else {
-      card.style.display = "none";
-    }
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("id, username, full_name, avatar_url")
+    .or(
+      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
+    )
+    .limit(20);
+
+  if (error) {
+    console.error("Search error:", error);
+    results.innerHTML = "<p>Unable to search users.</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    results.innerHTML = "<p>No users found.</p>";
+    return;
+  }
+
+  results.innerHTML = "";
+
+  data.forEach(function(user) {
+    const card = document.createElement("div");
+    card.className = "friend-card";
+
+    const firstLetter =
+      (user.full_name || user.username || "?")
+        .charAt(0)
+        .toUpperCase();
+
+    card.innerHTML = `
+      <div class="avatar">${firstLetter}</div>
+
+      <div>
+        <h3>${user.full_name || "User"}</h3>
+        <p>@${user.username || "username"}</p>
+      </div>
+
+      <button onclick="addFriend(this)">
+        Add Friend
+      </button>
+    `;
+
+    results.appendChild(card);
   });
 }
 
