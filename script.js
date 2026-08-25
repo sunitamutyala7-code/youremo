@@ -1444,3 +1444,147 @@ async function logout() {
 
   alert("Logged out successfully.");
 }
+// ============================================
+// EDIT PROFILE
+// ============================================
+
+async function openEditProfile() {
+
+  const menu =
+    document.getElementById("accountMenu");
+
+  if (menu) {
+    menu.classList.remove("show");
+  }
+
+  const modal =
+    document.getElementById("editProfileModal");
+
+  const nameInput =
+    document.getElementById("editProfileName");
+
+  const usernameInput =
+    document.getElementById("editProfileUsername");
+
+  if (!modal || !nameInput || !usernameInput) {
+    return;
+  }
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .select("full_name, username")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+
+    console.error(
+      "Edit profile loading error:",
+      error
+    );
+
+    alert(error.message);
+    return;
+  }
+
+  nameInput.value =
+    profile?.full_name || "";
+
+  usernameInput.value =
+    profile?.username || "";
+
+  modal.style.display = "flex";
+}
+
+
+// Close Edit Profile
+function closeEditProfile() {
+
+  const modal =
+    document.getElementById("editProfileModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+// Save Edit Profile
+async function saveEditProfile() {
+
+  const nameInput =
+    document.getElementById("editProfileName");
+
+  const usernameInput =
+    document.getElementById("editProfileUsername");
+
+  const name =
+    nameInput?.value.trim();
+
+  const username =
+    usernameInput?.value.trim();
+
+  if (!name || !username) {
+
+    alert(
+      "Please enter your name and username."
+    );
+
+    return;
+  }
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+
+    alert("Please login first.");
+
+    return;
+  }
+
+  const {
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .update({
+      full_name: name,
+      username: username
+    })
+    .eq("id", user.id);
+
+  if (error) {
+
+    console.error(
+      "Profile update error:",
+      error
+    );
+
+    alert(error.message);
+
+    return;
+  }
+
+  alert(
+    "Profile updated successfully! 🎉"
+  );
+
+  closeEditProfile();
+
+  // Immediately update navbar and profile
+  await updateLoginButton();
+  await loadMyProfile();
+}
