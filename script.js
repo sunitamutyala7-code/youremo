@@ -60,7 +60,9 @@ document.querySelector(".login-btn").addEventListener("click", function() {
   alert("Login feature coming soon!");
 });
 function openAuth() {
-  document.getElementById("authModal").style.display = "flex";
+  const modal = document.getElementById("authModal");
+  modal.style.display = "flex";
+
   showLogin();
 }
 
@@ -73,32 +75,43 @@ function showLogin() {
   document.getElementById("authSubtitle").textContent =
     "Login to your YouRemo account";
 
-  document.getElementById("authName").style.display = "block";
+  document.getElementById("authName").style.display = "none";
   document.getElementById("authUsername").style.display = "none";
+
   document.getElementById("authEmail").style.display = "block";
   document.getElementById("authPassword").style.display = "block";
 
-  document.getElementById("authName").placeholder = "Your name (optional)";
+  const button = document.querySelector(".auth-submit");
+  button.textContent = "Login";
+  button.onclick = login;
 
-  document.querySelector(".auth-submit").textContent = "Login";
-  document.querySelector(".auth-submit").onclick = login;
-
-  document.querySelector(".auth-switch").innerHTML =
-    'Don\\'t have an account? <span onclick="showSignup()">Sign Up</span>';
+  const switchText = document.querySelector(".auth-switch");
+  switchText.innerHTML =
+    "Don't have an account? <span onclick=\"showSignup()\">Sign Up</span>";
 }
 
 function showSignup() {
-  document.getElementById("authTitle").textContent = "Welcome to YouRemo";
-  document.getElementById("authSubtitle").textContent = "Create your account";
+  document.getElementById("authTitle").textContent =
+    "Welcome to YouRemo";
+
+  document.getElementById("authSubtitle").textContent =
+    "Create your account";
 
   document.getElementById("authName").style.display = "block";
   document.getElementById("authUsername").style.display = "block";
+  document.getElementById("authEmail").style.display = "block";
+  document.getElementById("authPassword").style.display = "block";
 
-  document.querySelector(".auth-submit").textContent = "Create Account";
-  document.querySelector(".auth-submit").onclick = signUp;
+  document.getElementById("authName").placeholder = "Full name";
+  document.getElementById("authUsername").placeholder = "Username";
 
-  document.querySelector(".auth-switch").innerHTML =
-    'Already have an account? <span onclick="showLogin()">Login</span>';
+  const button = document.querySelector(".auth-submit");
+  button.textContent = "Create Account";
+  button.onclick = signUp;
+
+  const switchText = document.querySelector(".auth-switch");
+  switchText.innerHTML =
+    "Already have an account? <span onclick=\"showLogin()\">Login</span>";
 }
 
 async function signUp() {
@@ -109,11 +122,6 @@ async function signUp() {
 
   if (!name || !username || !email || !password) {
     alert("Please fill in all fields.");
-    return;
-  }
-
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters.");
     return;
   }
 
@@ -143,7 +151,6 @@ async function signUp() {
   }
 
   alert("Account created successfully!");
-
   closeAuth();
 }
 
@@ -167,6 +174,5 @@ async function login() {
   }
 
   alert("Login successful!");
-
   closeAuth();
 }
