@@ -594,10 +594,22 @@ async function loadFriendRequests() {
   }
 
   if (!requests || requests.length === 0) {
-    container.innerHTML =
-      "<p>No new friend requests.</p>";
-    return;
+
+  container.innerHTML =
+    "<p>No new friend requests.</p>";
+
+  if (requestBadge) {
+    requestBadge.textContent = "0";
+    requestBadge.style.display = "none";
   }
+
+  return;
+}
+
+if (requestBadge) {
+  requestBadge.textContent = requests.length;
+  requestBadge.style.display = "inline-flex";
+}
 
   for (const request of requests) {
     const { data: profile } =
