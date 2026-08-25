@@ -1,14 +1,15 @@
 ```javascript
 // ============================================================
-// YouRemo - COMPLETE script.js
+// YOUREMO - COMPLETE SCRIPT.JS
 // ============================================================
 
 
 // ============================================================
-// 1. SUPABASE CREDENTIALS
+// SUPABASE CREDENTIALS
 // ============================================================
 
-const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-w";
 
 const supabaseClient = window.supabase.createClient(
@@ -18,7 +19,7 @@ const supabaseClient = window.supabase.createClient(
 
 
 // ============================================================
-// 2. NAVIGATION
+// NAVIGATION
 // ============================================================
 
 function findFriends() {
@@ -52,14 +53,14 @@ function learnMore() {
 
 
 // ============================================================
-// 3. LOGIN MODAL
+// LOGIN MODAL
 // ============================================================
 
 function openAuth() {
   const modal = document.getElementById("authModal");
 
   if (!modal) {
-    console.error("authModal not found");
+    alert("Login window not found.");
     return;
   }
 
@@ -119,7 +120,8 @@ function showLogin() {
 
   if (switchText) {
     switchText.innerHTML =
-      "New to YouRemo? <span onclick=\"showSignup()\">Create Account</span>";
+      "New to YouRemo? " +
+      "<span onclick=\"showSignup()\">Create Account</span>";
   }
 }
 
@@ -167,20 +169,40 @@ function showSignup() {
 
   if (switchText) {
     switchText.innerHTML =
-      "Already have an account? <span onclick=\"showLogin()\">Login</span>";
+      "Already have an account? " +
+      "<span onclick=\"showLogin()\">Login</span>";
   }
 }
 
 
 // ============================================================
-// 4. SIGN UP
+// SIGN UP
 // ============================================================
 
 async function signUp() {
-  const name = document.getElementById("authName").value.trim();
-  const username = document.getElementById("authUsername").value.trim();
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const nameElement =
+    document.getElementById("authName");
+
+  const usernameElement =
+    document.getElementById("authUsername");
+
+  const emailElement =
+    document.getElementById("authEmail");
+
+  const passwordElement =
+    document.getElementById("authPassword");
+
+  const name =
+    nameElement ? nameElement.value.trim() : "";
+
+  const username =
+    usernameElement ? usernameElement.value.trim() : "";
+
+  const email =
+    emailElement ? emailElement.value.trim() : "";
+
+  const password =
+    passwordElement ? passwordElement.value : "";
 
   if (!name || !username || !email || !password) {
     alert("Please fill in all fields.");
@@ -192,16 +214,17 @@ async function signUp() {
     return;
   }
 
-  const result = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        full_name: name,
-        username: username
+  const result =
+    await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: name,
+          username: username
+        }
       }
-    }
-  });
+    });
 
   if (result.error) {
     console.error("Signup error:", result.error);
@@ -214,13 +237,14 @@ async function signUp() {
     return;
   }
 
-  const profileResult = await supabaseClient
-    .from("profiles")
-    .insert({
-      id: result.data.user.id,
-      username: username,
-      full_name: name
-    });
+  const profileResult =
+    await supabaseClient
+      .from("profiles")
+      .insert({
+        id: result.data.user.id,
+        username: username,
+        full_name: name
+      });
 
   if (profileResult.error) {
     console.error(
@@ -241,12 +265,21 @@ async function signUp() {
 
 
 // ============================================================
-// 5. LOGIN
+// LOGIN
 // ============================================================
 
 async function login() {
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const emailElement =
+    document.getElementById("authEmail");
+
+  const passwordElement =
+    document.getElementById("authPassword");
+
+  const email =
+    emailElement ? emailElement.value.trim() : "";
+
+  const password =
+    passwordElement ? passwordElement.value : "";
 
   if (!email || !password) {
     alert("Please enter your email and password.");
@@ -276,7 +309,7 @@ async function login() {
 
 
 // ============================================================
-// 6. LOGIN BUTTON
+// LOGIN BUTTON
 // ============================================================
 
 async function updateLoginButton() {
@@ -299,11 +332,13 @@ async function updateLoginButton() {
     return;
   }
 
-  const user = session.user;
+  const user =
+    session.user;
 
   const metadataName =
-    user.user_metadata &&
-    user.user_metadata.full_name;
+    user.user_metadata
+      ? user.user_metadata.full_name
+      : null;
 
   if (metadataName) {
     button.textContent = metadataName;
@@ -343,7 +378,7 @@ async function updateLoginButton() {
 
 
 // ============================================================
-// 7. SEARCH FRIENDS
+// SEARCH FRIENDS
 // ============================================================
 
 async function searchFriends() {
@@ -410,7 +445,6 @@ async function searchFriends() {
   if (!users || users.length === 0) {
     results.innerHTML =
       "<p>No users found.</p>";
-
     return;
   }
 
@@ -443,8 +477,7 @@ async function searchFriends() {
     const card =
       document.createElement("div");
 
-    card.className =
-      "friend-card";
+    card.className = "friend-card";
 
     const name =
       person.full_name || "User";
@@ -456,34 +489,36 @@ async function searchFriends() {
       name.charAt(0).toUpperCase();
 
     if (friendship) {
-      card.innerHTML = `
-        <div class="avatar">${firstLetter}</div>
+      card.innerHTML =
+        '<div class="avatar">' +
+        firstLetter +
+        '</div>' +
 
-        <div>
-          <h3>${name}</h3>
-          <p>@${username}</p>
-        </div>
+        '<div>' +
+        '<h3>' + name + '</h3>' +
+        '<p>@' + username + '</p>' +
+        '</div>' +
 
-        <button disabled>
-          Friends ✓
-        </button>
-      `;
+        '<button disabled>' +
+        'Friends ✓' +
+        '</button>';
     }
     else {
-      card.innerHTML = `
-        <div class="avatar">${firstLetter}</div>
+      card.innerHTML =
+        '<div class="avatar">' +
+        firstLetter +
+        '</div>' +
 
-        <div>
-          <h3>${name}</h3>
-          <p>@${username}</p>
-        </div>
+        '<div>' +
+        '<h3>' + name + '</h3>' +
+        '<p>@' + username + '</p>' +
+        '</div>' +
 
-        <button
-          data-user-id="${person.id}"
-          onclick="addFriend(this)">
-          Add Friend
-        </button>
-      `;
+        '<button ' +
+        'data-user-id="' + person.id + '" ' +
+        'onclick="addFriend(this)">' +
+        'Add Friend' +
+        '</button>';
     }
 
     results.appendChild(card);
@@ -492,7 +527,7 @@ async function searchFriends() {
 
 
 // ============================================================
-// 8. ADD FRIEND
+// ADD FRIEND
 // ============================================================
 
 async function addFriend(button) {
@@ -601,7 +636,7 @@ async function addFriend(button) {
 
 
 // ============================================================
-// 9. LOAD FRIEND REQUESTS
+// FRIEND REQUESTS
 // ============================================================
 
 async function loadFriendRequests() {
@@ -646,11 +681,11 @@ async function loadFriendRequests() {
   }
 
   const requests =
-    requestResult.data;
+    requestResult.data || [];
 
   container.innerHTML = "";
 
-  if (!requests || requests.length === 0) {
+  if (requests.length === 0) {
     container.innerHTML =
       "<p>No new friend requests.</p>";
     return;
@@ -686,25 +721,28 @@ async function loadFriendRequests() {
     card.className =
       "friend-card";
 
-    card.innerHTML = `
-      <div class="avatar">${firstLetter}</div>
+    card.innerHTML =
+      '<div class="avatar">' +
+      firstLetter +
+      '</div>' +
 
-      <div>
-        <h3>${name}</h3>
-        <p>@${username}</p>
-      </div>
+      '<div>' +
+      '<h3>' + name + '</h3>' +
+      '<p>@' + username + '</p>' +
+      '</div>' +
 
-      <button
-        onclick="acceptFriendRequest('${request.id}')">
-        Accept
-      </button>
+      '<button onclick="acceptFriendRequest(\'' +
+      request.id +
+      '\')">' +
+      'Accept' +
+      '</button>' +
 
-      <button
-        class="secondary-request"
-        onclick="declineFriendRequest('${request.id}')">
-        Decline
-      </button>
-    `;
+      '<button class="secondary-request" ' +
+      'onclick="declineFriendRequest(\'' +
+      request.id +
+      '\')">' +
+      'Decline' +
+      '</button>';
 
     container.appendChild(card);
   }
@@ -712,7 +750,7 @@ async function loadFriendRequests() {
 
 
 // ============================================================
-// 10. ACCEPT FRIEND REQUEST
+// ACCEPT FRIEND REQUEST
 // ============================================================
 
 async function acceptFriendRequest(requestId) {
@@ -745,51 +783,28 @@ async function acceptFriendRequest(requestId) {
   const request =
     requestResult.data;
 
-  const existingResult =
+  const friendshipResult =
     await supabaseClient
       .from("friendships")
-      .select("id")
-      .or(
-        "and(user_id.eq." +
-        user.id +
-        ",friend_id.eq." +
-        request.sender_id +
-        "),and(user_id.eq." +
-        request.sender_id +
-        ",friend_id.eq." +
-        user.id +
-        ")"
-      )
-      .limit(1)
-      .maybeSingle();
+      .insert([
+        {
+          user_id: user.id,
+          friend_id: request.sender_id
+        },
+        {
+          user_id: request.sender_id,
+          friend_id: user.id
+        }
+      ]);
 
-  if (!existingResult.data) {
-    const friendshipResult =
-      await supabaseClient
-        .from("friendships")
-        .insert([
-          {
-            user_id: user.id,
-            friend_id: request.sender_id
-          },
-          {
-            user_id: request.sender_id,
-            friend_id: user.id
-          }
-        ]);
+  if (friendshipResult.error) {
+    console.error(
+      "Friendship error:",
+      friendshipResult.error
+    );
 
-    if (friendshipResult.error) {
-      console.error(
-        "Friendship error:",
-        friendshipResult.error
-      );
-
-      alert(
-        friendshipResult.error.message
-      );
-
-      return;
-    }
+    alert(friendshipResult.error.message);
+    return;
   }
 
   const updateResult =
@@ -806,9 +821,7 @@ async function acceptFriendRequest(requestId) {
     return;
   }
 
-  alert(
-    "Friend added successfully! 🎉"
-  );
+  alert("Friend added successfully!");
 
   await loadFriendRequests();
   await loadMyFriends();
@@ -816,7 +829,7 @@ async function acceptFriendRequest(requestId) {
 
 
 // ============================================================
-// 11. DECLINE FRIEND REQUEST
+// DECLINE FRIEND REQUEST
 // ============================================================
 
 async function declineFriendRequest(requestId) {
@@ -855,7 +868,7 @@ async function declineFriendRequest(requestId) {
 
 
 // ============================================================
-// 12. MY FRIENDS
+// MY FRIENDS
 // ============================================================
 
 async function loadMyFriends() {
@@ -902,8 +915,8 @@ async function loadMyFriends() {
   const uniqueFriendIds =
     [...new Set(
       friendships.map(
-        function (friendship) {
-          return friendship.friend_id;
+        function (item) {
+          return item.friend_id;
         }
       )
     )];
@@ -948,18 +961,19 @@ async function loadMyFriends() {
     card.className =
       "friend-card friend-clickable";
 
-    card.innerHTML = `
-      <div class="avatar">${firstLetter}</div>
+    card.innerHTML =
+      '<div class="avatar">' +
+      firstLetter +
+      '</div>' +
 
-      <div class="friend-info">
-        <h3>${name}</h3>
-        <p>@${username}</p>
-      </div>
+      '<div class="friend-info">' +
+      '<h3>' + name + '</h3>' +
+      '<p>@' + username + '</p>' +
+      '</div>' +
 
-      <span class="friend-status">
-        Friends ✓
-      </span>
-    `;
+      '<span class="friend-status">' +
+      'Friends ✓' +
+      '</span>';
 
     card.onclick = function () {
       openFriendProfile(
@@ -975,7 +989,7 @@ async function loadMyFriends() {
 
 
 // ============================================================
-// 13. FRIEND PROFILE
+// FRIEND PROFILE
 // ============================================================
 
 function openFriendProfile(
@@ -1007,29 +1021,27 @@ function openFriendProfile(
   modal.style.display =
     "flex";
 
-  modal.innerHTML = `
-    <div class="auth-box friend-profile-box">
+  modal.innerHTML =
+    '<div class="auth-box friend-profile-box">' +
 
-      <button
-        class="close-auth"
-        onclick="closeFriendProfile()">
-        ×
-      </button>
+    '<button class="close-auth" ' +
+    'onclick="closeFriendProfile()">' +
+    '×' +
+    '</button>' +
 
-      <div class="profile-avatar">
-        ${firstLetter}
-      </div>
+    '<div class="profile-avatar">' +
+    firstLetter +
+    '</div>' +
 
-      <h2>${name}</h2>
+    '<h2>' + name + '</h2>' +
 
-      <p>@${username}</p>
+    '<p>@' + username + '</p>' +
 
-      <p class="profile-friend-status">
-        ✓ You are friends
-      </p>
+    '<p class="profile-friend-status">' +
+    '✓ You are friends' +
+    '</p>' +
 
-    </div>
-  `;
+    '</div>';
 
   document.body.appendChild(modal);
 }
@@ -1048,7 +1060,7 @@ function closeFriendProfile() {
 
 
 // ============================================================
-// 14. AUTH STATE
+// AUTH STATE
 // ============================================================
 
 supabaseClient.auth.onAuthStateChange(
@@ -1061,7 +1073,7 @@ supabaseClient.auth.onAuthStateChange(
 
 
 // ============================================================
-// 15. INITIAL LOAD
+// START
 // ============================================================
 
 updateLoginButton();
