@@ -293,7 +293,8 @@ async function login() {
 
 async function updateLoginButton() {
   const button = document.getElementById("loginButton");
-
+const navAvatar =
+  document.getElementById("navAvatar");
   if (!button) {
     return;
   }
@@ -326,7 +327,7 @@ async function updateLoginButton() {
 
   const profileResult = await supabaseClient
     .from("profiles")
-    .select("full_name, username")
+    ..select("full_name, username, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -349,7 +350,28 @@ async function updateLoginButton() {
   } else {
     button.textContent = "Account";
   }
+  if (navAvatar) {
+
+  if (profile && profile.avatar_url) {
+
+    navAvatar.innerHTML = `
+      <img
+        src="${profile.avatar_url}"
+        alt="Profile"
+      >
+    `;
+
+  } else {
+
+    const firstLetter =
+      (profile?.full_name || "U")
+        .charAt(0)
+        .toUpperCase();
+
+    navAvatar.textContent = firstLetter;
+  }
 }
+} 
 
 
 // =====================================================
