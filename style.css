@@ -431,3 +431,124 @@ footer {
   font-weight: 700;
   cursor: pointer;
 }
+/* =========================================
+   PROFESSIONAL FRIEND CARDS
+   ========================================= */
+
+.friend-results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 700px;
+  margin: 25px auto 0;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 18px;
+  background: #ffffff;
+  border: 1px solid #e8eaf0;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: 0.2s ease;
+}
+
+.friend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+}
+
+.friend-card .avatar {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  color: white;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.friend-card > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.friend-card h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #202124;
+}
+
+.friend-card p {
+  margin: 0;
+  color: #777b85;
+  font-size: 14px;
+}
+
+.friend-card button {
+  border: none;
+  padding: 10px 17px;
+  border-radius: 10px;
+  background: #6c63ff;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.friend-card button:hover {
+  background: #584ff0;
+}
+
+.friend-card button:disabled {
+  background: #e9eaf0;
+  color: #555a66;
+  cursor: default;
+}
+
+.friend-card .secondary-request {
+  background: #f1f2f5;
+  color: #555a66;
+  margin-left: 6px;
+}
+
+.friend-card .secondary-request:hover {
+  background: #e2e3e8;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .friend-card {
+    padding: 14px;
+    gap: 11px;
+  }
+
+  .friend-card .avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    font-size: 18px;
+  }
+
+  .friend-card button {
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+
+  .friend-card h3 {
+    font-size: 15px;
+  }
+
+  .friend-card p {
+    font-size: 13px;
+  }
+}
