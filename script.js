@@ -292,86 +292,92 @@ async function login() {
 // =====================================================
 
 async function updateLoginButton() {
-  const button = document.getElementById("loginButton");
-const navAvatar =
-  document.getElementById("navAvatar");
-  if (!button) {
-    return;
-  }
 
-  const result = await supabaseClient.auth.getSession();
+  const button =
+    document.getElementById("loginButton");
 
-  if (result.error) {
-    console.error(result.error);
-    button.textContent = "Login";
-    return;
-  }
+  const navAvatar =
+    document.getElementById("navAvatar");
 
-  const session = result.data.session;
+  if (!button) return;
+
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
 
   if (!session) {
+
     button.textContent = "Login";
+
+    if (navAvatar) {
+      navAvatar.textContent = "?";
+    }
+
     return;
   }
 
   const user = session.user;
 
-  const metadataName =
-    user.user_metadata &&
-    user.user_metadata.full_name;
-
-  if (metadataName) {
-    button.textContent = metadataName;
-    return;
-  }
-
-  const profileResult = await supabaseClient
+  const {
+    data: profile,
+    error
+  } = await supabaseClient
     .from("profiles")
-    ..select("full_name, username, avatar_url")
+    .select("full_name, username, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profileResult.error) {
+  if (error) {
+
     console.error(
       "Profile error:",
-      profileResult.error
+      error
     );
 
     button.textContent = "Account";
+
     return;
   }
 
-  const profile = profileResult.data;
-
   if (profile && profile.full_name) {
-    button.textContent = profile.full_name;
+
+    button.textContent =
+      profile.full_name;
+
   } else if (profile && profile.username) {
-    button.textContent = profile.username;
+
+    button.textContent =
+      profile.username;
+
   } else {
-    button.textContent = "Account";
+
+    button.textContent =
+      "Account";
   }
+
   if (navAvatar) {
 
-  if (profile && profile.avatar_url) {
+    if (profile && profile.avatar_url) {
 
-    navAvatar.innerHTML = `
-      <img
-        src="${profile.avatar_url}"
-        alt="Profile"
-      >
-    `;
+      navAvatar.innerHTML = `
+        <img
+          src="${profile.avatar_url}"
+          alt="Profile"
+        >
+      `;
 
-  } else {
+    } else {
 
-    const firstLetter =
-      (profile?.full_name || "U")
-        .charAt(0)
-        .toUpperCase();
+      const firstLetter =
+        (profile?.full_name || "U")
+          .charAt(0)
+          .toUpperCase();
 
-    navAvatar.textContent = firstLetter;
+      navAvatar.textContent =
+        firstLetter;
+    }
   }
 }
-} 
 
 
 // =====================================================
