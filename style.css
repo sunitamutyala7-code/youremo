@@ -1305,3 +1305,76 @@ footer {
 .edit-profile-btn:hover {
   background: #eef2ff;
 }
+/* ============================================
+   EDIT PROFILE MODAL
+   ============================================ */
+
+#editProfileModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
+}
+
+#editProfileModal .auth-box {
+  width: min(420px, calc(100% - 40px));
+  padding: 32px;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+#editProfileModal h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+}
+
+#editProfileModal::before {
+  content: "Update your YouRemo profile";
+  display: block;
+  margin-bottom: 22px;
+  color: #777;
+  font-size: 14px;
+}
+
+#editProfileModal input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+  border-radius: 11px;
+  font-size: 15px;
+  outline: none;
+}
+
+#editProfileModal input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+#editProfileModal .auth-submit {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  border: none;
+  border-radius: 11px;
+  background: #4f46e5;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#editProfileModal .auth-submit:hover {
+  opacity: 0.9;
+}
+
+#editProfileModal .close-auth {
+  position: absolute;
+  margin-left: 350px;
+}
