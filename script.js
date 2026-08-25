@@ -827,28 +827,20 @@ async function loadMyFriends() {
     const friendCount =
       document.getElementById("friendCount");
 
-    const profileFriendCount =
-      document.getElementById(
-        "profileFriendCount"
-      );
+   const profileFriendCount =
+  document.getElementById("profileFriendCount");
 
-    if (friendCount) {
-      friendCount.textContent =
-        `${totalFriends} ${
-          totalFriends === 1
-            ? "Friend"
-            : "Friends"
-        }`;
-    }
+if (friendCount) {
+  friendCount.textContent =
+    `${totalFriends} ${
+      totalFriends === 1 ? "Friend" : "Friends"
+    }`;
+}
 
-    if (profileFriendCount) {
-      profileFriendCount.textContent =
-        `${totalFriends} ${
-          totalFriends === 1
-            ? "Friend"
-            : "Friends"
-        }`;
-    }
+if (profileFriendCount) {
+  profileFriendCount.textContent =
+    totalFriends;
+}
 
     container.innerHTML = "";
 
