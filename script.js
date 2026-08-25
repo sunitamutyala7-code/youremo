@@ -613,7 +613,7 @@ async function loadFriendRequests() {
   if (!container) {
     return;
   }
-
+const requestBadge = document.getElementById("requestBadge");
   const userResult =
     await supabaseClient.auth.getUser();
 
