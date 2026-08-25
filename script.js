@@ -1099,9 +1099,12 @@ function closeFriendProfile() {
 
 supabaseClient.auth.onAuthStateChange(
   function () {
+
     updateLoginButton();
     loadFriendRequests();
     loadMyFriends();
+    loadMyProfile();
+
   }
 );
 
