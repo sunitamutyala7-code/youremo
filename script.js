@@ -945,6 +945,32 @@ if (friendCountElement) {
       uniqueFriendIds.length === 1 ? "Friend" : "Friends"
     }`;
 }
+   const uniqueFriendIds = [
+  ...new Set(
+    (friendships || []).map(
+      friendship => friendship.friend_id
+    )
+  )
+];
+
+const totalFriends =
+  uniqueFriendIds.length;
+
+const friendCount =
+  document.getElementById("friendCount");
+
+const profileFriendCount =
+  document.getElementById("profileFriendCount");
+
+if (friendCount) {
+  friendCount.textContent =
+    `${totalFriends} Friends`;
+}
+
+if (profileFriendCount) {
+  profileFriendCount.textContent =
+    totalFriends;
+} 
     if (!friendships || friendships.length === 0) {
       container.innerHTML =
         "<p>You don't have any friends yet.</p>";
