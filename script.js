@@ -895,10 +895,13 @@ if (profileFriendCount) {
         "friend-card friend-clickable";
 
       card.innerHTML = `
-        <div class="avatar">
-          ${firstLetter}
-        </div>
-
+        <div class="profile-avatar">
+  ${
+    avatarUrl
+      ? `<img src="${avatarUrl}" alt="Profile picture">`
+      : firstLetter
+  }
+</div>
         <div class="friend-info">
           <h3>${name}</h3>
           <p>@${username}</p>
