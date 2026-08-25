@@ -1219,6 +1219,10 @@ if (avatarInput) {
 // LOAD MY PROFILE
 // ============================================
 
+// ============================================
+// LOAD MY PROFILE
+// ============================================
+
 async function loadMyProfile() {
 
   const avatar =
@@ -1236,51 +1240,47 @@ async function loadMyProfile() {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
   const {
     data: profile,
     error
   } = await supabaseClient
     .from("profiles")
-    .select(
-      "full_name, username, avatar_url"
-    )
+    .select("full_name, username, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
   if (error) {
-    console.error(
-      "Profile loading error:",
-      error
-    );
+    console.error("Profile loading error:", error);
     return;
   }
 
   if (!profile) return;
 
-  const name =
-    profile.full_name || "User";
-
-  const username =
-    profile.username || "username";
+  const name = profile.full_name || "User";
+  const username = profile.username || "username";
 
   if (nameElement) {
     nameElement.textContent = name;
   }
 
   if (usernameElement) {
-    usernameElement.textContent =
-      "@" + username;
+    usernameElement.textContent = "@" + username;
   }
 
   if (profile.avatar_url) {
 
+    // Prevent browser from showing an old cached image
+    const freshAvatarUrl =
+      profile.avatar_url +
+      (profile.avatar_url.includes("?") ? "&" : "?") +
+      "v=" +
+      Date.now();
+
     avatar.innerHTML = `
       <img
-        src="${profile.avatar_url}"
+        src="${freshAvatarUrl}"
         alt="Profile picture"
       >
     `;
@@ -1289,10 +1289,11 @@ async function loadMyProfile() {
 
     avatar.textContent =
       name.charAt(0).toUpperCase();
-
   }
 }
 
+// Load profile when page starts
+loadMyProfile();
 
 // Load profile when page starts
 loadMyProfile();
