@@ -87,7 +87,14 @@ async function searchFriends() {
   const searchText = searchInput.value.trim();
 
   const results = document.getElementById("friendResults");
+const {
+  data: { user: currentUser }
+} = await supabaseClient.auth.getUser();
 
+if (!currentUser) {
+  results.innerHTML = "<p>Please login first.</p>";
+  return;
+}
   if (searchText.length < 2) {
     results.innerHTML = "";
     return;
@@ -114,32 +121,43 @@ async function searchFriends() {
 
   results.innerHTML = "";
 
-  data.forEach(function(user) {
-    const card = document.createElement("div");
-    card.className = "friend-card";
-    card.dataset.userId = user.id;
-    const firstLetter =
-      (user.full_name || user.username || "?")
-        .charAt(0)
-        .toUpperCase();
+for (const user of data) {
+  const { data: friendship } = await supabaseClient
+    .from("friendships")
+    .select("id")
+    .or(
+      `and(user_id.eq.${currentUser.id},friend_id.eq.${user.id}),and(user_id.eq.${user.id},friend_id.eq.${currentUser.id})`
+    )
+    .maybeSingle();
 
-    card.innerHTML = `
-      <div class="avatar">${firstLetter}</div>
+  const card = document.createElement("div");
+  card.className = "friend-card";
 
-      <div>
-        <h3>${user.full_name || "User"}</h3>
-        <p>@${user.username || "username"}</p>
-      </div>
+  const firstLetter =
+    (user.full_name || user.username || "?")
+      .charAt(0)
+      .toUpperCase();
 
-      <button
-        data-user-id="${user.id}"
-        onclick="addFriend(this)">
-        Add Friend
-      </button>
-    `;
+  const buttonText = friendship ? "Friends ✓" : "Add Friend";
 
-    results.appendChild(card);
-  });
+  card.innerHTML = `
+    <div class="avatar">${firstLetter}</div>
+
+    <div>
+      <h3>${user.full_name || "User"}</h3>
+      <p>@${user.username || "username"}</p>
+    </div>
+
+    <button
+      ${friendship ? "disabled" : ""}
+      data-user-id="${user.id}"
+      onclick="addFriend(this)">
+      ${buttonText}
+    </button>
+  `;
+
+  results.appendChild(card);
+}  
 }
 
 
