@@ -552,3 +552,30 @@ footer {
     font-size: 13px;
   }
 }
+/* Friend count */
+
+.friend-count {
+  text-align: center;
+  color: #777b85;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 8px 0 18px;
+}
+
+/* Friend request notification */
+
+.request-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  margin-left: 8px;
+  border-radius: 50px;
+  background: #6c63ff;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
