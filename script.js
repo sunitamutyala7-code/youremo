@@ -8,18 +8,22 @@
 // =====================================================
 // KEEP YOUR EXISTING CREDENTIALS HERE
 
-const SUPABASE_URL = "ykqnqdtekbxnevtjjkbd.supabase.co/auth/v1/token";
+// ================================
+// SUPABASE CONFIGURATION
+// ================================
+
+const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-w";
-
-
-// =====================================================
-// 2. SUPABASE CLIENT
-// =====================================================
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+// ================================
+// NAVIGATION
+// ================================
 
 
 // =====================================================
