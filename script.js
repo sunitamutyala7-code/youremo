@@ -61,6 +61,7 @@ document.querySelector(".login-btn").addEventListener("click", function() {
 });
 function openAuth() {
   document.getElementById("authModal").style.display = "flex";
+  showLogin();
 }
 
 function closeAuth() {
