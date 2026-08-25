@@ -1325,3 +1325,100 @@ loadMyProfile();
 
 // Load profile when page starts
 loadMyProfile();
+// ============================================
+// ACCOUNT MENU
+// ============================================
+
+const accountButton =
+  document.getElementById("accountButton");
+
+const accountMenu =
+  document.getElementById("accountMenu");
+
+if (accountButton) {
+
+  accountButton.addEventListener(
+    "click",
+    async function (event) {
+
+      event.stopPropagation();
+
+      const {
+        data: { session }
+      } = await supabaseClient.auth.getSession();
+
+      // If not logged in, open login
+      if (!session) {
+        openAuth();
+        return;
+      }
+
+      // If logged in, toggle account menu
+      if (accountMenu) {
+        accountMenu.classList.toggle("show");
+      }
+    }
+  );
+}
+
+
+// Close menu when clicking outside
+document.addEventListener(
+  "click",
+  function () {
+
+    if (accountMenu) {
+      accountMenu.classList.remove("show");
+    }
+
+  }
+);
+
+
+// Go to My Profile
+function goToMyProfile() {
+
+  if (accountMenu) {
+    accountMenu.classList.remove("show");
+  }
+
+  const profile =
+    document.getElementById("profile");
+
+  if (profile) {
+
+    profile.scrollIntoView({
+      behavior: "smooth"
+    });
+
+  }
+}
+
+
+// Logout
+async function logout() {
+
+  const {
+    error
+  } = await supabaseClient.auth.signOut();
+
+  if (error) {
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
+    alert(error.message);
+
+    return;
+  }
+
+  if (accountMenu) {
+    accountMenu.classList.remove("show");
+  }
+
+  await updateLoginButton();
+
+  alert("Logged out successfully.");
+}
