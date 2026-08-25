@@ -9,7 +9,7 @@
 // KEEP YOUR EXISTING CREDENTIALS HERE
 
 const SUPABASE_URL = "https://ykqnqdtekbxnevtjjkbd.supabase.co/rest/v1/L";
-const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-wY";
+const SUPABASE_KEY = "sb_publishable_PRK8WX4OlSxntOJu76G_iw_UAoCye-w";
 
 
 // =====================================================
