@@ -1499,23 +1499,3 @@ document.addEventListener(
     refreshAccountUI();
   }
 );
-.navbar nav a {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.navbar nav a.active {
-  color: #4f46e5;
-  font-weight: 600;
-}
-
-.navbar nav a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  height: 2px;
-  background: #4f46e5;
-  border-radius: 2px;
-}
