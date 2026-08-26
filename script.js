@@ -1560,57 +1560,103 @@ function goToMyProfile() {
 }
 
 
-// =====================================================
+// ============================================
 // LOGOUT
-// =====================================================
+// ============================================
 
 async function logout() {
-  const { error } =
-    await supabaseClient.auth.signOut();
+
+  const {
+    error
+  } = await supabaseClient.auth.signOut();
 
   if (error) {
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
     alert(error.message);
+
     return;
   }
 
-  // Immediately clear everything
-  resetProfileUI();
-  resetFriendCounts();
+  // Clear friend search
+  const searchInput =
+    document.getElementById("friendSearch");
 
-  const friendsList =
-    document.getElementById(
-      "myFriendsList"
-    );
+  const friendResults =
+    document.getElementById("friendResults");
 
-  if (friendsList) {
-    friendsList.innerHTML =
-      "<p>Please login to see your friends.</p>";
+  if (searchInput) {
+    searchInput.value = "";
   }
 
-  const requests =
-    document.getElementById(
-      "friendRequests"
-    );
+  if (friendResults) {
+    friendResults.innerHTML = "";
+  }
 
-  if (requests) {
-    requests.innerHTML =
+  // Clear friend requests
+  const friendRequests =
+    document.getElementById("friendRequests");
+
+  if (friendRequests) {
+    friendRequests.innerHTML =
       "<p>Please login to see friend requests.</p>";
   }
 
-  const badge =
-    document.getElementById(
-      "requestBadge"
-    );
+  // Reset request badge
+  const requestBadge =
+    document.getElementById("requestBadge");
 
-  if (badge) {
-    badge.textContent = "0";
+  if (requestBadge) {
+    requestBadge.textContent = "0";
+    requestBadge.style.display = "none";
   }
 
+  // Clear My Friends
+  const myFriends =
+    document.getElementById("myFriendsList");
+
+  if (myFriends) {
+    myFriends.innerHTML =
+      "<p>Please login to see your friends.</p>";
+  }
+
+  // Reset friend count
+  const friendCount =
+    document.getElementById("friendCount");
+
+  if (friendCount) {
+    friendCount.textContent =
+      "0 Friends";
+  }
+
+  const profileFriendCount =
+    document.getElementById(
+      "profileFriendCount"
+    );
+
+  if (profileFriendCount) {
+    profileFriendCount.textContent = "0";
+  }
+
+  // Reset profile
+  await loadMyProfile();
+
+  // Update navbar
   await updateLoginButton();
 
-  alert(
-    "Logged out successfully."
-  );
+  // Close account menu
+  const accountMenu =
+    document.getElementById("accountMenu");
+
+  if (accountMenu) {
+    accountMenu.classList.remove("show");
+  }
+
+  alert("Logged out successfully.");
 }
 
 
