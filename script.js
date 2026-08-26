@@ -999,39 +999,28 @@ function learnMore() {
 
 
 /* =========================================================
-   18. SEARCH FRIENDS
+   SEARCH FRIENDS - FIXED
    ========================================================= */
 
 async function searchFriends() {
 
   const input =
-    document.getElementById(
-      "friendSearch"
-    );
+    document.getElementById("friendSearch");
 
   const results =
-    document.getElementById(
-      "friendResults"
-    );
-
+    document.getElementById("friendResults");
 
   if (!input || !results) {
-
     return;
-
   }
-
 
   const searchTerm =
     input.value.trim();
 
-
   if (!searchTerm) {
 
     results.innerHTML = `
-
       <div class="empty-state">
-
         <div>👥</div>
 
         <h2>Find Friends</h2>
@@ -1039,93 +1028,135 @@ async function searchFriends() {
         <p>
           Enter a name or username to find people on YouRemo.
         </p>
-
       </div>
-
     `;
 
     return;
-
   }
 
-
   results.innerHTML = `
-
     <div class="empty-state">
-
       <div>🔎</div>
 
       <p>
         Searching...
       </p>
-
     </div>
-
   `;
-
 
   try {
 
     /*
-      Search both full_name and username.
+      Search by name first.
     */
 
     const {
-      data,
-      error
+      data: nameResults,
+      error: nameError
     } = await supabaseClient
       .from("profiles")
       .select(
         "id, username, full_name, avatar_url"
       )
-      .or(
-        `full_name.ilike.%${escapeSearch(searchTerm)}%,username.ilike.%${escapeSearch(searchTerm)}%`
+      .ilike(
+        "full_name",
+        `%${searchTerm}%`
       )
       .limit(30);
 
 
-    if (error) {
+    /*
+      Search by username.
+    */
+
+    const {
+      data: usernameResults,
+      error: usernameError
+    } = await supabaseClient
+      .from("profiles")
+      .select(
+        "id, username, full_name, avatar_url"
+      )
+      .ilike(
+        "username",
+        `%${searchTerm}%`
+      )
+      .limit(30);
+
+
+    if (nameError) {
 
       console.error(
-        "Search error:",
-        error
+        "Name search error:",
+        nameError
       );
 
-      results.innerHTML = `
+    }
 
-        <div class="empty-state">
 
-          <div>⚠️</div>
+    if (usernameError) {
 
-          <p>
-            Unable to search right now.
-          </p>
-
-        </div>
-
-      `;
-
-      return;
+      console.error(
+        "Username search error:",
+        usernameError
+      );
 
     }
 
 
     /*
-      Don't show yourself in search results.
+      Combine both searches.
     */
 
-    const people =
-      (data || []).filter(
-        person =>
-          !currentUser ||
-          person.id !== currentUser.id
+    const combined = [
+      ...(nameResults || []),
+      ...(usernameResults || [])
+    ];
+
+
+    /*
+      Remove duplicate users.
+    */
+
+    const peopleMap =
+      new Map();
+
+    combined.forEach(person => {
+
+      peopleMap.set(
+        person.id,
+        person
       );
 
+    });
+
+
+    let people =
+      [...peopleMap.values()];
+
+
+    /*
+      Don't show yourself.
+    */
+
+    if (currentUser) {
+
+      people =
+        people.filter(
+          person =>
+            person.id !== currentUser.id
+        );
+
+    }
+
+
+    /*
+      No results.
+    */
 
     if (!people.length) {
 
       results.innerHTML = `
-
         <div class="empty-state">
 
           <div>😕</div>
@@ -1137,32 +1168,26 @@ async function searchFriends() {
           </p>
 
         </div>
-
       `;
 
       return;
-
     }
 
 
     /*
-      Render each result.
+      Display results.
     */
 
     results.innerHTML =
       people
-        .map(
-          person =>
-            createFriendResultCard(
-              person
-            )
+        .map(person =>
+          createFriendResultCard(person)
         )
         .join("");
 
 
     /*
-      Update buttons based on existing
-      friend/request status.
+      Update Add Friend buttons.
     */
 
     if (currentUser) {
@@ -1182,17 +1207,17 @@ async function searchFriends() {
     );
 
     results.innerHTML = `
-
       <div class="empty-state">
 
         <div>⚠️</div>
 
+        <h2>Search Error</h2>
+
         <p>
-          Something went wrong.
+          Something went wrong while searching.
         </p>
 
       </div>
-
     `;
 
   }
