@@ -574,9 +574,9 @@ body {
   color: #777;
 }
 
-/* =========================================================
-   PROFILE ACTIONS
-   ========================================================= */
+/* ============================================
+   PROFILE ACTION BUTTONS
+   ============================================ */
 
 .profile-actions {
   display: flex;
@@ -585,36 +585,62 @@ body {
   flex-wrap: wrap;
 }
 
-.upload-avatar-btn,
-.edit-profile-btn {
+.profile-actions .edit-profile-btn,
+.profile-actions .upload-avatar-btn {
+  width: 130px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 11px 18px;
+
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
+
   cursor: pointer;
   transition: 0.2s ease;
 }
 
-.upload-avatar-btn {
-  background: #4f46e5;
-  color: #ffffff;
-}
+/* Edit Profile */
 
-.upload-avatar-btn:hover {
-  background: #4338ca;
-}
-
-.edit-profile-btn {
+.profile-actions .edit-profile-btn {
   border: 1px solid #4f46e5;
-  background: #ffffff;
+  background: white;
   color: #4f46e5;
 }
 
-.edit-profile-btn:hover {
+.profile-actions .edit-profile-btn:hover {
   background: #eef2ff;
+}
+
+/* Change Photo */
+
+.profile-actions .upload-avatar-btn {
+  border: none;
+  background: #4f46e5;
+  color: white;
+}
+
+.profile-actions .upload-avatar-btn:hover {
+  background: #4338ca;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .profile-actions {
+    justify-content: center;
+  }
+
+  .profile-actions .edit-profile-btn,
+  .profile-actions .upload-avatar-btn {
+    width: 130px;
+  }
+
 }
 
 /* =========================================================
