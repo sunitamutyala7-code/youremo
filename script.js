@@ -352,16 +352,12 @@ async function updateLoginButton() {
 // =====================================================
 
 async function searchFriends() {
-  const input =
-    document.getElementById("friendSearch");
-
-  const results =
-    document.getElementById("friendResults");
+  const input = document.getElementById("friendSearch");
+  const results = document.getElementById("friendResults");
 
   if (!input || !results) return;
 
-  const searchText =
-    input.value.trim();
+  const searchText = input.value.trim();
 
   if (searchText.length < 2) {
     results.innerHTML = "";
@@ -369,37 +365,36 @@ async function searchFriends() {
   }
 
   const {
-    data: { user }
+    data: { user },
+    error: userError
   } = await supabaseClient.auth.getUser();
 
-  if (!user) {
-    results.innerHTML =
-      "<p>Please login first.</p>";
+  if (userError || !user) {
+    results.innerHTML = "<p>Please login first.</p>";
     return;
   }
 
-  const { data: users, error } =
-    await supabaseClient
-      .from("profiles")
-      .select("id, username, full_name, avatar_url")
-      .or(
-        `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
-      )
-      .limit(20);
+  results.innerHTML = "<p>Searching...</p>";
+
+  // Search username OR full name
+  const { data: users, error } = await supabaseClient
+    .from("profiles")
+    .select("id, username, full_name, avatar_url")
+    .or(
+      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
+    )
+    .limit(20);
 
   if (error) {
-    console.error(error);
+    console.error("Search users error:", error);
     results.innerHTML =
       "<p>Unable to search users.</p>";
     return;
   }
 
-  results.innerHTML = "";
-
-  const filteredUsers =
-    (users || []).filter(person =>
-      person.id !== user.id
-    );
+  const filteredUsers = (users || []).filter(
+    person => person.id !== user.id
+  );
 
   if (filteredUsers.length === 0) {
     results.innerHTML =
@@ -407,7 +402,10 @@ async function searchFriends() {
     return;
   }
 
+  results.innerHTML = "";
+
   for (const person of filteredUsers) {
+
     const { data: friendship } =
       await supabaseClient
         .from("friendships")
@@ -418,38 +416,65 @@ async function searchFriends() {
         .limit(1)
         .maybeSingle();
 
-    const card =
-      document.createElement("div");
+    const { data: request } =
+      await supabaseClient
+        .from("friend_requests")
+        .select("id, sender_id, receiver_id, status")
+        .or(
+          `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
+        )
+        .limit(1)
+        .maybeSingle();
+
+    const card = document.createElement("div");
 
     card.className = "friend-card";
 
-    const name =
-      person.full_name || "User";
-
-    const username =
-      person.username || "username";
+    const name = person.full_name || "User";
+    const username = person.username || "username";
 
     const firstLetter =
       name.charAt(0).toUpperCase();
 
+    let buttonHTML = "";
+
     if (friendship) {
-      card.innerHTML = `
-        <div class="avatar">${firstLetter}</div>
-        <div>
-          <h3>${name}</h3>
-          <p>@${username}</p>
-        </div>
+
+      buttonHTML = `
         <button disabled>
           Friends ✓
         </button>
       `;
+
+    } else if (
+      request &&
+      request.status === "pending" &&
+      request.sender_id === user.id
+    ) {
+
+      buttonHTML = `
+        <button disabled>
+          Request Sent
+        </button>
+      `;
+
+    } else if (
+      request &&
+      request.status === "pending" &&
+      request.receiver_id === user.id
+    ) {
+
+      buttonHTML = `
+        <button
+          data-request-id="${request.id}"
+          onclick="acceptFriendRequest('${request.id}')">
+          Accept Request
+        </button>
+      `;
+
     } else {
-      card.innerHTML = `
-        <div class="avatar">${firstLetter}</div>
-        <div>
-          <h3>${name}</h3>
-          <p>@${username}</p>
-        </div>
+
+      buttonHTML = `
         <button
           data-user-id="${person.id}"
           onclick="addFriend(this)">
@@ -458,10 +483,38 @@ async function searchFriends() {
       `;
     }
 
+    let avatarHTML = "";
+
+    if (person.avatar_url) {
+
+      avatarHTML = `
+        <img
+          src="${person.avatar_url}?v=${Date.now()}"
+          alt="${name}"
+        >
+      `;
+
+    } else {
+
+      avatarHTML = firstLetter;
+    }
+
+    card.innerHTML = `
+      <div class="avatar">
+        ${avatarHTML}
+      </div>
+
+      <div class="friend-info">
+        <h3>${name}</h3>
+        <p>@${username}</p>
+      </div>
+
+      ${buttonHTML}
+    `;
+
     results.appendChild(card);
   }
 }
-
 
 // =====================================================
 // ADD FRIEND
