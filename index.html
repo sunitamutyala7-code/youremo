@@ -202,31 +202,26 @@
 
       </div>
 
-      <div class="profile-actions">
+     <div class="profile-actions">
 
-        <button
-          class="primary-btn"
-          onclick="openEditProfile()">
-          Edit Profile
-        </button>
+  <button
+    type="button"
+    class="profile-action-btn edit-profile-btn"
+    onclick="openEditProfile()">
+    Edit Profile
+  </button>
 
-        <label class="upload-avatar-btn">
-          Change Photo
-          <input
-            type="file"
-            id="avatarInput"
-            accept="image/*"
-            hidden
-          >
-        </label>
-       
-      </div>
+  <label class="profile-action-btn upload-avatar-btn">
+    Change Photo
+    <input
+      type="file"
+      id="avatarInput"
+      accept="image/*"
+      hidden
+    >
+  </label>
 
-    </div>
-
-  </div>
-
-</section>
+</div>
     <!-- ================= MY FRIENDS ================= -->
 
     <section
@@ -453,3 +448,78 @@
 </body>
 
 </html>
+/* =========================================================
+   PROFILE BUTTONS - EXACT SAME SIZE
+   ========================================================= */
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-action-btn {
+  width: 140px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+/* EDIT PROFILE */
+
+.edit-profile-btn {
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1px solid #4f46e5;
+}
+
+/* CHANGE PHOTO */
+
+.upload-avatar-btn {
+  background: #4f46e5;
+  color: #ffffff;
+  border: 1px solid #4f46e5;
+}
+
+/* Hide file input */
+
+.upload-avatar-btn input {
+  display: none;
+}
+
+/* Hover */
+
+.edit-profile-btn:hover {
+  background: #eef2ff;
+}
+
+.upload-avatar-btn:hover {
+  background: #4338ca;
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+  .profile-actions {
+    justify-content: center;
+  }
+
+  .profile-action-btn {
+    width: 140px;
+    height: 44px;
+  }
+}
