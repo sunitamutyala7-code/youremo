@@ -1087,3 +1087,60 @@ footer {
     width: 130px;
   }
 }
+/* FINAL FIX - PROFILE BUTTONS */
+
+.profile-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+.profile-actions .edit-profile-btn,
+.profile-actions .upload-avatar-btn {
+  box-sizing: border-box !important;
+  width: 130px !important;
+  min-width: 130px !important;
+  max-width: 130px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+
+/* EDIT PROFILE */
+
+.profile-actions .edit-profile-btn {
+  border: 1px solid #4f46e5 !important;
+  background: #ffffff !important;
+  color: #4f46e5 !important;
+}
+
+/* CHANGE PHOTO */
+
+.profile-actions .upload-avatar-btn {
+  border: none !important;
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+/* HOVER */
+
+.profile-actions .edit-profile-btn:hover {
+  background: #eef2ff !important;
+}
+
+.profile-actions .upload-avatar-btn:hover {
+  background: #4338ca !important;
+}
