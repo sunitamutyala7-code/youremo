@@ -4865,3 +4865,31 @@ document.addEventListener(
 
   }
 );
+// =====================================================
+// LOGIN / ACCOUNT BUTTON FIX
+// =====================================================
+
+async function handleAccountClick() {
+
+  const {
+    data: {
+      session
+    }
+  } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+
+    openAuth();
+
+    return;
+  }
+
+  const accountMenu =
+    document.getElementById("accountMenu");
+
+  if (accountMenu) {
+
+    accountMenu.classList.toggle("show");
+
+  }
+}
