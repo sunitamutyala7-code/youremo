@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo - Friends</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header class="top-bar">
+  <div class="logo">YouRemo</div>
+  <button onclick="window.location.href='index.html'">← Home</button>
+</header>
+
+<main class="page-container">
+
+  <h1>👥 Friends</h1>
+  <p>Find and connect with people on YouRemo.</p>
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="friendSearch"
+      placeholder="Search for a person..."
+    >
+    <button onclick="searchFriends()">Search</button>
+  </div>
+
+  <div id="friendsResults">
+
+    <div class="empty-state">
+      <div>👥</div>
+      <h2>Find Friends</h2>
+      <p>Search for people using their name or username.</p>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="script.js"></script>
+
+<script>
+function searchFriends() {
+
+  const search = document
+    .getElementById("friendSearch")
+    .value
+    .trim();
+
+  const results =
+    document.getElementById("friendsResults");
+
+  if (!search) {
+    results.innerHTML = `
+      <div class="empty-state">
+        <div>🔎</div>
+        <h2>Search for a friend</h2>
+        <p>Enter a name or username above.</p>
+      </div>
+    `;
+    return;
+  }
+
+  results.innerHTML = `
+    <div class="empty-state">
+      <div>🔍</div>
+      <h2>Searching...</h2>
+      <p>Looking for "${search}"</p>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
