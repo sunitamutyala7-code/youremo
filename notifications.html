@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo - Notifications</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header class="top-bar">
+  <div class="logo">YouRemo</div>
+  <button onclick="window.location.href='index.html'">← Home</button>
+</header>
+
+<main class="page-container">
+
+  <div class="page-heading">
+    <div>
+      <h1>🔔 Notifications</h1>
+      <p>Stay updated with what's happening on YouRemo.</p>
+    </div>
+
+    <button onclick="markAllRead()">
+      Mark all as read
+    </button>
+  </div>
+
+  <section id="notificationsList">
+
+    <div class="notification-item">
+      <div class="notification-icon">👋</div>
+      <div>
+        <strong>Welcome to YouRemo!</strong>
+        <p>Your account is ready. Start connecting with people.</p>
+        <small>Just now</small>
+      </div>
+    </div>
+
+    <div class="empty-state" id="noNotifications">
+      <div>🔔</div>
+      <h2>No new notifications</h2>
+      <p>You're all caught up!</p>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+
+<script>
+function markAllRead() {
+
+  const notifications =
+    document.querySelectorAll(".notification-item");
+
+  notifications.forEach(function(item) {
+    item.style.opacity = "0.5";
+  });
+
+  alert("All notifications marked as read.");
+}
+</script>
+
+</body>
+</html>
