@@ -1782,6 +1782,22 @@ supabaseClient.auth.onAuthStateChange(
 document.addEventListener(
   "DOMContentLoaded",
   () => {
+
+    // Clear Find Friends search after refresh
+    const searchInput =
+      document.getElementById("friendSearch");
+
+    const friendResults =
+      document.getElementById("friendResults");
+
+    if (searchInput) {
+      searchInput.value = "";
+    }
+
+    if (friendResults) {
+      friendResults.innerHTML = "";
+    }
+
     refreshAccountUI();
   }
 );
