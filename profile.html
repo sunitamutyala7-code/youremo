@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo - Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header class="top-bar">
+  <div class="logo">YouRemo</div>
+  <button onclick="window.location.href='index.html'">← Home</button>
+</header>
+
+<main class="page-container">
+
+  <section class="profile-header">
+
+    <div class="profile-avatar" id="profileAvatar">
+      👤
+    </div>
+
+    <div class="profile-info">
+
+      <h1 id="profileName">
+        Your Profile
+      </h1>
+
+      <p id="profileEmail">
+        Loading account...
+      </p>
+
+      <button onclick="editProfile()">
+        ✏️ Edit Profile
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="profile-card">
+
+    <h2>About You</h2>
+
+    <div class="profile-field">
+      <span>Name</span>
+      <strong id="displayName">Not set</strong>
+    </div>
+
+    <div class="profile-field">
+      <span>Username</span>
+      <strong id="displayUsername">Not set</strong>
+    </div>
+
+    <div class="profile-field">
+      <span>Email</span>
+      <strong id="displayEmail">Not available</strong>
+    </div>
+
+    <div class="profile-field">
+      <span>Joined</span>
+      <strong id="joinedDate">-</strong>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+
+<script>
+function editProfile() {
+  alert("Profile editing will be added next.");
+}
+</script>
+
+</body>
+</html>
