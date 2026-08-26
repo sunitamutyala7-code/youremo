@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>YouRemo - About</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
+  <header class="navbar">
+
+    <div class="logo">
+      YouRemo
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <!-- ACCOUNT BUTTON -->
+
+    <div
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
+
+      <div id="navAvatar" class="nav-avatar">
+        ?
+      </div>
+
+      <span id="loginButton">
+        Login
+      </span>
+
+    </div>
+
+
+    <!-- ACCOUNT MENU -->
+
+    <div
+      id="accountMenu"
+      class="account-menu">
+
+      <button onclick="window.location.href='profile.html'">
+        My Profile
+      </button>
+
+      <button onclick="openEditProfile()">
+        Edit Profile
+      </button>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       ABOUT PAGE
+       ===================================================== -->
+
+  <main>
+
+    <section class="about-page">
+
+      <div class="about-hero">
+
+        <span class="about-icon">
+          👥
+        </span>
+
+        <h1>
+          About YouRemo
+        </h1>
+
+        <p>
+          A simple place to find your people,
+          build connections and stay connected.
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           FEATURES
+           ================================================= -->
+
+      <div class="features">
+
+        <div class="feature">
+
+          <span>
+            🔎
+          </span>
+
+          <h2>
+            Find Friends
+          </h2>
+
+          <p>
+            Search for people using their name
+            or username.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <span>
+            🤝
+          </span>
+
+          <h2>
+            Connect
+          </h2>
+
+          <p>
+            Send and accept friend requests
+            to grow your connections.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <span>
+            👤
+          </span>
+
+          <h2>
+            Your Profile
+          </h2>
+
+          <p>
+            Create your profile, add your photo
+            and personalize your account.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <span>
+            💬
+          </span>
+
+          <h2>
+            Stay Connected
+          </h2>
+
+          <p>
+            Keep track of the people you're
+            connected with.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           HOW IT WORKS
+           ================================================= -->
+
+      <div class="about-info">
+
+        <h2>
+          How YouRemo Works
+        </h2>
+
+        <div class="steps">
+
+          <div class="step">
+
+            <strong>
+              01
+            </strong>
+
+            <div>
+
+              <h3>
+                Create an Account
+              </h3>
+
+              <p>
+                Sign up and create your YouRemo profile.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <strong>
+              02
+            </strong>
+
+            <div>
+
+              <h3>
+                Find People
+              </h3>
+
+              <p>
+                Search for friends by name or username.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <strong>
+              03
+            </strong>
+
+            <div>
+
+              <h3>
+                Send a Request
+              </h3>
+
+              <p>
+                Send a friend request to someone you know.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <strong>
+              04
+            </strong>
+
+            <div>
+
+              <h3>
+                Connect
+              </h3>
+
+              <p>
+                Once accepted, they'll appear in My Friends.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer>
+
+    <p>
+      © 2026 YouRemo. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
