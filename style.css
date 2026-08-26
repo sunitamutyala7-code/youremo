@@ -1,6 +1,6 @@
-/* =========================================
+/* =========================================================
    YOUREMO - CLEAN PROFESSIONAL STYLES
-   ========================================= */
+   ========================================================= */
 
 * {
   margin: 0;
@@ -18,13 +18,13 @@ body {
   color: #172033;
 }
 
-/* =========================================
+/* =========================================================
    NAVBAR
-   ========================================= */
+   ========================================================= */
 
 .navbar {
   height: 72px;
-  background: #fff;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,6 +43,7 @@ body {
 
 .navbar nav {
   display: flex;
+  align-items: center;
   gap: 35px;
 }
 
@@ -54,7 +55,10 @@ body {
   transition: color 0.2s ease;
 }
 
-.navbar nav a:hover,
+.navbar nav a:hover {
+  color: #4f46e5;
+}
+
 .navbar nav a.active {
   color: #4f46e5;
 }
@@ -73,16 +77,16 @@ body {
 .login-btn {
   border: none;
   background: #5b5ce2;
-  color: white;
+  color: #ffffff;
   padding: 11px 22px;
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
 }
 
-/* =========================================
+/* =========================================================
    HERO
-   ========================================= */
+   ========================================================= */
 
 .hero {
   min-height: 600px;
@@ -130,19 +134,19 @@ body {
 .primary-btn {
   border: none;
   background: #5b5ce2;
-  color: white;
+  color: #ffffff;
 }
 
 .secondary-btn {
   border: 1px solid #d7d9e3;
-  background: white;
+  background: #ffffff;
   color: #333a4d;
 }
 
 .hero-card {
   width: 350px;
   padding: 40px;
-  background: white;
+  background: #ffffff;
   border-radius: 25px;
   box-shadow: 0 20px 50px rgba(40, 45, 90, 0.12);
   text-align: center;
@@ -169,36 +173,50 @@ body {
   margin: 0;
 }
 
-/* =========================================
+/* =========================================================
    COMMON SECTIONS
-   ========================================= */
+   ========================================================= */
 
-.section-text {
-  text-align: center;
-  color: #737b8d;
-  margin-bottom: 30px;
+.friends-section,
+.requests-section,
+.friends-list-section,
+.profile-section {
+  padding: 80px 20px;
+}
+
+.friends-section {
+  background: #ffffff;
+}
+
+.requests-section,
+.profile-section {
+  background: #f8f9fc;
+}
+
+.friends-list-section {
+  background: #ffffff;
 }
 
 .friends-section h2,
 .requests-section h2,
 .friends-list-section h2,
-.about h2,
-.profile-section h2 {
+.profile-section h2,
+.about h2 {
   text-align: center;
-  font-size: 36px;
+  font-size: 34px;
   margin-bottom: 10px;
 }
 
-/* =========================================
-   FRIEND SEARCH
-   ========================================= */
-
-.friends-section {
-  max-width: 1000px;
-  margin: 70px auto;
-  padding: 50px 25px;
-  background: white;
+.section-text {
+  text-align: center;
+  color: #737b8d;
+  margin-bottom: 25px;
+  line-height: 1.6;
 }
+
+/* =========================================================
+   FRIEND SEARCH
+   ========================================================= */
 
 .search-box {
   display: flex;
@@ -211,7 +229,7 @@ body {
   flex: 1;
   height: 52px;
   padding: 0 18px;
-  border: 1px solid #ddd;
+  border: 1px solid #dfe2ea;
   border-radius: 14px;
   outline: none;
   font-size: 16px;
@@ -229,19 +247,20 @@ body {
   border: none;
   border-radius: 14px;
   background: #4f46e5;
-  color: white;
+  color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .search-box button:hover {
   transform: translateY(-1px);
 }
 
-/* =========================================
+/* =========================================================
    FRIEND RESULTS
-   ========================================= */
+   ========================================================= */
 
 .friend-results {
   width: 100%;
@@ -252,16 +271,21 @@ body {
   gap: 14px;
 }
 
+/* =========================================================
+   FRIEND CARD
+   ========================================================= */
+
 .friend-card {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 18px;
-  background: white;
+  background: #ffffff;
   border: 1px solid #e8eaf0;
   border-radius: 18px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .friend-card:hover {
@@ -269,36 +293,42 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* =========================================
+/* =========================================================
    AVATARS
-   ========================================= */
+   ========================================================= */
 
-.avatar {
+.friend-card .avatar,
+#myFriendsList .avatar,
+#friendRequests .avatar {
   width: 55px;
   height: 55px;
   min-width: 55px;
   border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #4f46e5;
-  color: white;
+  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  color: #ffffff;
   font-size: 20px;
   font-weight: 700;
-  overflow: hidden;
 }
 
-.avatar img {
+.friend-card .avatar img,
+#myFriendsList .avatar img,
+#friendRequests .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* =========================================
+/* =========================================================
    FRIEND INFORMATION
-   ========================================= */
+   ========================================================= */
 
-.friend-info {
+.friend-info,
+.friend-card > div:nth-child(2) {
   flex: 1;
   min-width: 0;
 }
@@ -311,21 +341,20 @@ body {
 
 .friend-card p {
   margin: 0;
-  color: #777;
+  color: #777b85;
   font-size: 14px;
 }
 
-/* =========================================
+/* =========================================================
    FRIEND BUTTONS
-   ========================================= */
+   ========================================================= */
 
 .friend-card button {
-  margin-left: auto;
   border: none;
   border-radius: 10px;
   padding: 10px 16px;
-  background: #4f46e5;
-  color: white;
+  background: #6c63ff;
+  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
@@ -333,7 +362,7 @@ body {
 
 .friend-card button:hover:not(:disabled) {
   transform: translateY(-1px);
-  opacity: 0.9;
+  background: #584ff0;
 }
 
 .friend-card button:disabled {
@@ -345,12 +374,15 @@ body {
 .secondary-request {
   background: #f1f1f5 !important;
   color: #555 !important;
-  margin-left: 6px !important;
 }
 
-/* =========================================
+.secondary-request:hover {
+  background: #e2e2e8 !important;
+}
+
+/* =========================================================
    FRIEND STATUS
-   ========================================= */
+   ========================================================= */
 
 .friend-status {
   padding: 8px 14px;
@@ -361,9 +393,9 @@ body {
   font-weight: 600;
 }
 
-/* =========================================
+/* =========================================================
    FRIEND COUNT
-   ========================================= */
+   ========================================================= */
 
 .friend-count {
   text-align: center;
@@ -373,66 +405,60 @@ body {
   margin: 10px 0 18px;
 }
 
-/* =========================================
-   FRIEND REQUEST BADGE
-   ========================================= */
+/* =========================================================
+   REQUEST BADGE
+   ========================================================= */
 
 .request-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  height: 24px;
+  min-width: 22px;
+  height: 22px;
   padding: 0 7px;
-  margin-left: 7px;
+  margin-left: 6px;
   border-radius: 999px;
   background: #ef4444;
-  color: white;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
 }
 
-/* =========================================
+/* =========================================================
    FRIEND REQUESTS
-   ========================================= */
-
-.requests-section {
-  max-width: 1000px;
-  margin: 70px auto;
-  padding: 50px 25px;
-  background: #f8f9fc;
-}
+   ========================================================= */
 
 #friendRequests .friend-card {
-  background: white;
+  display: flex;
+  align-items: center;
 }
 
 #friendRequests .friend-info {
   flex: 1;
 }
 
-/* =========================================
-   MY FRIENDS
-   ========================================= */
-
-.friends-list-section {
-  max-width: 1000px;
-  margin: 70px auto;
-  padding: 50px 25px;
-  background: white;
+#friendRequests button {
+  padding: 9px 16px;
 }
 
+/* =========================================================
+   MY FRIENDS
+   ========================================================= */
+
 #myFriendsList .friend-card {
-  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 #myFriendsList .friend-info {
   flex: 1;
 }
 
-/* =========================================
+/* =========================================================
    ABOUT
-   ========================================= */
+   ========================================================= */
 
 .about {
   padding: 90px 8%;
@@ -448,7 +474,7 @@ body {
 }
 
 .feature {
-  background: white;
+  background: #ffffff;
   padding: 35px;
   border-radius: 18px;
   text-align: center;
@@ -468,40 +494,36 @@ body {
   line-height: 1.6;
 }
 
-/* =========================================
+/* =========================================================
    PROFILE
-   ========================================= */
+   ========================================================= */
 
-.profile-section {
-  padding: 80px 20px;
-  background: #f8f9fc;
-}
-
+.profile-card,
 .my-profile-card {
   max-width: 760px;
-  margin: 35px auto 0;
+  margin: 30px auto 0;
   padding: 32px;
   display: flex;
   align-items: center;
   gap: 30px;
-  background: white;
+  background: #ffffff;
   border: 1px solid #e8eaf0;
   border-radius: 24px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
 .profile-avatar-large {
-  width: 140px;
-  height: 140px;
-  min-width: 140px;
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 45px;
+  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  color: #ffffff;
+  font-size: 42px;
   font-weight: 700;
   border: 5px solid #eef2ff;
 }
@@ -512,19 +534,22 @@ body {
   object-fit: cover;
 }
 
+.profile-details,
 .my-profile-info {
   flex: 1;
 }
 
+.profile-details h3,
 .my-profile-info h3 {
-  margin: 0;
-  font-size: 30px;
+  margin: 0 0 6px;
+  font-size: 28px;
   color: #202124;
 }
 
+.profile-details p,
 .my-profile-info > p {
-  margin: 6px 0 20px;
-  color: #6b7280;
+  margin: 0 0 18px;
+  color: #777b85;
 }
 
 .profile-stats {
@@ -549,6 +574,10 @@ body {
   color: #777;
 }
 
+/* =========================================================
+   PROFILE ACTIONS
+   ========================================================= */
+
 .profile-actions {
   display: flex;
   align-items: center;
@@ -571,49 +600,59 @@ body {
 
 .upload-avatar-btn {
   background: #4f46e5;
-  color: white;
+  color: #ffffff;
+}
+
+.upload-avatar-btn:hover {
+  background: #4338ca;
 }
 
 .edit-profile-btn {
   border: 1px solid #4f46e5;
-  background: white;
+  background: #ffffff;
   color: #4f46e5;
 }
 
-.upload-avatar-btn:hover,
 .edit-profile-btn:hover {
-  transform: translateY(-1px);
+  background: #eef2ff;
 }
 
-/* =========================================
+/* =========================================================
    NAVBAR ACCOUNT
-   ========================================= */
+   ========================================================= */
 
 .account-button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 7px 14px 7px 8px;
   border: 1px solid #e5e7ef;
   border-radius: 30px;
-  background: white;
+  background: #ffffff;
   color: #202124;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s ease;
+  z-index: 1001;
+}
+
+.account-button:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .nav-avatar {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #4f46e5;
-  color: white;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  color: #ffffff;
   font-size: 15px;
   font-weight: 700;
-  overflow: hidden;
 }
 
 .nav-avatar img {
@@ -622,17 +661,17 @@ body {
   object-fit: cover;
 }
 
-/* =========================================
+/* =========================================================
    ACCOUNT MENU
-   ========================================= */
+   ========================================================= */
 
 .account-menu {
   position: absolute;
   top: 70px;
   right: 25px;
-  width: 190px;
+  width: 180px;
   padding: 8px;
-  background: white;
+  background: #ffffff;
   border: 1px solid #e8eaf0;
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
@@ -659,25 +698,26 @@ body {
   background: #f4f4f8;
 }
 
-/* =========================================
+/* =========================================================
    AUTH MODAL
-   ========================================= */
+   ========================================================= */
 
-.auth-modal {
+.auth-modal,
+#editProfileModal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 40, 0.65);
-  z-index: 2000;
+  z-index: 1000;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background: rgba(15, 20, 40, 0.65);
 }
 
 .auth-box {
   width: 100%;
   max-width: 430px;
-  background: white;
+  background: #ffffff;
   padding: 40px;
   border-radius: 22px;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
@@ -686,8 +726,8 @@ body {
 
 .close-auth {
   position: absolute;
-  top: 12px;
-  right: 17px;
+  top: 15px;
+  right: 18px;
   border: none;
   background: transparent;
   font-size: 30px;
@@ -725,7 +765,7 @@ body {
   border: none;
   border-radius: 10px;
   background: #4f46e5;
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -743,31 +783,22 @@ body {
   cursor: pointer;
 }
 
-/* =========================================
+/* =========================================================
    EDIT PROFILE MODAL
-   ========================================= */
+   ========================================================= */
 
 #editProfileModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(5px);
-  padding: 20px;
 }
 
 #editProfileModal .auth-box {
-  width: min(420px, 100%);
+  width: min(420px, calc(100% - 40px));
   padding: 32px;
-  border-radius: 22px;
-  background: white;
 }
 
 #editProfileModal input {
   width: 100%;
+  box-sizing: border-box;
   padding: 13px 15px;
   margin-bottom: 14px;
   border: 1px solid #ddd;
@@ -780,9 +811,9 @@ body {
   border-color: #4f46e5;
 }
 
-/* =========================================
+/* =========================================================
    FRIEND PROFILE POPUP
-   ========================================= */
+   ========================================================= */
 
 .friend-profile-box {
   text-align: center;
@@ -801,7 +832,7 @@ body {
   align-items: center;
   justify-content: center;
   background: #4f46e5;
-  color: white;
+  color: #ffffff;
   font-size: 42px;
   font-weight: 700;
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.25);
@@ -814,10 +845,12 @@ body {
 }
 
 .friend-profile-box h2 {
-  margin-bottom: 6px;
+  margin: 0 0 6px;
+  font-size: 25px;
 }
 
 .friend-profile-box > p {
+  margin: 0;
   color: #777;
 }
 
@@ -831,6 +864,10 @@ body {
   font-size: 14px;
   font-weight: 600;
 }
+
+/* =========================================================
+   REMOVE FRIEND
+   ========================================================= */
 
 .remove-friend-btn {
   margin-top: 20px;
@@ -847,9 +884,9 @@ body {
   background: #fecaca;
 }
 
-/* =========================================
+/* =========================================================
    FOOTER
-   ========================================= */
+   ========================================================= */
 
 footer {
   padding: 30px;
@@ -858,9 +895,9 @@ footer {
   text-align: center;
 }
 
-/* =========================================
+/* =========================================================
    MOBILE
-   ========================================= */
+   ========================================================= */
 
 @media (max-width: 800px) {
 
@@ -900,25 +937,15 @@ footer {
   .features {
     grid-template-columns: 1fr;
   }
-
-  .my-profile-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .profile-actions,
-  .profile-stats {
-    justify-content: center;
-  }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
   .friends-section,
   .requests-section,
-  .friends-list-section {
-    margin: 40px auto;
-    padding: 35px 15px;
+  .friends-list-section,
+  .profile-section {
+    padding: 55px 15px;
   }
 
   .search-box {
@@ -934,36 +961,37 @@ footer {
     gap: 11px;
   }
 
+  .friend-card .avatar,
+  #myFriendsList .avatar,
+  #friendRequests .avatar {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    font-size: 18px;
+  }
+
   .friend-card button {
     padding: 8px 11px;
     font-size: 13px;
   }
 
-  .avatar {
-    width: 45px;
-    height: 45px;
-    min-width: 45px;
+  .profile-card,
+  .my-profile-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 25px;
   }
 
-  .friend-card h3 {
-    font-size: 15px;
+  .profile-details,
+  .my-profile-info {
+    width: 100%;
   }
 
-  .friend-card p {
-    font-size: 13px;
-  }
-
-  .profile-avatar-large {
-    width: 110px;
-    height: 110px;
-    min-width: 110px;
-  }
-
-  .my-profile-info h3 {
-    font-size: 25px;
+  .profile-actions {
+    justify-content: center;
   }
 
   .profile-stats {
-    gap: 20px;
+    justify-content: center;
   }
 }
