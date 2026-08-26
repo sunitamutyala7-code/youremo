@@ -1487,27 +1487,37 @@ function closeFriendProfile() {
 // =====================================================
 
 async function removeFriend(friendId) {
+
   const {
-    data: { user }
+    data: { user },
+    error: userError
   } = await supabaseClient.auth.getUser();
 
-  if (!user) {
+  if (userError || !user) {
     alert("Please login first.");
     return;
   }
 
-  const confirmed =
-    confirm(
-      "Are you sure you want to remove this friend?"
-    );
+  if (!friendId) {
+    alert("Friend ID is missing.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "Are you sure you want to remove this friend?"
+  );
 
   if (!confirmed) {
     return;
   }
 
-  const {
-    error
-  } = await supabaseClient
+  console.log("Removing friendship:", {
+    currentUser: user.id,
+    friend: friendId
+  });
+
+  // Delete both directions
+  const { error } = await supabaseClient
     .from("friendships")
     .delete()
     .or(
@@ -1515,25 +1525,25 @@ async function removeFriend(friendId) {
     );
 
   if (error) {
-    console.error(
-      "Remove friend error:",
-      error
-    );
+    console.error("Remove friend error:", error);
 
-    alert(error.message);
+    alert(
+      "Unable to remove friend.\n\n" +
+      error.message
+    );
 
     return;
   }
 
+  console.log("Friendship removed successfully.");
+
   closeFriendProfile();
 
+  // Refresh friends list
   await loadMyFriends();
 
-  alert(
-    "Friend removed successfully."
-  );
+  alert("Friend removed successfully.");
 }
-
 
 // =====================================================
 // PROFILE PICTURE
