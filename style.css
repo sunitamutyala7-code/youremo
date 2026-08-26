@@ -1171,3 +1171,294 @@ footer {
 
   border-radius: 50%;
 }
+/* =========================================================
+   YOUREMO - MY FRIENDS PAGE DESIGN
+   ========================================================= */
+
+.friends-list-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 70px 25px 100px;
+}
+
+.friends-list-section h1 {
+  margin-bottom: 10px;
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.friends-list-section .section-text {
+  margin-bottom: 30px;
+}
+
+
+/* =========================
+   FRIEND COUNT
+   ========================= */
+
+.friend-count-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 20px;
+  margin-bottom: 35px;
+
+  background: #ffffff;
+  border-radius: 14px;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+  font-size: 16px;
+}
+
+.friend-count-box span {
+  font-size: 22px;
+}
+
+.friend-count-box strong {
+  font-weight: 600;
+}
+
+
+/* =========================
+   FRIEND RESULTS GRID
+   ========================= */
+
+#myFriendsList.friend-results {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(300px, 1fr));
+
+  gap: 20px;
+
+  width: 100%;
+}
+
+
+/* =========================
+   FRIEND CARD
+   ========================= */
+
+#myFriendsList .friend-card {
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+
+/* Hover */
+
+#myFriendsList .friend-card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.12);
+
+}
+
+
+/* =========================
+   FRIEND AVATAR
+   ========================= */
+
+#myFriendsList .friend-avatar {
+
+  width: 68px;
+  height: 68px;
+
+  min-width: 68px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  border: 3px solid #ffffff;
+
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   FRIEND INFORMATION
+   ========================= */
+
+#myFriendsList .friend-info {
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+
+#myFriendsList .friend-info h3 {
+
+  margin: 0 0 6px;
+
+  font-size: 18px;
+
+  font-weight: 650;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+}
+
+
+#myFriendsList .friend-info p {
+
+  margin: 0;
+
+  font-size: 14px;
+
+  opacity: 0.65;
+
+}
+
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+#myFriendsList .empty-state {
+
+  grid-column: 1 / -1;
+
+  text-align: center;
+
+  padding: 60px 25px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.06);
+}
+
+
+#myFriendsList .empty-state > div {
+
+  font-size: 48px;
+
+  margin-bottom: 15px;
+
+}
+
+
+#myFriendsList .empty-state h2 {
+
+  margin-bottom: 10px;
+
+}
+
+
+/* =========================
+   FIND MORE FRIENDS
+   ========================= */
+
+.my-friends-action {
+
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 40px;
+}
+
+
+.my-friends-action .primary-btn {
+
+  padding: 13px 26px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 700px) {
+
+  .friends-list-section {
+
+    padding:
+      45px 18px 70px;
+
+  }
+
+
+  .friends-list-section h1 {
+
+    font-size: 30px;
+
+  }
+
+
+  #myFriendsList.friend-results {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  #myFriendsList .friend-card {
+
+    padding: 16px;
+
+  }
+
+
+  #myFriendsList .friend-avatar {
+
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+  }
+
+}
