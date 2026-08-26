@@ -12,10 +12,6 @@
 
 <body>
 
-  <!-- =========================
-       NAVBAR
-       ========================= -->
-
   <header class="navbar">
 
     <div class="logo">
@@ -67,10 +63,6 @@
   </header>
 
 
-  <!-- =========================
-       MY FRIENDS PAGE
-       ========================= -->
-
   <main>
 
     <section class="friends-list-section">
@@ -84,13 +76,9 @@
       </p>
 
 
-      <!-- FRIEND COUNT -->
-
       <div class="friend-count-box">
 
-        <span>
-          👥
-        </span>
+        <span>👥</span>
 
         <strong id="friendCount">
           0 Friends
@@ -99,17 +87,13 @@
       </div>
 
 
-      <!-- FRIENDS LIST -->
-
       <div
         id="myFriendsList"
         class="friend-results">
 
         <div class="empty-state">
 
-          <div>
-            ⏳
-          </div>
+          <div>⏳</div>
 
           <p>
             Loading friends...
@@ -118,33 +102,29 @@
         </div>
 
       </div>
-<div class="my-friends-action">
 
-  <button
-    class="primary-btn"
-    type="button"
-    onclick="window.location.href='friends.html'">
 
-    Find More Friends
+      <!-- ONLY ONE BUTTON -->
 
-  </button>
+      <div class="my-friends-action">
 
-</div>
+        <button
+          class="primary-btn"
+          type="button"
+          onclick="window.location.href='friends.html'">
 
-      <!-- FIND MORE FRIENDS -->
+          Find More Friends
 
-      
+        </button>
 
-  <!-- =========================
-       SUPABASE
-       ========================= -->
+      </div>
+
+    </section>
+
+  </main>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-  <!-- =========================
-       YOUREMO JAVASCRIPT
-       ========================= -->
 
   <script src="script.js"></script>
 
