@@ -221,20 +221,20 @@ async function login() {
 
 async function refreshAccountUI() {
   console.log("Refreshing account UI...");
+  // Clear friend search when account changes
+const searchInput =
+  document.getElementById("friendSearch");
 
-  // First clear old account information
-  resetProfileUI();
-  resetFriendCounts();
+const friendResults =
+  document.getElementById("friendResults");
 
-  // Then load the CURRENT account
-  await updateLoginButton();
-  await loadMyProfile();
-  await loadFriendRequests();
-  await loadMyFriends();
-
-  console.log("Account UI refreshed.");
+if (searchInput) {
+  searchInput.value = "";
 }
 
+if (friendResults) {
+  friendResults.innerHTML = "";
+}
 
 // =====================================================
 // RESET PROFILE UI
@@ -1657,20 +1657,25 @@ async function logout() {
     return;
   }
 
-  // Clear friend search
-  const searchInput =
-    document.getElementById("friendSearch");
+// ============================================
+// CLEAR FRIEND SEARCH ON LOGOUT
+// ============================================
 
-  const friendResults =
-    document.getElementById("friendResults");
+const searchInput =
+  document.getElementById("friendSearch");
 
-  if (searchInput) {
-    searchInput.value = "";
-  }
+const friendResults =
+  document.getElementById("friendResults");
 
-  if (friendResults) {
-    friendResults.innerHTML = "";
-  }
+if (searchInput) {
+  searchInput.value = "";
+  searchInput.blur();
+}
+
+if (friendResults) {
+  friendResults.innerHTML = "";
+  friendResults.style.display = "";
+}
 
   // Clear friend requests
   const friendRequests =
