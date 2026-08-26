@@ -1,5 +1,5 @@
 /* =========================================================
-   YOUREMO - CLEAN PROFESSIONAL STYLES
+   YOUREMO - COMPLETE PROFESSIONAL STYLE
    ========================================================= */
 
 * {
@@ -18,86 +18,142 @@ body {
   color: #172033;
 }
 
-
 /* =========================================================
    NAVBAR
    ========================================================= */
 
 .navbar {
   height: 72px;
+  width: 100%;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8%;
+  padding: 0 7%;
   border-bottom: 1px solid #e8eaf0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .logo {
   font-size: 27px;
   font-weight: 800;
-  color: #5b5ce2;
+  color: #5548e8;
+  letter-spacing: -0.5px;
 }
 
 .navbar nav {
   display: flex;
   align-items: center;
-  gap: 35px;
+  gap: 28px;
 }
 
 .navbar nav a {
-  position: relative;
   text-decoration: none;
   color: #555d70;
+  font-size: 14px;
   font-weight: 600;
-  transition: color 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .navbar nav a:hover {
   color: #4f46e5;
 }
 
-.navbar nav a.active {
-  color: #4f46e5;
-}
+/* =========================================================
+   ACCOUNT BUTTON
+   ========================================================= */
 
-.navbar nav a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  height: 2px;
-  background: #4f46e5;
-  border-radius: 2px;
-}
-
-.login-btn {
-  border: none;
-  background: #5b5ce2;
-  color: #ffffff;
-  padding: 11px 22px;
-  border-radius: 10px;
-  font-weight: 600;
+.account-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 13px 6px 7px;
+  background: #ffffff;
+  border: 1px solid #e1e4ec;
+  border-radius: 30px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #202124;
 }
 
+.account-button:hover {
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6258ee, #9189ff);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================================
+   ACCOUNT MENU
+   ========================================================= */
+
+.account-menu {
+  position: fixed;
+  top: 78px;
+  right: 7%;
+  width: 190px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #e7e9ef;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(20, 25, 50, 0.15);
+  display: none;
+  z-index: 2000;
+}
+
+.account-menu.show {
+  display: block;
+}
+
+.account-menu button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333a4d;
+}
+
+.account-menu button:hover {
+  background: #f3f4f8;
+}
 
 /* =========================================================
    HERO
    ========================================================= */
 
 .hero {
-  min-height: 600px;
-  padding: 90px 8%;
+  min-height: 590px;
+  padding: 80px 7%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 60px;
-  background: linear-gradient(135deg, #f7f8ff, #eef0ff);
+  gap: 70px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #eef0ff 100%);
 }
 
 .hero-content {
@@ -105,38 +161,47 @@ body {
 }
 
 .hero h1 {
-  font-size: 58px;
+  font-size: 56px;
   line-height: 1.08;
-  margin-bottom: 25px;
   letter-spacing: -2px;
+  color: #151b2c;
+  margin-bottom: 24px;
 }
 
 .hero p {
-  font-size: 19px;
+  max-width: 560px;
+  color: #6d7485;
+  font-size: 18px;
   line-height: 1.7;
-  color: #697184;
-  max-width: 550px;
-  margin-bottom: 35px;
+  margin-bottom: 32px;
 }
 
 .hero-buttons {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 14px;
 }
 
 .primary-btn,
 .secondary-btn {
-  padding: 15px 25px;
+  min-height: 48px;
+  padding: 0 24px;
   border-radius: 11px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .primary-btn {
-  border: none;
-  background: #5b5ce2;
+  border: 1px solid #4f46e5;
+  background: #4f46e5;
   color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
 }
 
 .secondary-btn {
@@ -145,19 +210,29 @@ body {
   color: #333a4d;
 }
 
+.secondary-btn:hover {
+  background: #f5f5fa;
+}
+
+/* =========================================================
+   HERO CARD
+   ========================================================= */
+
 .hero-card {
   width: 350px;
-  padding: 40px;
+  min-width: 350px;
+  padding: 40px 32px;
   background: #ffffff;
+  border: 1px solid #eceef4;
   border-radius: 25px;
-  box-shadow: 0 20px 50px rgba(40, 45, 90, 0.12);
   text-align: center;
+  box-shadow: 0 20px 55px rgba(45, 48, 95, 0.12);
 }
 
 .card-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 25px;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 23px;
   border-radius: 50%;
   background: #eeeeff;
   display: flex;
@@ -167,14 +242,17 @@ body {
 }
 
 .hero-card h2 {
+  color: #202124;
+  font-size: 22px;
+  line-height: 1.35;
   margin-bottom: 12px;
 }
 
 .hero-card p {
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 1.6;
   margin: 0;
 }
-
 
 /* =========================================================
    COMMON SECTIONS
@@ -183,8 +261,9 @@ body {
 .friends-section,
 .requests-section,
 .friends-list-section,
-.profile-section {
-  padding: 80px 20px;
+.profile-section,
+.about {
+  padding: 80px 7%;
 }
 
 .friends-section {
@@ -193,11 +272,15 @@ body {
 
 .requests-section,
 .profile-section {
-  background: #f8f9fc;
+  background: #f7f8fc;
 }
 
 .friends-list-section {
   background: #ffffff;
+}
+
+.about {
+  background: #f7f8fc;
 }
 
 .friends-section h2,
@@ -207,26 +290,26 @@ body {
 .about h2 {
   text-align: center;
   font-size: 34px;
+  color: #1d2435;
   margin-bottom: 10px;
 }
 
 .section-text {
   text-align: center;
   color: #737b8d;
-  margin-bottom: 25px;
   line-height: 1.6;
+  margin-bottom: 25px;
 }
 
-
 /* =========================================================
-   FRIEND SEARCH
+   SEARCH
    ========================================================= */
 
 .search-box {
+  max-width: 700px;
+  margin: 30px auto 35px;
   display: flex;
   gap: 12px;
-  max-width: 650px;
-  margin: 30px auto 35px;
 }
 
 .search-box input {
@@ -234,33 +317,33 @@ body {
   height: 52px;
   padding: 0 18px;
   border: 1px solid #dfe2ea;
-  border-radius: 14px;
+  border-radius: 13px;
   outline: none;
-  font-size: 16px;
-  transition: 0.2s ease;
+  font-size: 15px;
+  color: #202124;
+  background: #ffffff;
 }
 
 .search-box input:focus {
   border-color: #4f46e5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.08);
 }
 
 .search-box button {
   height: 52px;
   padding: 0 25px;
   border: none;
-  border-radius: 14px;
+  border-radius: 13px;
   background: #4f46e5;
   color: #ffffff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .search-box button:hover {
-  transform: translateY(-1px);
+  background: #4338ca;
 }
-
 
 /* =========================================================
    FRIEND RESULTS
@@ -269,12 +352,11 @@ body {
 .friend-results {
   width: 100%;
   max-width: 800px;
-  margin: 30px auto;
+  margin: 30px auto 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
-
 
 /* =========================================================
    FRIEND CARD
@@ -282,22 +364,22 @@ body {
 
 .friend-card {
   width: 100%;
+  min-height: 78px;
+  padding: 15px 18px;
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 18px;
   background: #ffffff;
-  border: 1px solid #e8eaf0;
-  border-radius: 18px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e7e9ef;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(30, 35, 65, 0.05);
+  transition: 0.2s ease;
 }
 
 .friend-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px rgba(30, 35, 65, 0.08);
 }
-
 
 /* =========================================================
    AVATARS
@@ -306,17 +388,17 @@ body {
 .friend-card .avatar,
 #myFriendsList .avatar,
 #friendRequests .avatar {
-  width: 55px;
-  height: 55px;
-  min-width: 55px;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  background: linear-gradient(135deg, #6258ee, #9189ff);
   color: #ffffff;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
 }
 
@@ -326,9 +408,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
-
 
 /* =========================================================
    FRIEND INFORMATION
@@ -341,67 +421,62 @@ body {
 }
 
 .friend-card h3 {
-  margin: 0 0 4px;
-  font-size: 17px;
+  margin-bottom: 4px;
   color: #202124;
+  font-size: 16px;
 }
 
 .friend-card p {
-  margin: 0;
-  color: #777b85;
+  color: #777d8a;
   font-size: 14px;
 }
 
-
 /* =========================================================
-   FRIEND BUTTONS
+   FRIEND BUTTON
    ========================================================= */
 
 .friend-card button {
   border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  background: #6c63ff;
+  border-radius: 9px;
+  padding: 9px 15px;
+  background: #4f46e5;
   color: #ffffff;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .friend-card button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background: #584ff0;
+  background: #4338ca;
 }
 
 .friend-card button:disabled {
-  background: #e9e9ef;
-  color: #666;
+  background: #e9eaf0;
+  color: #666b76;
   cursor: default;
 }
 
 .secondary-request {
-  background: #f1f1f5 !important;
+  background: #f0f0f5 !important;
   color: #555 !important;
 }
 
 .secondary-request:hover {
-  background: #e2e2e8 !important;
+  background: #e3e3e9 !important;
 }
-
 
 /* =========================================================
    FRIEND STATUS
    ========================================================= */
 
 .friend-status {
-  padding: 8px 14px;
-  border-radius: 10px;
+  padding: 8px 13px;
+  border-radius: 999px;
   background: #eef2ff;
   color: #4f46e5;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
-
 
 /* =========================================================
    FRIEND COUNT
@@ -409,112 +484,38 @@ body {
 
 .friend-count {
   text-align: center;
+  margin: 8px 0 18px;
   color: #4f46e5;
-  font-size: 15px;
-  font-weight: 600;
-  margin: 10px 0 18px;
+  font-size: 14px;
+  font-weight: 700;
 }
-
 
 /* =========================================================
    REQUEST BADGE
    ========================================================= */
 
 .request-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 22px;
+  display: block;
+  width: fit-content;
+  min-width: 23px;
+  height: 23px;
   padding: 0 7px;
-  margin-left: 6px;
+  margin: 4px auto 0;
   border-radius: 999px;
   background: #ef4444;
   color: #ffffff;
   font-size: 12px;
   font-weight: 700;
-  line-height: 1;
-  vertical-align: middle;
-}
-
-
-/* =========================================================
-   FRIEND REQUESTS
-   ========================================================= */
-
-#friendRequests .friend-card {
-  display: flex;
-  align-items: center;
-}
-
-#friendRequests .friend-info {
-  flex: 1;
-}
-
-#friendRequests button {
-  padding: 9px 16px;
-}
-
-
-/* =========================================================
-   MY FRIENDS
-   ========================================================= */
-
-#myFriendsList .friend-card {
-  display: flex;
-  align-items: center;
-}
-
-#myFriendsList .friend-info {
-  flex: 1;
-}
-
-
-/* =========================================================
-   ABOUT
-   ========================================================= */
-
-.about {
-  padding: 90px 8%;
-  background: #f7f8fc;
-}
-
-.features {
-  max-width: 1000px;
-  margin: 45px auto 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-}
-
-.feature {
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 18px;
+  line-height: 23px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(30, 35, 70, 0.06);
 }
-
-.feature span {
-  font-size: 35px;
-}
-
-.feature h3 {
-  margin: 18px 0 10px;
-}
-
-.feature p {
-  color: #737b8d;
-  line-height: 1.6;
-}
-
 
 /* =========================================================
    PROFILE
    ========================================================= */
 
-.profile-card,
 .my-profile-card {
+  width: 100%;
   max-width: 760px;
   margin: 30px auto 0;
   padding: 32px;
@@ -522,9 +523,9 @@ body {
   align-items: center;
   gap: 30px;
   background: #ffffff;
-  border: 1px solid #e8eaf0;
-  border-radius: 24px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e7e9ef;
+  border-radius: 22px;
+  box-shadow: 0 12px 35px rgba(30, 35, 65, 0.07);
 }
 
 .profile-avatar-large {
@@ -536,7 +537,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
+  background: linear-gradient(135deg, #6258ee, #9189ff);
   color: #ffffff;
   font-size: 42px;
   font-weight: 700;
@@ -549,24 +550,22 @@ body {
   object-fit: cover;
 }
 
-.profile-details,
 .my-profile-info {
   flex: 1;
+  min-width: 0;
 }
 
-.profile-details h3,
 .my-profile-info h3 {
-  margin: 0 0 6px;
-  font-size: 28px;
+  margin-bottom: 6px;
   color: #202124;
+  font-size: 27px;
 }
 
-.profile-details p,
 .my-profile-info > p {
-  margin: 0 0 18px;
-  color: #777b85;
+  margin-bottom: 18px;
+  color: #777d8a;
+  font-size: 15px;
 }
-
 
 /* =========================================================
    PROFILE STATS
@@ -585,69 +584,55 @@ body {
 }
 
 .profile-stat strong {
-  font-size: 24px;
   color: #4f46e5;
+  font-size: 24px;
 }
 
 .profile-stat span {
-  font-size: 14px;
-  color: #777;
+  color: #777d8a;
+  font-size: 13px;
 }
-
 
 /* =========================================================
    PROFILE ACTION BUTTONS
    ========================================================= */
 
-/*
-   BOTH BUTTONS ARE EXACTLY:
-   Width  = 140px
-   Height = 44px
-*/
-
 .profile-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 5px;
+  flex-wrap: wrap;
 }
 
 .profile-action-btn {
   width: 140px !important;
-  height: 44px !important;
-
   min-width: 140px !important;
   max-width: 140px !important;
 
+  height: 44px !important;
   min-height: 44px !important;
   max-height: 44px !important;
 
-  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
 
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
 
-  padding: 0 !important;
-  margin: 0 !important;
+  box-sizing: border-box !important;
 
   border-radius: 10px !important;
 
   font-family: Arial, Helvetica, sans-serif !important;
   font-size: 14px !important;
   font-weight: 600 !important;
-
   line-height: 1 !important;
 
-  cursor: pointer !important;
-
-  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-
-/* =========================================================
-   EDIT PROFILE BUTTON
-   ========================================================= */
+/* Edit Profile */
 
 .profile-action-btn.edit-profile-btn {
   background: #ffffff !important;
@@ -659,10 +644,7 @@ body {
   background: #eef2ff !important;
 }
 
-
-/* =========================================================
-   CHANGE PHOTO BUTTON
-   ========================================================= */
+/* Change Photo */
 
 .profile-action-btn.upload-avatar-btn {
   background: #4f46e5 !important;
@@ -674,96 +656,45 @@ body {
   background: #4338ca !important;
 }
 
-
-/* Hide file input */
-
-.profile-action-btn.upload-avatar-btn input {
+.upload-avatar-btn input {
   display: none !important;
 }
 
-
 /* =========================================================
-   NAVBAR ACCOUNT
+   ABOUT FEATURES
    ========================================================= */
 
-.account-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 14px 7px 8px;
-  border: 1px solid #e5e7ef;
-  border-radius: 30px;
-  background: #ffffff;
-  color: #202124;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-  z-index: 1001;
+.features {
+  max-width: 1000px;
+  margin: 45px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
 }
 
-.account-button:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-}
-
-.nav-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.nav-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-/* =========================================================
-   ACCOUNT MENU
-   ========================================================= */
-
-.account-menu {
-  position: absolute;
-  top: 70px;
-  right: 25px;
-  width: 180px;
-  padding: 8px;
+.feature {
+  padding: 35px 28px;
   background: #ffffff;
   border: 1px solid #e8eaf0;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  display: none;
-  z-index: 1000;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(30, 35, 70, 0.05);
 }
 
-.account-menu.show {
-  display: block;
+.feature span {
+  font-size: 34px;
 }
 
-.account-menu button {
-  width: 100%;
-  padding: 12px 14px;
-  border: none;
-  background: transparent;
-  text-align: left;
-  border-radius: 9px;
-  font-size: 15px;
-  cursor: pointer;
+.feature h3 {
+  margin: 17px 0 10px;
+  color: #202124;
 }
 
-.account-menu button:hover {
-  background: #f4f4f8;
+.feature p {
+  color: #737b8d;
+  line-height: 1.6;
+  font-size: 14px;
 }
-
 
 /* =========================================================
    AUTH MODAL
@@ -771,76 +702,104 @@ body {
 
 .auth-modal,
 #editProfileModal {
-  display: none;
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 3000;
+
+  display: none;
+
   align-items: center;
   justify-content: center;
+
   padding: 20px;
+
   background: rgba(15, 20, 40, 0.65);
+  backdrop-filter: blur(5px);
 }
 
 .auth-box {
+  position: relative;
+
   width: 100%;
   max-width: 430px;
+
+  padding: 38px;
+
   background: #ffffff;
-  padding: 40px;
   border-radius: 22px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
-  position: relative;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
 }
 
 .close-auth {
   position: absolute;
-  top: 15px;
-  right: 18px;
+  top: 13px;
+  right: 17px;
+
   border: none;
   background: transparent;
-  font-size: 30px;
+
   color: #777;
+  font-size: 30px;
+
   cursor: pointer;
 }
 
 .auth-box h2 {
-  font-size: 28px;
   margin-bottom: 8px;
+  color: #202124;
+  font-size: 27px;
 }
 
 .auth-box > p {
+  margin-bottom: 24px;
   color: #737b8d;
-  margin-bottom: 25px;
+  line-height: 1.5;
 }
 
 .auth-box input {
   width: 100%;
-  padding: 14px 15px;
-  margin-bottom: 14px;
+  height: 48px;
+
+  padding: 0 15px;
+  margin-bottom: 13px;
+
   border: 1px solid #dfe2ea;
   border-radius: 10px;
-  font-size: 15px;
+
   outline: none;
+
+  font-size: 14px;
 }
 
 .auth-box input:focus {
   border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
 }
 
 .auth-submit {
   width: 100%;
-  padding: 14px;
+  height: 48px;
+
   border: none;
   border-radius: 10px;
+
   background: #4f46e5;
   color: #ffffff;
-  font-size: 16px;
+
+  font-size: 15px;
   font-weight: 700;
+
   cursor: pointer;
+}
+
+.auth-submit:hover {
+  background: #4338ca;
 }
 
 .auth-switch {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 18px;
   color: #737b8d;
 }
 
@@ -850,60 +809,44 @@ body {
   cursor: pointer;
 }
 
-
 /* =========================================================
    EDIT PROFILE MODAL
    ========================================================= */
 
-#editProfileModal {
-  backdrop-filter: blur(5px);
-}
-
 #editProfileModal .auth-box {
-  width: min(420px, calc(100% - 40px));
-  padding: 32px;
+  max-width: 420px;
 }
-
-#editProfileModal input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 13px 15px;
-  margin-bottom: 14px;
-  border: 1px solid #ddd;
-  border-radius: 11px;
-  font-size: 15px;
-  outline: none;
-}
-
-#editProfileModal input:focus {
-  border-color: #4f46e5;
-}
-
 
 /* =========================================================
    FRIEND PROFILE POPUP
    ========================================================= */
 
 .friend-profile-box {
-  text-align: center;
   position: relative;
   padding: 35px 30px;
   border-radius: 24px;
+  text-align: center;
 }
 
 .friend-profile-box .profile-avatar {
   width: 110px;
   height: 110px;
+
   margin: 5px auto 20px;
+
   border-radius: 50%;
   overflow: hidden;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background: #4f46e5;
   color: #ffffff;
+
   font-size: 42px;
   font-weight: 700;
+
   box-shadow: 0 8px 25px rgba(79, 70, 229, 0.25);
 }
 
@@ -914,38 +857,40 @@ body {
 }
 
 .friend-profile-box h2 {
-  margin: 0 0 6px;
+  margin-bottom: 6px;
   font-size: 25px;
 }
 
 .friend-profile-box > p {
-  margin: 0;
   color: #777;
 }
 
 .profile-friend-status {
   display: inline-block;
+
   margin-top: 18px;
   padding: 8px 16px;
+
   border-radius: 999px;
+
   background: #f1edff;
   color: #5b3cc4;
+
   font-size: 14px;
   font-weight: 600;
 }
 
-
-/* =========================================================
-   REMOVE FRIEND
-   ========================================================= */
-
 .remove-friend-btn {
   margin-top: 20px;
+
   padding: 10px 18px;
+
   border: none;
   border-radius: 10px;
+
   background: #fee2e2;
   color: #dc2626;
+
   font-weight: 600;
   cursor: pointer;
 }
@@ -953,7 +898,6 @@ body {
 .remove-friend-btn:hover {
   background: #fecaca;
 }
-
 
 /* =========================================================
    FOOTER
@@ -964,8 +908,41 @@ footer {
   background: #172033;
   color: #c9ceda;
   text-align: center;
+  font-size: 14px;
 }
 
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .navbar {
+    padding: 0 4%;
+  }
+
+  .navbar nav {
+    gap: 16px;
+  }
+
+  .hero {
+    padding: 70px 5%;
+    gap: 40px;
+  }
+
+  .hero h1 {
+    font-size: 46px;
+  }
+
+  .friends-section,
+  .requests-section,
+  .friends-list-section,
+  .profile-section,
+  .about {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
 
 /* =========================================================
    MOBILE
@@ -974,26 +951,38 @@ footer {
 @media (max-width: 800px) {
 
   .navbar {
-    padding: 0 5%;
+    height: 65px;
   }
 
   .navbar nav {
     display: none;
   }
 
+  .account-menu {
+    right: 15px;
+    top: 70px;
+  }
+
   .hero {
-    padding: 70px 5%;
+    min-height: auto;
+    padding: 65px 20px;
     flex-direction: column;
     text-align: center;
   }
 
+  .hero-content {
+    max-width: 600px;
+  }
+
   .hero h1 {
     font-size: 42px;
+    letter-spacing: -1.5px;
   }
 
   .hero p {
     margin-left: auto;
     margin-right: auto;
+    font-size: 16px;
   }
 
   .hero-buttons {
@@ -1003,15 +992,14 @@ footer {
 
   .hero-card {
     width: 100%;
-    max-width: 350px;
+    min-width: 0;
+    max-width: 360px;
   }
 
   .features {
     grid-template-columns: 1fr;
   }
-
 }
-
 
 /* =========================================================
    SMALL MOBILE
@@ -1019,11 +1007,32 @@ footer {
 
 @media (max-width: 650px) {
 
+  .logo {
+    font-size: 23px;
+  }
+
+  .account-button {
+    padding-right: 9px;
+  }
+
+  #loginButton {
+    font-size: 13px;
+  }
+
   .friends-section,
   .requests-section,
   .friends-list-section,
-  .profile-section {
+  .profile-section,
+  .about {
     padding: 55px 15px;
+  }
+
+  .friends-section h2,
+  .requests-section h2,
+  .friends-list-section h2,
+  .profile-section h2,
+  .about h2 {
+    font-size: 29px;
   }
 
   .search-box {
@@ -1035,8 +1044,8 @@ footer {
   }
 
   .friend-card {
-    padding: 14px;
-    gap: 11px;
+    padding: 13px;
+    gap: 10px;
   }
 
   .friend-card .avatar,
@@ -1045,32 +1054,39 @@ footer {
     width: 46px;
     height: 46px;
     min-width: 46px;
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .friend-card button {
-    padding: 8px 11px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 12px;
   }
 
-  .profile-card,
+  .friend-card h3 {
+    font-size: 15px;
+  }
+
+  .friend-card p {
+    font-size: 12px;
+  }
+
+  /* Profile */
+
   .my-profile-card {
     flex-direction: column;
     text-align: center;
-    padding: 25px;
+    padding: 25px 18px;
   }
 
-  .profile-details,
   .my-profile-info {
     width: 100%;
   }
 
-  .profile-actions {
-    justify-content: center;
-    width: 100%;
+  .my-profile-info h3 {
+    font-size: 24px;
   }
 
-  .profile-stats {
+  .profile-actions {
     justify-content: center;
   }
 
@@ -1080,4 +1096,41 @@ footer {
     max-width: 140px !important;
   }
 
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .auth-box {
+    padding: 32px 22px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .hero h1 {
+    font-size: 35px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .profile-action-btn {
+    width: 100% !important;
+    max-width: 260px !important;
+  }
 }
