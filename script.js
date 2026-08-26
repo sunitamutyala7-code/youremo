@@ -1204,57 +1204,37 @@ async function searchFriends() {
    19. CREATE FRIEND RESULT CARD
    ========================================================= */
 
-function createFriendResultCard(
-  person
-) {
+function createFriendResultCard(person) {
 
   const name =
     person.full_name ||
     person.username ||
     "YouRemo User";
 
-
   const username =
     person.username
       ? `@${person.username}`
       : "";
 
-
-  let avatarHTML;
-
-
-  if (person.avatar_url) {
-
-    avatarHTML = `
-
-      <div
-        class="friend-avatar"
-        style="
-          background-image:url('${escapeHTML(person.avatar_url)}');
-          background-size:cover;
-          background-position:center;
-        ">
-      </div>
-
-    `;
-
-  } else {
-
-    avatarHTML = `
-
+  const avatarHTML = person.avatar_url
+    ? `
       <div class="friend-avatar">
-        ${escapeHTML(
-          getInitials(name)
-        )}
+
+        <img
+          src="${escapeHTML(person.avatar_url)}"
+          alt="${escapeHTML(name)}"
+          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
+        >
+
       </div>
-
+    `
+    : `
+      <div class="friend-avatar">
+        ${escapeHTML(getInitials(name))}
+      </div>
     `;
-
-  }
-
 
   return `
-
     <div
       class="friend-card"
       data-user-id="${escapeHTML(person.id)}">
@@ -1287,9 +1267,7 @@ function createFriendResultCard(
       </div>
 
     </div>
-
   `;
-
 }
 
 
@@ -1955,58 +1933,37 @@ async function loadFriendRequests() {
    23. CREATE REQUEST CARD
    ========================================================= */
 
-function createRequestCard(
-  request,
-  sender
-) {
+function createRequestCard(request, sender) {
 
   const name =
     sender?.full_name ||
     sender?.username ||
     "YouRemo User";
 
-
   const username =
     sender?.username
       ? `@${sender.username}`
       : "";
 
-
-  let avatarHTML;
-
-
-  if (sender?.avatar_url) {
-
-    avatarHTML = `
-
-      <div
-        class="friend-avatar"
-        style="
-          background-image:url('${escapeHTML(sender.avatar_url)}');
-          background-size:cover;
-          background-position:center;
-        ">
-      </div>
-
-    `;
-
-  } else {
-
-    avatarHTML = `
-
+  const avatarHTML = sender?.avatar_url
+    ? `
       <div class="friend-avatar">
-        ${escapeHTML(
-          getInitials(name)
-        )}
+
+        <img
+          src="${escapeHTML(sender.avatar_url)}"
+          alt="${escapeHTML(name)}"
+          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
+        >
+
       </div>
-
+    `
+    : `
+      <div class="friend-avatar">
+        ${escapeHTML(getInitials(name))}
+      </div>
     `;
-
-  }
-
 
   return `
-
     <div
       class="friend-card"
       data-request-id="${escapeHTML(request.id)}">
@@ -2046,9 +2003,7 @@ function createRequestCard(
       </div>
 
     </div>
-
   `;
-
 }
 
 
@@ -2549,57 +2504,35 @@ async function loadMyFriends() {
    27. CREATE MY FRIEND CARD
    ========================================================= */
 
-function createMyFriendCard(
-  friend
-) {
+function createMyFriendCard(friend) {
 
   const name =
     friend.full_name ||
     friend.username ||
     "YouRemo User";
 
-
   const username =
     friend.username
       ? `@${friend.username}`
       : "";
 
-
-  let avatarHTML;
-
-
-  if (friend.avatar_url) {
-
-    avatarHTML = `
-
-      <div
-        class="friend-avatar"
-        style="
-          background-image:url('${escapeHTML(friend.avatar_url)}');
-          background-size:cover;
-          background-position:center;
-        ">
-      </div>
-
-    `;
-
-  } else {
-
-    avatarHTML = `
-
+  const avatarHTML = friend.avatar_url
+    ? `
       <div class="friend-avatar">
-        ${escapeHTML(
-          getInitials(name)
-        )}
+        <img
+          src="${escapeHTML(friend.avatar_url)}"
+          alt="${escapeHTML(name)}"
+          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
+        >
       </div>
-
+    `
+    : `
+      <div class="friend-avatar">
+        ${escapeHTML(getInitials(name))}
+      </div>
     `;
-
-  }
-
 
   return `
-
     <div class="friend-card">
 
       ${avatarHTML}
@@ -2617,11 +2550,8 @@ function createMyFriendCard(
       </div>
 
     </div>
-
   `;
-
 }
-
 
 /* =========================================================
    28. LOAD PROFILE
