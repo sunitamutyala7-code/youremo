@@ -483,253 +483,277 @@ async function updateLoginButton() {
 
 
 // =====================================================
-// SEARCH FRIENDS
+// SEARCH FRIENDS - FIXED
 // =====================================================
 
-async function searchFriends() {
-  const input =
-    document.getElementById("friendSearch");
+let friendSearchTimer = null;
 
-  const results =
-    document.getElementById("friendResults");
+async function searchFriends() {
+
+  const input = document.getElementById("friendSearch");
+  const results = document.getElementById("friendResults");
 
   if (!input || !results) return;
 
-  const searchText =
-    input.value.trim();
+  const searchText = input.value.trim();
 
+  // Clear results when search is empty
+  if (searchText.length === 0) {
+    results.innerHTML = "";
+    return;
+  }
 
+  // Don't search for only 1 character
   if (searchText.length < 2) {
     results.innerHTML = "";
     return;
   }
 
+  // Cancel previous search
+  clearTimeout(friendSearchTimer);
 
-  const {
-    data: { user },
-    error: userError
-  } = await supabaseClient.auth.getUser();
+  // Small delay prevents multiple searches while typing
+  friendSearchTimer = setTimeout(async () => {
 
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
 
-  if (userError || !user) {
-    results.innerHTML =
-      "<p>Please login first.</p>";
+    if (userError || !user) {
+      results.innerHTML = "<p>Please login first.</p>";
+      return;
+    }
 
-    return;
-  }
+    results.innerHTML = "<p>Searching...</p>";
 
+    // =================================================
+    // SEARCH PROFILES
+    // =================================================
 
-  results.innerHTML =
-    "<p>Searching...</p>";
+    const { data: users, error } = await supabaseClient
+      .from("profiles")
+      .select("id, username, full_name, avatar_url")
+      .or(
+        `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
+      )
+      .limit(20);
 
+    if (error) {
 
-  const {
-    data: users,
-    error
-  } = await supabaseClient
-    .from("profiles")
-    .select(
-      "id, username, full_name, avatar_url"
-    )
-    .or(
-      `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
-    )
-    .limit(20);
+      console.error("Search users error:", error);
 
+      results.innerHTML =
+        "<p>Unable to search users.</p>";
 
-  if (error) {
-    console.error(
-      "Search users error:",
-      error
-    );
+      return;
+    }
 
-    results.innerHTML =
-      "<p>Unable to search users.</p>";
+    // =================================================
+    // REMOVE CURRENT USER
+    // =================================================
 
-    return;
-  }
-
-
-  const filteredUsers =
-    (users || []).filter(
+    const filteredUsers = (users || []).filter(
       person => person.id !== user.id
     );
 
+    // =================================================
+    // REMOVE DUPLICATE USERS
+    // =================================================
 
-  if (filteredUsers.length === 0) {
-    results.innerHTML =
-      "<p>No users found.</p>";
+    const uniqueUsers = [];
+    const seenIds = new Set();
 
-    return;
-  }
+    for (const person of filteredUsers) {
 
+      if (!seenIds.has(person.id)) {
 
-  results.innerHTML = "";
+        seenIds.add(person.id);
+        uniqueUsers.push(person);
 
+      }
 
-  for (const person of filteredUsers) {
-
-    // Check friendship
-    const {
-      data: friendship
-    } = await supabaseClient
-      .from("friendships")
-      .select("id")
-      .or(
-        `and(user_id.eq.${user.id},friend_id.eq.${person.id}),and(user_id.eq.${person.id},friend_id.eq.${user.id})`
-      )
-      .limit(1)
-      .maybeSingle();
-
-
-    // Check requests
-    const {
-      data: requestRows,
-      error: requestError
-    } = await supabaseClient
-      .from("friend_requests")
-      .select(
-        "id, sender_id, receiver_id, status"
-      )
-      .or(
-        `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
-      )
-      .eq("status", "pending")
-      .order("id", {
-        ascending: false
-      })
-      .limit(1);
-
-
-    if (requestError) {
-      console.error(
-        "Friend request check error:",
-        requestError
-      );
     }
 
+    // =================================================
+    // NO USERS
+    // =================================================
 
-    const request =
-      requestRows &&
-      requestRows.length > 0
-        ? requestRows[0]
-        : null;
+    if (uniqueUsers.length === 0) {
 
+      results.innerHTML =
+        "<p>No users found.</p>";
 
-    const card =
-      document.createElement("div");
+      return;
+    }
 
-    card.className =
-      "friend-card";
+    // =================================================
+    // CLEAR OLD RESULTS
+    // =================================================
 
+    results.innerHTML = "";
 
-    const name =
-      person.full_name || "User";
+    // =================================================
+    // DISPLAY USERS
+    // =================================================
 
-    const username =
-      person.username || "username";
+    for (const person of uniqueUsers) {
 
-    const firstLetter =
-      name.charAt(0).toUpperCase();
+      // -----------------------------------------------
+      // CHECK FRIENDSHIP
+      // -----------------------------------------------
 
+      const { data: friendship } =
+        await supabaseClient
+          .from("friendships")
+          .select("id")
+          .or(
+            `and(user_id.eq.${user.id},friend_id.eq.${person.id}),and(user_id.eq.${person.id},friend_id.eq.${user.id})`
+          )
+          .limit(1)
+          .maybeSingle();
 
-    let buttonHTML = "";
+      // -----------------------------------------------
+      // CHECK FRIEND REQUEST
+      // -----------------------------------------------
 
+      const { data: requestRows } =
+        await supabaseClient
+          .from("friend_requests")
+          .select(
+            "id, sender_id, receiver_id, status"
+          )
+          .or(
+            `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
+          )
+          .eq("status", "pending")
+          .order("id", {
+            ascending: false
+          })
+          .limit(1);
 
-    // Already friends
-    if (friendship) {
+      const request =
+        requestRows && requestRows.length > 0
+          ? requestRows[0]
+          : null;
 
-      buttonHTML = `
-        <button disabled>
-          Friends ✓
-        </button>
+      // -----------------------------------------------
+      // CREATE CARD
+      // -----------------------------------------------
+
+      const card =
+        document.createElement("div");
+
+      card.className = "friend-card";
+
+      const name =
+        person.full_name || "User";
+
+      const username =
+        person.username || "username";
+
+      const firstLetter =
+        name.charAt(0).toUpperCase();
+
+      // -----------------------------------------------
+      // BUTTON
+      // -----------------------------------------------
+
+      let buttonHTML = "";
+
+      if (friendship) {
+
+        buttonHTML = `
+          <button disabled>
+            Friends ✓
+          </button>
+        `;
+
+      } else if (
+        request &&
+        request.sender_id === user.id
+      ) {
+
+        buttonHTML = `
+          <button disabled>
+            Request Sent
+          </button>
+        `;
+
+      } else if (
+        request &&
+        request.receiver_id === user.id
+      ) {
+
+        buttonHTML = `
+          <button
+            onclick="acceptFriendRequest('${request.id}')">
+            Accept Request
+          </button>
+        `;
+
+      } else {
+
+        buttonHTML = `
+          <button
+            data-user-id="${person.id}"
+            onclick="addFriend(this)">
+            Add Friend
+          </button>
+        `;
+
+      }
+
+      // -----------------------------------------------
+      // AVATAR
+      // -----------------------------------------------
+
+      let avatarHTML = "";
+
+      if (person.avatar_url) {
+
+        avatarHTML = `
+          <img
+            src="${person.avatar_url}?v=${Date.now()}"
+            alt="${name}"
+          >
+        `;
+
+      } else {
+
+        avatarHTML = firstLetter;
+
+      }
+
+      // -----------------------------------------------
+      // CARD HTML
+      // -----------------------------------------------
+
+      card.innerHTML = `
+
+        <div class="avatar">
+          ${avatarHTML}
+        </div>
+
+        <div class="friend-info">
+
+          <h3>${name}</h3>
+
+          <p>@${username}</p>
+
+        </div>
+
+        ${buttonHTML}
+
       `;
 
-    }
-
-
-    // Request sent
-    else if (
-      request &&
-      request.sender_id === user.id
-    ) {
-
-      buttonHTML = `
-        <button disabled>
-          Request Sent
-        </button>
-      `;
+      results.appendChild(card);
 
     }
 
+  }, 250);
 
-    // Incoming request
-    else if (
-      request &&
-      request.receiver_id === user.id
-    ) {
-
-      buttonHTML = `
-        <button
-          data-request-id="${request.id}"
-          onclick="acceptFriendRequest('${request.id}')">
-          Accept Request
-        </button>
-      `;
-
-    }
-
-
-    // No relationship
-    else {
-
-      buttonHTML = `
-        <button
-          data-user-id="${person.id}"
-          onclick="addFriend(this)">
-          Add Friend
-        </button>
-      `;
-    }
-
-
-    let avatarHTML = "";
-
-
-    if (person.avatar_url) {
-
-      avatarHTML = `
-        <img
-          src="${person.avatar_url}?v=${Date.now()}"
-          alt="${name}"
-        >
-      `;
-
-    } else {
-
-      avatarHTML =
-        firstLetter;
-    }
-
-
-    card.innerHTML = `
-      <div class="avatar">
-        ${avatarHTML}
-      </div>
-
-      <div class="friend-info">
-        <h3>${name}</h3>
-        <p>@${username}</p>
-      </div>
-
-      ${buttonHTML}
-    `;
-
-
-    results.appendChild(card);
-  }
 }
-
 
 // =====================================================
 // ADD FRIEND
