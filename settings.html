@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo - Settings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header class="top-bar">
+  <div class="logo">YouRemo</div>
+  <button onclick="window.location.href='index.html'">← Home</button>
+</header>
+
+<main class="page-container">
+
+  <h1>⚙️ Settings</h1>
+  <p>Manage your YouRemo account and preferences.</p>
+
+  <section class="settings-card">
+
+    <h2>Account</h2>
+
+    <div class="setting-row">
+      <div>
+        <strong>Profile</strong>
+        <p>Manage your name, username and profile information.</p>
+      </div>
+
+      <button onclick="window.location.href='profile.html'">
+        Open
+      </button>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <strong>Email</strong>
+        <p>Manage your account email address.</p>
+      </div>
+
+      <button onclick="alert('Email settings coming soon.')">
+        Manage
+      </button>
+    </div>
+
+  </section>
+
+  <section class="settings-card">
+
+    <h2>Privacy</h2>
+
+    <div class="setting-row">
+      <div>
+        <strong>Profile visibility</strong>
+        <p>Choose who can see your profile.</p>
+      </div>
+
+      <select>
+        <option>Everyone</option>
+        <option>Friends only</option>
+        <option>Only me</option>
+      </select>
+    </div>
+
+  </section>
+
+  <section class="settings-card">
+
+    <h2>Notifications</h2>
+
+    <div class="setting-row">
+      <div>
+        <strong>Push notifications</strong>
+        <p>Receive notifications about your account.</p>
+      </div>
+
+      <input type="checkbox" checked>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <strong>Friend requests</strong>
+        <p>Get notified when someone sends you a request.</p>
+      </div>
+
+      <input type="checkbox" checked>
+    </div>
+
+  </section>
+
+  <section class="settings-card danger-zone">
+
+    <h2>Account Actions</h2>
+
+    <button onclick="logoutUser()">
+      Log Out
+    </button>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+
+<script>
+function logoutUser() {
+
+  if (typeof logout === "function") {
+    logout();
+  } else {
+    alert("Logout function is not available yet.");
+  }
+
+}
+</script>
+
+</body>
+</html>
