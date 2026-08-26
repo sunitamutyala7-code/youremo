@@ -12,9 +12,9 @@
 
 <body>
 
-  <!-- =====================================================
+  <!-- =========================
        NAVBAR
-       ===================================================== -->
+       ========================= -->
 
   <header class="navbar">
 
@@ -31,8 +31,6 @@
       <a href="about.html">About</a>
     </nav>
 
-    <!-- ACCOUNT BUTTON -->
-
     <div
       id="accountButton"
       class="account-button"
@@ -48,14 +46,11 @@
 
     </div>
 
-
-    <!-- ACCOUNT MENU -->
-
     <div
       id="accountMenu"
       class="account-menu">
 
-      <button onclick="window.location.href='profile.html'">
+      <button onclick="goToMyProfile()">
         My Profile
       </button>
 
@@ -72,40 +67,44 @@
   </header>
 
 
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
+  <!-- =========================
+       REQUESTS PAGE
+       ========================= -->
 
   <main>
 
-    <section
-      class="requests-section"
-      id="requests">
+    <section class="requests-section requests-page">
 
-      <h1>
-        Friend Requests
-      </h1>
+      <div class="requests-heading">
 
-      <p class="section-text">
-        See who wants to connect with you.
-      </p>
+        <div>
+
+          <h1>
+            Friend Requests
+          </h1>
+
+          <p class="section-text">
+            See who wants to connect with you.
+          </p>
+
+        </div>
 
 
-      <!-- REQUEST COUNT -->
+        <div class="request-count-box">
 
-      <div class="request-header">
+          <span>
+            🤝
+          </span>
 
-        <h2>
-          Pending Requests
-        </h2>
+          <strong id="requestBadge">
+            0
+          </strong>
 
-        <span
-          id="requestBadge"
-          class="request-badge">
+          <small>
+            Pending
+          </small>
 
-          0
-
-        </span>
+        </div>
 
       </div>
 
@@ -119,18 +118,30 @@
         <div class="empty-state">
 
           <div>
-            🔐
+            ⏳
           </div>
 
-          <h2>
-            Loading Requests
-          </h2>
-
           <p>
-            Checking your friend requests...
+            Loading requests...
           </p>
 
         </div>
+
+      </div>
+
+
+      <!-- FIND FRIENDS -->
+
+      <div class="requests-action">
+
+        <button
+          class="primary-btn"
+          type="button"
+          onclick="window.location.href='friends.html'">
+
+          Find Friends
+
+        </button>
 
       </div>
 
@@ -139,16 +150,15 @@
   </main>
 
 
-  <!-- =====================================================
+  <!-- =========================
        SUPABASE
-       ===================================================== -->
+       ========================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-  <!-- =====================================================
-       YOUR JAVASCRIPT
-       ===================================================== -->
+  <!-- =========================
+       YOUREMO JAVASCRIPT
+       ========================= -->
 
   <script src="script.js"></script>
 
