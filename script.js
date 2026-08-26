@@ -4893,3 +4893,62 @@ async function handleAccountClick() {
 
   }
 }
+// =====================================================
+// FIX LOGIN / ACCOUNT BUTTON CLICK
+// =====================================================
+
+function setupLoginButton() {
+
+  const loginButton =
+    document.getElementById("loginButton");
+
+  if (!loginButton) {
+
+    console.warn(
+      "loginButton not found."
+    );
+
+    return;
+  }
+
+  // Remove any old inline handler
+  loginButton.onclick = null;
+
+  // Add the correct click handler
+  loginButton.addEventListener(
+    "click",
+    function(event) {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      handleAccountClick();
+
+    }
+  );
+
+  console.log(
+    "Login / Account button connected."
+  );
+}
+
+
+// =====================================================
+// START LOGIN BUTTON
+// =====================================================
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    setupLoginButton
+  );
+
+} else {
+
+  setupLoginButton();
+
+}
