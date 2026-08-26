@@ -416,15 +416,25 @@ async function searchFriends() {
         .limit(1)
         .maybeSingle();
 
-    const { data: request } =
-      await supabaseClient
-        .from("friend_requests")
-        .select("id, sender_id, receiver_id, status")
-        .or(
-          `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
-        )
-        .limit(1)
-        .maybeSingle();
+    const { data: requestRows, error: requestError } =
+  await supabaseClient
+    .from("friend_requests")
+    .select("id, sender_id, receiver_id, status")
+    .or(
+      `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
+    )
+    .eq("status", "pending")
+    .order("id", { ascending: false })
+    .limit(1);
+
+if (requestError) {
+  console.error("Friend request check error:", requestError);
+}
+
+const request =
+  requestRows && requestRows.length > 0
+    ? requestRows[0]
+    : null;
 
     const card = document.createElement("div");
 
@@ -551,16 +561,28 @@ async function addFriend(button) {
     return;
   }
 
-  const { data: request } =
-    await supabaseClient
-      .from("friend_requests")
-      .select("id, status")
-      .or(
-        `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
-      )
-      .limit(1)
-      .maybeSingle();
+ const { data: requestRows, error: requestError } =
+  await supabaseClient
+    .from("friend_requests")
+    .select("id, sender_id, receiver_id, status")
+    .or(
+      `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
+    )
+    .eq("status", "pending")
+    .order("id", { ascending: false })
+    .limit(1);
 
+if (requestError) {
+  console.error(
+    "Friend request check error:",
+    requestError
+  );
+}
+
+const request =
+  requestRows && requestRows.length > 0
+    ? requestRows[0]
+    : null;
   if (request?.status === "pending") {
     button.textContent = "Request Sent";
     button.disabled = true;
