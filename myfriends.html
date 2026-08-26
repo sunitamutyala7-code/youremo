@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>YouRemo - My Friends</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
+  <header class="navbar">
+
+    <div class="logo">
+      YouRemo
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <!-- ACCOUNT BUTTON -->
+
+    <div
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
+
+      <div id="navAvatar" class="nav-avatar">
+        ?
+      </div>
+
+      <span id="loginButton">
+        Login
+      </span>
+
+    </div>
+
+
+    <!-- ACCOUNT MENU -->
+
+    <div
+      id="accountMenu"
+      class="account-menu">
+
+      <button onclick="window.location.href='profile.html'">
+        My Profile
+      </button>
+
+      <button onclick="openEditProfile()">
+        Edit Profile
+      </button>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main>
+
+    <section
+      class="friends-list-section"
+      id="myFriends">
+
+      <h1>
+        My Friends
+      </h1>
+
+      <p class="section-text">
+        People you're connected with on YouRemo.
+      </p>
+
+
+      <!-- FRIEND COUNT -->
+
+      <p
+        id="friendCount"
+        class="friend-count">
+
+        0 Friends
+
+      </p>
+
+
+      <!-- FRIEND LIST -->
+
+      <div
+        id="myFriendsList"
+        class="friend-results">
+
+        <div class="empty-state">
+
+          <div>
+            🔐
+          </div>
+
+          <h2>
+            Loading Friends
+          </h2>
+
+          <p>
+            Checking your friends...
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
