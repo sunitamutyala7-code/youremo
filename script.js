@@ -478,17 +478,20 @@ async function updateLoginButton() {
 let friendSearchTimer = null;
 
 
-async function searchFriends() {
-  const input =
-    document.getElementById("friendSearch");
+// =====================================================
+// SEARCH FRIENDS - FIXED
+// =====================================================
 
-  const results =
-    document.getElementById("friendResults");
+let friendSearchTimer = null;
+
+async function searchFriends() {
+
+  const input = document.getElementById("friendSearch");
+  const results = document.getElementById("friendResults");
 
   if (!input || !results) return;
 
-  const searchText =
-    input.value.trim();
+  const searchText = input.value.trim();
 
   if (searchText.length === 0) {
     results.innerHTML = "";
@@ -496,13 +499,14 @@ async function searchFriends() {
   }
 
   if (searchText.length < 2) {
-    results.innerHTML = "";
+    results.innerHTML = "<p>Type at least 2 characters.</p>";
     return;
   }
 
   clearTimeout(friendSearchTimer);
 
   friendSearchTimer = setTimeout(async () => {
+
     const {
       data: { user },
       error: userError
@@ -517,9 +521,13 @@ async function searchFriends() {
     results.innerHTML =
       "<p>Searching...</p>";
 
+    // -------------------------------------------------
+    // SEARCH USERS
+    // -------------------------------------------------
+
     const {
       data: users,
-      error
+      error: searchError
     } = await supabaseClient
       .from("profiles")
       .select(
@@ -530,10 +538,11 @@ async function searchFriends() {
       )
       .limit(20);
 
-    if (error) {
+    if (searchError) {
+
       console.error(
         "Search users error:",
-        error
+        searchError
       );
 
       results.innerHTML =
@@ -543,72 +552,100 @@ async function searchFriends() {
     }
 
     // Remove current user
-    const filteredUsers =
-      (users || []).filter(
-        person => person.id !== user.id
-      );
+    const otherUsers = (users || []).filter(
+      person => person.id !== user.id
+    );
 
-    // Remove duplicates
-    const uniqueUsers = [];
-    const seenIds = new Set();
+    if (otherUsers.length === 0) {
 
-    for (const person of filteredUsers) {
-      if (!seenIds.has(person.id)) {
-        seenIds.add(person.id);
-        uniqueUsers.push(person);
-      }
-    }
-
-    if (uniqueUsers.length === 0) {
       results.innerHTML =
         "<p>No users found.</p>";
+
       return;
     }
 
     results.innerHTML = "";
 
-    for (const person of uniqueUsers) {
+    // -------------------------------------------------
+    // CREATE USER CARDS
+    // -------------------------------------------------
 
-      // Check friendship
+    for (const person of otherUsers) {
+
+      // -----------------------------------------------
+      // CHECK BOTH DIRECTIONS OF FRIENDSHIP
+      // -----------------------------------------------
+
       const {
-        data: friendship
+        data: friendships,
+        error: friendshipError
       } = await supabaseClient
         .from("friendships")
-        .select("id")
+        .select("id, user_id, friend_id")
         .or(
           `and(user_id.eq.${user.id},friend_id.eq.${person.id}),and(user_id.eq.${person.id},friend_id.eq.${user.id})`
-        )
-        .limit(1)
-        .maybeSingle();
+        );
 
-      // Check friend request
+      if (friendshipError) {
+
+        console.error(
+          "Friendship check error:",
+          friendshipError
+        );
+      }
+
+      // IMPORTANT:
+      // Only consider it a friendship if a real row exists.
+      const isFriend =
+        Array.isArray(friendships) &&
+        friendships.some(row =>
+          (
+            row.user_id === user.id &&
+            row.friend_id === person.id
+          ) ||
+          (
+            row.user_id === person.id &&
+            row.friend_id === user.id
+          )
+        );
+
+      // -----------------------------------------------
+      // CHECK PENDING REQUEST
+      // -----------------------------------------------
+
       const {
-        data: requestRows
+        data: requests,
+        error: requestError
       } = await supabaseClient
         .from("friend_requests")
         .select(
           "id, sender_id, receiver_id, status"
         )
+        .eq("status", "pending")
         .or(
           `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
         )
-        .eq("status", "pending")
         .order("id", {
           ascending: false
         })
         .limit(1);
 
+      if (requestError) {
+
+        console.error(
+          "Friend request check error:",
+          requestError
+        );
+      }
+
       const request =
-        requestRows &&
-        requestRows.length > 0
-          ? requestRows[0]
+        requests && requests.length > 0
+          ? requests[0]
           : null;
 
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "friend-card";
+      // -----------------------------------------------
+      // USER INFORMATION
+      // -----------------------------------------------
 
       const name =
         person.full_name || "User";
@@ -619,46 +656,10 @@ async function searchFriends() {
       const firstLetter =
         name.charAt(0).toUpperCase();
 
-      let buttonHTML = "";
-
-      if (friendship) {
-        buttonHTML = `
-          <button disabled>
-            Friends ✓
-          </button>
-        `;
-      } else if (
-        request &&
-        request.sender_id === user.id
-      ) {
-        buttonHTML = `
-          <button disabled>
-            Request Sent
-          </button>
-        `;
-      } else if (
-        request &&
-        request.receiver_id === user.id
-      ) {
-        buttonHTML = `
-          <button
-            onclick="acceptFriendRequest('${request.id}')">
-            Accept Request
-          </button>
-        `;
-      } else {
-        buttonHTML = `
-          <button
-            data-user-id="${person.id}"
-            onclick="addFriend(this)">
-            Add Friend
-          </button>
-        `;
-      }
-
       let avatarHTML = firstLetter;
 
       if (person.avatar_url) {
+
         avatarHTML = `
           <img
             src="${person.avatar_url}?v=${Date.now()}"
@@ -667,17 +668,90 @@ async function searchFriends() {
         `;
       }
 
+      // -----------------------------------------------
+      // BUTTON
+      // -----------------------------------------------
+
+      let buttonHTML = "";
+
+      if (isFriend) {
+
+        buttonHTML = `
+          <button
+            class="friend-button"
+            disabled>
+            Friends ✓
+          </button>
+        `;
+
+      } else if (
+        request &&
+        request.sender_id === user.id
+      ) {
+
+        buttonHTML = `
+          <button
+            class="friend-button"
+            disabled>
+            Request Sent
+          </button>
+        `;
+
+      } else if (
+        request &&
+        request.receiver_id === user.id
+      ) {
+
+        buttonHTML = `
+          <button
+            class="friend-button"
+            onclick="acceptFriendRequest('${request.id}')">
+            Accept Request
+          </button>
+        `;
+
+      } else {
+
+        buttonHTML = `
+          <button
+            class="friend-button"
+            data-user-id="${person.id}"
+            onclick="addFriend(this)">
+            Add Friend
+          </button>
+        `;
+      }
+
+      // -----------------------------------------------
+      // CARD
+      // -----------------------------------------------
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "friend-card";
+
       card.innerHTML = `
+
         <div class="avatar">
           ${avatarHTML}
         </div>
 
         <div class="friend-info">
-          <h3>${name}</h3>
-          <p>@${username}</p>
+
+          <h3>
+            ${name}
+          </h3>
+
+          <p>
+            @${username}
+          </p>
+
         </div>
 
         ${buttonHTML}
+
       `;
 
       results.appendChild(card);
