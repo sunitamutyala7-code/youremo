@@ -1184,7 +1184,11 @@ function openFriendProfile(
       <p class="profile-friend-status">
         ✓ You are friends
       </p>
-
+      <button
+  class="remove-friend-btn"
+  onclick="removeFriend('${userId}')">
+  Remove Friend
+</button>
     </div>
   `;
 
@@ -1201,7 +1205,53 @@ function closeFriendProfile() {
     modal.remove();
   }
 }
+// ============================================
+// REMOVE FRIEND
+// ============================================
 
+async function removeFriend(friendId) {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const confirmed =
+    confirm("Are you sure you want to remove this friend?");
+
+  if (!confirmed) {
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from("friendships")
+      .delete()
+      .or(
+        `and(user_id.eq.${user.id},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${user.id})`
+      );
+
+  if (error) {
+
+    console.error(
+      "Remove friend error:",
+      error
+    );
+
+    alert(error.message);
+    return;
+  }
+
+  closeFriendProfile();
+
+  await loadMyFriends();
+
+  alert("Friend removed successfully.");
+}
 
 // =====================================================
 // PROFILE PICTURE
