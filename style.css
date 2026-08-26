@@ -1,3 +1,7 @@
+/* =========================================
+   YOUREMO - CLEAN PROFESSIONAL STYLES
+   ========================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -14,11 +18,13 @@ body {
   color: #172033;
 }
 
-/* NAVBAR */
+/* =========================================
+   NAVBAR
+   ========================================= */
 
 .navbar {
   height: 72px;
-  background: white;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,13 +47,27 @@ body {
 }
 
 .navbar nav a {
+  position: relative;
   text-decoration: none;
   color: #555d70;
   font-weight: 600;
+  transition: color 0.2s ease;
 }
 
-.navbar nav a:hover {
-  color: #5b5ce2;
+.navbar nav a:hover,
+.navbar nav a.active {
+  color: #4f46e5;
+}
+
+.navbar nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 2px;
+  background: #4f46e5;
+  border-radius: 2px;
 }
 
 .login-btn {
@@ -60,7 +80,9 @@ body {
   cursor: pointer;
 }
 
-/* HERO */
+/* =========================================
+   HERO
+   ========================================= */
 
 .hero {
   min-height: 600px;
@@ -147,61 +169,87 @@ body {
   margin: 0;
 }
 
-/* FRIENDS */
-
-.friends-section {
-  padding: 90px 8%;
-  background: white;
-}
-
-.friends-section h2,
-.about h2 {
-  text-align: center;
-  font-size: 38px;
-  margin-bottom: 12px;
-}
+/* =========================================
+   COMMON SECTIONS
+   ========================================= */
 
 .section-text {
   text-align: center;
   color: #737b8d;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
+}
+
+.friends-section h2,
+.requests-section h2,
+.friends-list-section h2,
+.about h2,
+.profile-section h2 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   FRIEND SEARCH
+   ========================================= */
+
+.friends-section {
+  max-width: 1000px;
+  margin: 70px auto;
+  padding: 50px 25px;
+  background: white;
 }
 
 .search-box {
-  max-width: 650px;
-  margin: 0 auto 40px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  max-width: 650px;
+  margin: 30px auto 35px;
 }
 
 .search-box input {
   flex: 1;
-  padding: 16px 18px;
-  border: 1px solid #dfe2ea;
-  border-radius: 10px;
-  font-size: 16px;
+  height: 52px;
+  padding: 0 18px;
+  border: 1px solid #ddd;
+  border-radius: 14px;
   outline: none;
+  font-size: 16px;
+  transition: 0.2s ease;
 }
 
 .search-box input:focus {
-  border-color: #5b5ce2;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
 }
 
 .search-box button {
-  border: none;
-  background: #5b5ce2;
-  color: white;
+  height: 52px;
   padding: 0 25px;
-  border-radius: 10px;
-  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  background: #4f46e5;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
 
+.search-box button:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   FRIEND RESULTS
+   ========================================= */
+
 .friend-results {
-  max-width: 750px;
-  margin: auto;
-  display: grid;
-  gap: 15px;
+  width: 100%;
+  max-width: 800px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .friend-card {
@@ -209,45 +257,182 @@ body {
   align-items: center;
   gap: 15px;
   padding: 18px;
-  border: 1px solid #e8eaf0;
-  border-radius: 15px;
   background: white;
+  border: 1px solid #e8eaf0;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease;
 }
 
+.friend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================
+   AVATARS
+   ========================================= */
+
 .avatar {
-  width: 52px;
-  height: 52px;
+  width: 55px;
+  height: 55px;
+  min-width: 55px;
   border-radius: 50%;
-  background: #eeeeff;
-  color: #5b5ce2;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 21px;
-  font-weight: 800;
+  background: #4f46e5;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================
+   FRIEND INFORMATION
+   ========================================= */
+
+.friend-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .friend-card h3 {
-  margin-bottom: 5px;
+  margin: 0 0 4px;
+  font-size: 17px;
+  color: #202124;
 }
 
 .friend-card p {
-  color: #858b9a;
+  margin: 0;
+  color: #777;
   font-size: 14px;
 }
+
+/* =========================================
+   FRIEND BUTTONS
+   ========================================= */
 
 .friend-card button {
   margin-left: auto;
   border: none;
-  background: #5b5ce2;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: #4f46e5;
   color: white;
-  padding: 10px 17px;
-  border-radius: 9px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.friend-card button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.friend-card button:disabled {
+  background: #e9e9ef;
+  color: #666;
+  cursor: default;
+}
+
+.secondary-request {
+  background: #f1f1f5 !important;
+  color: #555 !important;
+  margin-left: 6px !important;
+}
+
+/* =========================================
+   FRIEND STATUS
+   ========================================= */
+
+.friend-status {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 14px;
   font-weight: 600;
 }
 
-/* ABOUT */
+/* =========================================
+   FRIEND COUNT
+   ========================================= */
+
+.friend-count {
+  text-align: center;
+  color: #4f46e5;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 10px 0 18px;
+}
+
+/* =========================================
+   FRIEND REQUEST BADGE
+   ========================================= */
+
+.request-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  margin-left: 7px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================
+   FRIEND REQUESTS
+   ========================================= */
+
+.requests-section {
+  max-width: 1000px;
+  margin: 70px auto;
+  padding: 50px 25px;
+  background: #f8f9fc;
+}
+
+#friendRequests .friend-card {
+  background: white;
+}
+
+#friendRequests .friend-info {
+  flex: 1;
+}
+
+/* =========================================
+   MY FRIENDS
+   ========================================= */
+
+.friends-list-section {
+  max-width: 1000px;
+  margin: 70px auto;
+  padding: 50px 25px;
+  background: white;
+}
+
+#myFriendsList .friend-card {
+  cursor: pointer;
+}
+
+#myFriendsList .friend-info {
+  flex: 1;
+}
+
+/* =========================================
+   ABOUT
+   ========================================= */
 
 .about {
   padding: 90px 8%;
@@ -283,76 +468,207 @@ body {
   line-height: 1.6;
 }
 
-/* FOOTER */
+/* =========================================
+   PROFILE
+   ========================================= */
 
-footer {
-  padding: 30px;
-  background: #172033;
-  color: #c9ceda;
-  text-align: center;
+.profile-section {
+  padding: 80px 20px;
+  background: #f8f9fc;
 }
 
-/* MOBILE */
-
-@media (max-width: 800px) {
-
-  .navbar {
-    padding: 0 5%;
-  }
-
-  .navbar nav {
-    display: none;
-  }
-
-  .hero {
-    padding: 70px 5%;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero h1 {
-    font-size: 42px;
-  }
-
-  .hero p {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-  }
-
-  .hero-card {
-    width: 100%;
-    max-width: 350px;
-  }
-
-  .friends-section,
-  .about {
-    padding: 70px 5%;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-  }
-
-  .friend-card {
-    flex-wrap: wrap;
-  }
-
-  .friend-card button {
-    margin-left: 67px;
-  }
+.my-profile-card {
+  max-width: 760px;
+  margin: 35px auto 0;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background: white;
+  border: 1px solid #e8eaf0;
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
-/* AUTH MODAL */
+
+.profile-avatar-large {
+  width: 140px;
+  height: 140px;
+  min-width: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4f46e5;
+  color: white;
+  font-size: 45px;
+  font-weight: 700;
+  border: 5px solid #eef2ff;
+}
+
+.profile-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.my-profile-info {
+  flex: 1;
+}
+
+.my-profile-info h3 {
+  margin: 0;
+  font-size: 30px;
+  color: #202124;
+}
+
+.my-profile-info > p {
+  margin: 6px 0 20px;
+  color: #6b7280;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 35px;
+  margin-bottom: 22px;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.profile-stat strong {
+  font-size: 24px;
+  color: #4f46e5;
+}
+
+.profile-stat span {
+  font-size: 14px;
+  color: #777;
+}
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.upload-avatar-btn,
+.edit-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.upload-avatar-btn {
+  background: #4f46e5;
+  color: white;
+}
+
+.edit-profile-btn {
+  border: 1px solid #4f46e5;
+  background: white;
+  color: #4f46e5;
+}
+
+.upload-avatar-btn:hover,
+.edit-profile-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   NAVBAR ACCOUNT
+   ========================================= */
+
+.account-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 14px 7px 8px;
+  border: 1px solid #e5e7ef;
+  border-radius: 30px;
+  background: white;
+  color: #202124;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================
+   ACCOUNT MENU
+   ========================================= */
+
+.account-menu {
+  position: absolute;
+  top: 70px;
+  right: 25px;
+  width: 190px;
+  padding: 8px;
+  background: white;
+  border: 1px solid #e8eaf0;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  display: none;
+  z-index: 1000;
+}
+
+.account-menu.show {
+  display: block;
+}
+
+.account-menu button {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  border-radius: 9px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.account-menu button:hover {
+  background: #f4f4f8;
+}
+
+/* =========================================
+   AUTH MODAL
+   ========================================= */
 
 .auth-modal {
   display: none;
   position: fixed;
   inset: 0;
   background: rgba(15, 20, 40, 0.65);
-  z-index: 1000;
+  z-index: 2000;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -370,8 +686,8 @@ footer {
 
 .close-auth {
   position: absolute;
-  top: 15px;
-  right: 18px;
+  top: 12px;
+  right: 17px;
   border: none;
   background: transparent;
   font-size: 30px;
@@ -400,7 +716,7 @@ footer {
 }
 
 .auth-box input:focus {
-  border-color: #5b5ce2;
+  border-color: #4f46e5;
 }
 
 .auth-submit {
@@ -408,16 +724,11 @@ footer {
   padding: 14px;
   border: none;
   border-radius: 10px;
-  background: #5b5ce2;
+  background: #4f46e5;
   color: white;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 5px;
-}
-
-.auth-submit:hover {
-  opacity: 0.9;
 }
 
 .auth-switch {
@@ -427,923 +738,36 @@ footer {
 }
 
 .auth-switch span {
-  color: #5b5ce2;
-  font-weight: 700;
-  cursor: pointer;
-}
-/* =========================================
-   PROFESSIONAL FRIEND CARDS
-   ========================================= */
-
-.friend-results {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  max-width: 700px;
-  margin: 25px auto 0;
-}
-
-.friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 16px 18px;
-  background: #ffffff;
-  border: 1px solid #e8eaf0;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  transition: 0.2s ease;
-}
-
-.friend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
-}
-
-.friend-card .avatar {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
-  color: white;
-  font-size: 21px;
-  font-weight: 700;
-}
-
-.friend-card > div:nth-child(2) {
-  flex: 1;
-  min-width: 0;
-}
-
-.friend-card h3 {
-  margin: 0 0 4px;
-  font-size: 16px;
-  color: #202124;
-}
-
-.friend-card p {
-  margin: 0;
-  color: #777b85;
-  font-size: 14px;
-}
-
-.friend-card button {
-  border: none;
-  padding: 10px 17px;
-  border-radius: 10px;
-  background: #6c63ff;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.friend-card button:hover {
-  background: #584ff0;
-}
-
-.friend-card button:disabled {
-  background: #e9eaf0;
-  color: #555a66;
-  cursor: default;
-}
-
-.friend-card .secondary-request {
-  background: #f1f2f5;
-  color: #555a66;
-  margin-left: 6px;
-}
-
-.friend-card .secondary-request:hover {
-  background: #e2e3e8;
-}
-
-/* Mobile */
-
-@media (max-width: 600px) {
-
-  .friend-card {
-    padding: 14px;
-    gap: 11px;
-  }
-
-  .friend-card .avatar {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    font-size: 18px;
-  }
-
-  .friend-card button {
-    padding: 8px 11px;
-    font-size: 13px;
-  }
-
-  .friend-card h3 {
-    font-size: 15px;
-  }
-
-  .friend-card p {
-    font-size: 13px;
-  }
-}
-/* Friend count */
-
-.friend-count {
-  text-align: center;
-  color: #777b85;
-  font-size: 15px;
-  font-weight: 600;
-  margin: 8px 0 18px;
-}
-
-/* Friend request notification */
-
-.request-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 7px;
-  margin-left: 8px;
-  border-radius: 50px;
-  background: #6c63ff;
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  vertical-align: middle;
-}
-/* =========================================
-   MY PROFILE
-   ========================================= */
-
-.profile-section {
-  padding: 80px 20px;
-  text-align: center;
-  background: #f8f9fc;
-}
-
-.profile-card {
-  max-width: 600px;
-  margin: 30px auto 0;
-  padding: 30px;
-  background: #ffffff;
-  border: 1px solid #e8eaf0;
-  border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
-
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  text-align: left;
-}
-
-.profile-avatar-large {
-  width: 100px;
-  height: 100px;
-  min-width: 100px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
-  color: white;
-
-  font-size: 38px;
-  font-weight: 700;
-
-  overflow: hidden;
-}
-
-.profile-avatar-large img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-details {
-  flex: 1;
-}
-
-.profile-details h3 {
-  margin: 0 0 6px;
-  font-size: 24px;
-  color: #202124;
-}
-
-.profile-details p {
-  margin: 0 0 18px;
-  color: #777b85;
-}
-
-.upload-avatar-btn {
-  display: inline-block;
-  padding: 10px 17px;
-  border-radius: 10px;
-  background: #6c63ff;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.upload-avatar-btn:hover {
-  background: #584ff0;
-}
-
-@media (max-width: 600px) {
-
-  .profile-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .profile-details {
-    width: 100%;
-  }
-
-}
-/* =========================================
-   NAVBAR ACCOUNT
-   ========================================= */
-
-.account-button {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 14px 7px 8px;
-  border: 1px solid #e5e7ef;
-  border-radius: 30px;
-  background: white;
-  color: #202124;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.account-button:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
-}
-
-.nav-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6c63ff, #8f86ff);
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 15px;
-  font-weight: 700;
-  overflow: hidden;
-}
-
-.nav-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* =========================================
-   ACCOUNT MENU
-   ========================================= */
-
-.account-button {
-  position: relative;
-  z-index: 1001;
-}
-
-.account-menu {
-  position: absolute;
-  top: 70px;
-  right: 25px;
-
-  width: 180px;
-  padding: 8px;
-
-  background: white;
-  border: 1px solid #e8eaf0;
-  border-radius: 14px;
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-
-  display: none;
-  z-index: 1000;
-}
-
-.account-menu button {
-  width: 100%;
-  padding: 12px 14px;
-
-  border: none;
-  background: transparent;
-
-  text-align: left;
-  border-radius: 9px;
-
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.account-menu button:hover {
-  background: #f4f4f8;
-}
-
-.account-menu.show {
-  display: block;
-}
-/* =========================================
-   PROFESSIONAL MY PROFILE
-   ========================================= */
-
-.my-profile-card {
-  max-width: 760px;
-  margin: 30px auto 0;
-
-  padding: 32px;
-
-  display: flex;
-  align-items: center;
-  gap: 30px;
-
-  background: white;
-  border: 1px solid #e8eaf0;
-  border-radius: 24px;
-
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-}
-
-.my-profile-card .profile-avatar-large {
-  width: 150px;
-  height: 150px;
-
-  min-width: 150px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-
-  background: linear-gradient(
-    135deg,
-    #6c63ff,
-    #8f86ff
-  );
-
-  color: white;
-
-  font-size: 48px;
-  font-weight: 700;
-
-  border: 5px solid white;
-
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.my-profile-card
-.profile-avatar-large img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-}
-
-.my-profile-info {
-  flex: 1;
-}
-
-.my-profile-info h3 {
-  margin: 0;
-
-  font-size: 30px;
-  font-weight: 700;
-
-  color: #202124;
-}
-
-.my-profile-info > p {
-  margin: 6px 0 20px;
-
-  font-size: 16px;
-
-  color: #6b7280;
-}
-
-.profile-stats {
-  display: flex;
-  gap: 35px;
-
-  margin-bottom: 22px;
-}
-
-.profile-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.profile-stat strong {
-  font-size: 24px;
-  color: #202124;
-}
-
-.profile-stat span {
-  font-size: 14px;
-  color: #777;
-}
-
-.profile-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.profile-actions .primary-btn {
-  border: none;
-}
-
-.profile-actions .upload-avatar-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 12px 18px;
-
-  border-radius: 10px;
-
-  background: #f1f2f6;
-
-  color: #333;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.profile-actions .upload-avatar-btn:hover {
-  background: #e5e7eb;
-}
-
-
-/* Mobile */
-
-@media (max-width: 700px) {
-
-  .my-profile-card {
-    flex-direction: column;
-
-    text-align: center;
-
-    padding: 25px;
-  }
-
-  .profile-actions {
-    justify-content: center;
-  }
-
-  .profile-stats {
-    justify-content: center;
-  }
-
-}
-.navbar nav a {
-  position: relative;
-  transition: color 0.2s ease;
-}
-
-.navbar nav a.active {
   color: #4f46e5;
-  font-weight: 600;
-}
-
-.navbar nav a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px;
-  height: 2px;
-  background: #4f46e5;
-  border-radius: 2px;
-}
-/* ============================================
-   FRIEND SEARCH - PROFESSIONAL UI
-   ============================================ */
-
-.friends-section {
-  padding: 80px 20px;
-}
-
-.search-box {
-  display: flex;
-  max-width: 650px;
-  margin: 30px auto;
-  gap: 10px;
-}
-
-.search-box input {
-  flex: 1;
-  padding: 15px 18px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font-size: 16px;
-  outline: none;
-  transition: 0.2s;
-}
-
-.search-box input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
-}
-
-.search-box button {
-  padding: 15px 24px;
-  border: none;
-  border-radius: 12px;
-  background: #4f46e5;
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.search-box button:hover {
-  transform: translateY(-1px);
-  opacity: 0.9;
-}
-
-.friend-results {
-  max-width: 800px;
-  margin: 30px auto;
-}
-
-.friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 18px;
-  margin-bottom: 12px;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.friend-card .avatar {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.friend-card h3 {
-  margin: 0 0 4px;
-}
-
-.friend-card p {
-  margin: 0;
-  color: #777;
-}
-
-.friend-card button {
-  margin-left: auto;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #4f46e5;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.friend-card button:disabled {
-  background: #e5e7eb;
-  color: #555;
-  cursor: default;
-}
-/* ============================================
-   FRIEND REQUESTS - PROFESSIONAL UI
-   ============================================ */
-
-.requests-section {
-  padding: 80px 20px;
-  background: #f8f9fc;
-}
-
-.requests-section .friend-results {
-  max-width: 800px;
-}
-
-.requests-section .friend-card {
-  background: #ffffff;
-  border: 1px solid #e8e8ef;
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-}
-
-.requests-section .friend-card .avatar {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.requests-section .friend-card h3 {
-  margin: 0 0 4px;
-}
-
-.requests-section .friend-card p {
-  margin: 0;
-  color: #777;
-}
-
-.requests-section .friend-card button {
-  margin-left: auto;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #4f46e5;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.requests-section .friend-card button:hover {
-  opacity: 0.9;
-}
-
-.requests-section .friend-card .secondary-request {
-  margin-left: 0;
-  background: #eeeeF3;
-  color: #444;
-}
-
-.requests-section .friend-card .secondary-request:hover {
-  background: #e2e2e8;
-}
-/* ============================================
-   MY FRIENDS - PROFESSIONAL UI
-   ============================================ */
-
-.friends-list-section {
-  padding: 80px 20px;
-  background: #ffffff;
-}
-
-.friend-count {
-  text-align: center;
-  font-weight: 600;
-  color: #4f46e5;
-  margin-top: 10px;
-}
-
-.friends-list-section .friend-results {
-  max-width: 800px;
-  margin: 30px auto;
-}
-
-.friends-list-section .friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 18px;
-  margin-bottom: 14px;
-  background: #ffffff;
-  border: 1px solid #e8e8ef;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.friends-list-section .friend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
-}
-
-.friends-list-section .avatar {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.friend-info {
-  flex: 1;
-}
-
-.friend-info h3 {
-  margin: 0 0 4px;
-}
-
-.friend-info p {
-  margin: 0;
-  color: #777;
-}
-
-.friend-status {
-  padding: 8px 14px;
-  border-radius: 10px;
-  background: #eef2ff;
-  color: #4f46e5;
-  font-size: 14px;
-  font-weight: 600;
-}
-/* ============================================
-   PROFILE - PROFESSIONAL UI
-   ============================================ */
-
-.profile-section {
-  padding: 80px 20px;
-  background: #f8f9fc;
-}
-
-.profile-card {
-  max-width: 700px;
-  margin: 35px auto 0;
-  padding: 35px;
-  background: #ffffff;
-  border: 1px solid #e8e8ef;
-  border-radius: 22px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
-.profile-avatar-large {
-  width: 120px;
-  height: 120px;
-  min-width: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 45px;
   font-weight: 700;
-  border: 5px solid #eef2ff;
-}
-
-.profile-avatar-large img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-details {
-  flex: 1;
-}
-
-.profile-details h3 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.profile-details > p {
-  margin: 6px 0 20px;
-  color: #777;
-}
-
-.profile-stat {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.profile-stat strong {
-  font-size: 24px;
-  color: #4f46e5;
-}
-
-.profile-stat span {
-  color: #777;
-  font-size: 14px;
-}
-
-.upload-avatar-btn {
-  display: inline-block;
-  padding: 11px 18px;
-  border-radius: 10px;
-  background: #4f46e5;
-  color: white;
-  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.upload-avatar-btn:hover {
-  opacity: 0.9;
-}
-/* ============================================
-   EDIT PROFILE BUTTON
-   ============================================ */
-
-.edit-profile-btn {
-  display: inline-block;
-  margin-left: 10px;
-  padding: 11px 18px;
-  border: 1px solid #4f46e5;
-  border-radius: 10px;
-  background: white;
-  color: #4f46e5;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.edit-profile-btn:hover {
-  background: #eef2ff;
-}
-/* ============================================
+/* =========================================
    EDIT PROFILE MODAL
-   ============================================ */
+   ========================================= */
 
 #editProfileModal {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2000;
   align-items: center;
   justify-content: center;
   background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(5px);
+  padding: 20px;
 }
 
 #editProfileModal .auth-box {
-  width: min(420px, calc(100% - 40px));
+  width: min(420px, 100%);
   padding: 32px;
   border-radius: 22px;
   background: white;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-}
-
-#editProfileModal h2 {
-  margin: 0 0 8px;
-  font-size: 26px;
-}
-
-#editProfileModal::before {
-  content: "Update your YouRemo profile";
-  display: block;
-  margin-bottom: 22px;
-  color: #777;
-  font-size: 14px;
 }
 
 #editProfileModal input {
   width: 100%;
-  box-sizing: border-box;
   padding: 13px 15px;
   margin-bottom: 14px;
   border: 1px solid #ddd;
@@ -1354,116 +778,11 @@ footer {
 
 #editProfileModal input:focus {
   border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
-#editProfileModal .auth-submit {
-  width: 100%;
-  margin-top: 8px;
-  padding: 13px;
-  border: none;
-  border-radius: 11px;
-  background: #4f46e5;
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-#editProfileModal .auth-submit:hover {
-  opacity: 0.9;
-}
-
-#editProfileModal .close-auth {
-  position: absolute;
-  margin-left: 350px;
-}
-/* ============================================
-   FRIEND REQUEST NOTIFICATION BADGE
-   ============================================ */
-
-.request-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  margin-left: 5px;
-  border-radius: 999px;
-  background: #ef4444;
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-  vertical-align: middle;
-}
-.friend-profile-box .profile-avatar {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 38px;
-  font-weight: 700;
-}
-
-.friend-profile-box .profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* ============================================
-   MY FRIENDS - SMALL AVATARS
-   ============================================ */
-
-#myFriendsList .avatar {
-  width: 55px;
-  height: 55px;
-  min-width: 55px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4f46e5;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-#myFriendsList .avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-#myFriendsList .friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-#myFriendsList .friend-info {
-  flex: 1;
-}
-
-#myFriendsList .friend-info h3 {
-  margin: 0 0 4px;
-}
-
-#myFriendsList .friend-info p {
-  margin: 0;
-}
-/* ============================================
+/* =========================================
    FRIEND PROFILE POPUP
-   ============================================ */
+   ========================================= */
 
 .friend-profile-box {
   text-align: center;
@@ -1492,20 +811,17 @@ footer {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .friend-profile-box h2 {
-  margin: 0 0 6px;
-  font-size: 25px;
+  margin-bottom: 6px;
 }
 
 .friend-profile-box > p {
-  margin: 0;
   color: #777;
 }
 
-.friend-profile-box .profile-friend-status {
+.profile-friend-status {
   display: inline-block;
   margin-top: 18px;
   padding: 8px 16px;
@@ -1515,14 +831,6 @@ footer {
   font-size: 14px;
   font-weight: 600;
 }
-
-.friend-profile-box .close-auth {
-  top: 15px;
-  right: 18px;
-}
-/* ============================================
-   REMOVE FRIEND BUTTON
-   ============================================ */
 
 .remove-friend-btn {
   margin-top: 20px;
@@ -1538,253 +846,79 @@ footer {
 .remove-friend-btn:hover {
   background: #fecaca;
 }
-/* ============================================
-   FRIEND REQUEST CARDS
-   ============================================ */
 
-#friendRequests .friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 16px 18px;
+/* =========================================
+   FOOTER
+   ========================================= */
+
+footer {
+  padding: 30px;
+  background: #172033;
+  color: #c9ceda;
+  text-align: center;
 }
 
-#friendRequests .friend-card .avatar {
-  width: 55px;
-  height: 55px;
-  min-width: 55px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #4f46e5;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-}
+/* =========================================
+   MOBILE
+   ========================================= */
 
-#friendRequests .friend-info {
-  flex: 1;
-}
+@media (max-width: 800px) {
 
-#friendRequests .friend-info h3 {
-  margin: 0 0 4px;
-}
-
-#friendRequests .friend-info p {
-  margin: 0;
-  color: #777;
-}
-
-#friendRequests button {
-  padding: 9px 16px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-#friendRequests .secondary-request {
-  margin-left: 5px;
-}
-/* ============================================
-   MODERN FRIENDS UI
-   ============================================ */
-
-.friends-section,
-.requests-section {
-  max-width: 1000px;
-  margin: 70px auto;
-  padding: 40px 25px;
-}
-
-.friends-section h2,
-.requests-section h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.section-text {
-  color: #777;
-  margin-bottom: 25px;
-}
-
-/* SEARCH BOX */
-
-.search-box {
-  display: flex;
-  gap: 12px;
-  max-width: 650px;
-  margin: 25px auto 35px;
-}
-
-.search-box input {
-  flex: 1;
-  height: 52px;
-  padding: 0 18px;
-  border: 1px solid #ddd;
-  border-radius: 14px;
-  outline: none;
-  font-size: 16px;
-  transition: 0.2s ease;
-}
-
-.search-box input:focus {
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
-}
-
-.search-box button {
-  height: 52px;
-  padding: 0 25px;
-  border: none;
-  border-radius: 14px;
-  background: #6c63ff;
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.search-box button:hover {
-  transform: translateY(-2px);
-}
-
-/* FRIEND RESULTS */
-
-.friend-results {
-  display: grid;
-  gap: 15px;
-}
-
-/* FRIEND CARD */
-
-.friend-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 18px;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 18px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease;
-}
-
-.friend-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-/* AVATAR */
-
-.friend-card .avatar {
-  width: 55px;
-  height: 55px;
-  min-width: 55px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #6c63ff;
-  color: white;
-  font-size: 21px;
-  font-weight: 700;
-  overflow: hidden;
-}
-
-.friend-card .avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* FRIEND INFORMATION */
-
-.friend-info {
-  flex: 1;
-}
-
-.friend-card h3 {
-  margin: 0 0 4px;
-  font-size: 17px;
-}
-
-.friend-card p {
-  margin: 0;
-  color: #777;
-  font-size: 14px;
-}
-
-/* BUTTONS */
-
-.friend-card button {
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  background: #6c63ff;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.friend-card button:hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.friend-card button:disabled {
-  background: #e9e9ef;
-  color: #666;
-  cursor: default;
-}
-
-/* FRIEND STATUS */
-
-.friend-status {
-  color: #20a464;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* REQUEST BUTTON */
-
-.secondary-request {
-  background: #f1f1f5 !important;
-  color: #555 !important;
-}
-
-/* REQUEST BADGE */
-
-.request-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 25px;
-  height: 25px;
-  padding: 0 7px;
-  margin-left: 8px;
-  border-radius: 50px;
-  background: #ff4d67;
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-/* MOBILE */
-
-@media (max-width: 650px) {
-
-  .friends-section,
-  .requests-section {
-    padding: 25px 15px;
-    margin: 40px auto;
+  .navbar {
+    padding: 0 5%;
   }
 
-  .friends-section h2,
-  .requests-section h2 {
-    font-size: 26px;
+  .navbar nav {
+    display: none;
+  }
+
+  .hero {
+    padding: 70px 5%;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-card {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .my-profile-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-actions,
+  .profile-stats {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .friends-section,
+  .requests-section,
+  .friends-list-section {
+    margin: 40px auto;
+    padding: 35px 15px;
   }
 
   .search-box {
@@ -1797,11 +931,39 @@ footer {
 
   .friend-card {
     padding: 14px;
+    gap: 11px;
   }
 
   .friend-card button {
-    padding: 9px 11px;
+    padding: 8px 11px;
     font-size: 13px;
   }
 
+  .avatar {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+  }
+
+  .friend-card h3 {
+    font-size: 15px;
+  }
+
+  .friend-card p {
+    font-size: 13px;
+  }
+
+  .profile-avatar-large {
+    width: 110px;
+    height: 110px;
+    min-width: 110px;
+  }
+
+  .my-profile-info h3 {
+    font-size: 25px;
+  }
+
+  .profile-stats {
+    gap: 20px;
+  }
 }
