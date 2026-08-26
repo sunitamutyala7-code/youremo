@@ -3753,7 +3753,116 @@ function escapeSearch(
 
 }
 
+/* =========================================================
+   CREATE FRIEND RESULT CARD
+   ========================================================= */
 
+function createFriendResultCard(person) {
+
+  const name =
+    person.full_name ||
+    person.username ||
+    "YouRemo User";
+
+  const username =
+    person.username
+      ? `@${person.username}`
+      : "";
+
+  let avatarHTML = "";
+
+  /*
+    Show actual profile photo
+  */
+
+  if (person.avatar_url) {
+
+    avatarHTML = `
+      <div class="friend-avatar">
+
+        <img
+          src="${escapeHTML(person.avatar_url)}"
+          alt="${escapeHTML(name)}"
+          class="friend-avatar-img"
+          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
+        >
+
+      </div>
+    `;
+
+  } else {
+
+    /*
+      No photo = initials
+    */
+
+    avatarHTML = `
+      <div class="friend-avatar">
+        ${escapeHTML(getInitials(name))}
+      </div>
+    `;
+
+  }
+
+  return `
+    <div
+      class="friend-card"
+      data-user-id="${escapeHTML(person.id)}">
+
+      ${avatarHTML}
+
+      <div class="friend-info">
+
+        <h3>
+          ${escapeHTML(name)}
+        </h3>
+
+        <p>
+          ${escapeHTML(username)}
+        </p>
+
+      </div>
+
+      <div class="friend-card-actions">
+
+        <button
+          class="primary-btn friend-request-btn"
+          data-user-id="${escapeHTML(person.id)}"
+          onclick="sendFriendRequest('${escapeJS(person.id)}')">
+
+          Add Friend
+
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   PROFILE PAGE EDIT FUNCTION
+   ========================================================= */
+
+function editProfile() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+
+  }
+
+  /*
+    Open the profile editor on index.html
+  */
+
+  window.location.href =
+    "index.html#profile";
+
+}
 /* =========================================================
    46. EXPORT FUNCTIONS TO WINDOW
    ========================================================= */
