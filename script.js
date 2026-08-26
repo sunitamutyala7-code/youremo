@@ -220,22 +220,83 @@ async function login() {
 // =====================================================
 
 async function refreshAccountUI() {
+
   console.log("Refreshing account UI...");
-  // Clear friend search when account changes
-const searchInput =
-  document.getElementById("friendSearch");
 
-const friendResults =
-  document.getElementById("friendResults");
+  // Get current session
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
 
-if (searchInput) {
-  searchInput.value = "";
+  // ============================================
+  // CLEAR FIND FRIENDS SEARCH
+  // ============================================
+
+  const searchInput =
+    document.getElementById("friendSearch");
+
+  const friendResults =
+    document.getElementById("friendResults");
+
+  if (searchInput) {
+    searchInput.value = "";
+    searchInput.blur();
+  }
+
+  if (friendResults) {
+    friendResults.innerHTML = "";
+  }
+
+  // ============================================
+  // LOGGED OUT
+  // ============================================
+
+  if (!session) {
+
+    resetProfileUI();
+    resetFriendCounts();
+
+    await updateLoginButton();
+
+    const friendRequests =
+      document.getElementById("friendRequests");
+
+    if (friendRequests) {
+      friendRequests.innerHTML =
+        "<p>Please login to see friend requests.</p>";
+    }
+
+    const requestBadge =
+      document.getElementById("requestBadge");
+
+    if (requestBadge) {
+      requestBadge.textContent = "0";
+      requestBadge.style.display = "none";
+    }
+
+    const myFriends =
+      document.getElementById("myFriendsList");
+
+    if (myFriends) {
+      myFriends.innerHTML =
+        "<p>Please login to see your friends.</p>";
+    }
+
+    return;
+  }
+
+  // ============================================
+  // LOGGED IN
+  // ============================================
+
+  await updateLoginButton();
+
+  await loadMyProfile();
+
+  await loadFriendRequests();
+
+  await loadMyFriends();
 }
-
-if (friendResults) {
-  friendResults.innerHTML = "";
-}
-
 // =====================================================
 // RESET PROFILE UI
 // =====================================================
