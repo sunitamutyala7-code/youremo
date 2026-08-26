@@ -21,21 +21,47 @@
     </div>
 
     <nav>
-      <a href="index.html">Home</a>
-      <a href="friends.html">Friends</a>
-      <a href="requests.html">Requests</a>
-      <a href="profile.html">Profile</a>
-      <a href="myfriends.html">My Friends</a>
-      <a href="index.html#about">About</a>
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="friends.html">
+        Friends
+      </a>
+
+      <a href="requests.html">
+        Requests
+      </a>
+
+      <a href="profile.html">
+        Profile
+      </a>
+
+      <a href="myfriends.html">
+        My Friends
+      </a>
+
+      <a href="about.html">
+        About
+      </a>
+
     </nav>
+
+
+    <!-- ACCOUNT -->
 
     <div
       id="accountButton"
       class="account-button"
       onclick="handleAccountClick()">
 
-      <div id="navAvatar" class="nav-avatar">
+      <div
+        id="navAvatar"
+        class="nav-avatar">
+
         ?
+
       </div>
 
       <span id="loginButton">
@@ -44,15 +70,18 @@
 
     </div>
 
+
+    <!-- ACCOUNT MENU -->
+
     <div
       id="accountMenu"
       class="account-menu">
 
-      <button onclick="window.location.href='profile.html'">
+      <button onclick="goToMyProfile()">
         My Profile
       </button>
 
-      <button onclick="window.location.href='index.html#profile'">
+      <button onclick="openEditProfile()">
         Edit Profile
       </button>
 
@@ -65,7 +94,7 @@
   </header>
 
 
-  <!-- FRIENDS PAGE -->
+  <!-- MAIN -->
 
   <main>
 
@@ -74,11 +103,11 @@
       id="friends">
 
       <h1>
-        Find Your Friends
+        Find Friends
       </h1>
 
       <p class="section-text">
-        Search for people and start connecting.
+        Search for people on YouRemo and start connecting.
       </p>
 
 
@@ -89,17 +118,20 @@
         <input
           type="text"
           id="friendSearch"
-          placeholder="Search for a person..."
-          onkeyup="searchFriends()">
+          placeholder="Search by name or username..."
+          autocomplete="off">
 
-        <button onclick="searchFriends()">
+        <button
+          onclick="searchFriends()">
+
           Search
+
         </button>
 
       </div>
 
 
-      <!-- SEARCH RESULTS -->
+      <!-- RESULTS -->
 
       <div
         id="friendResults"
@@ -125,47 +157,23 @@
 
     </section>
 
-
-    <!-- MY FRIENDS -->
-
-    <section
-      class="friends-list-section">
-
-      <h2>
-        My Friends
-      </h2>
-
-      <p class="section-text">
-        People you're connected with on YouRemo.
-      </p>
-
-      <p
-        id="friendCount"
-        class="friend-count">
-
-        0 Friends
-
-      </p>
-
-      <div
-        id="myFriendsList"
-        class="friend-results">
-
-        <p>
-          Please login to see your friends.
-        </p>
-
-      </div>
-
-    </section>
-
   </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <p>
+      © 2026 YouRemo. All rights reserved.
+    </p>
+
+  </footer>
 
 
   <!-- SUPABASE -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
   <!-- YOUR JAVASCRIPT -->
 
