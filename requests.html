@@ -1,1 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>YouRemo - Friend Requests</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
+  <header class="navbar">
+
+    <div class="logo">
+      YouRemo
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <!-- ACCOUNT BUTTON -->
+
+    <div
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
+
+      <div id="navAvatar" class="nav-avatar">
+        ?
+      </div>
+
+      <span id="loginButton">
+        Login
+      </span>
+
+    </div>
+
+
+    <!-- ACCOUNT MENU -->
+
+    <div
+      id="accountMenu"
+      class="account-menu">
+
+      <button onclick="window.location.href='profile.html'">
+        My Profile
+      </button>
+
+      <button onclick="openEditProfile()">
+        Edit Profile
+      </button>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main>
+
+    <section
+      class="requests-section"
+      id="requests">
+
+      <h1>
+        Friend Requests
+      </h1>
+
+      <p class="section-text">
+        See who wants to connect with you.
+      </p>
+
+
+      <!-- REQUEST COUNT -->
+
+      <div class="request-header">
+
+        <h2>
+          Pending Requests
+        </h2>
+
+        <span
+          id="requestBadge"
+          class="request-badge">
+
+          0
+
+        </span>
+
+      </div>
+
+
+      <!-- REQUEST LIST -->
+
+      <div
+        id="friendRequests"
+        class="friend-results">
+
+        <div class="empty-state">
+
+          <div>
+            🔐
+          </div>
+
+          <h2>
+            Loading Requests
+          </h2>
+
+          <p>
+            Checking your friend requests...
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
