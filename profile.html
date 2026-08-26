@@ -1,79 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>YouRemo - Profile</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="top-bar">
-  <div class="logo">YouRemo</div>
-  <button onclick="window.location.href='index.html'">← Home</button>
-</header>
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
 
-<main class="page-container">
+  <header class="navbar">
 
-  <section class="profile-header">
-
-    <div class="profile-avatar" id="profileAvatar">
-      👤
+    <div class="logo">
+      YouRemo
     </div>
 
-    <div class="profile-info">
+    <nav>
 
-      <h1 id="profileName">
-        Your Profile
-      </h1>
+      <a href="index.html">
+        Home
+      </a>
 
-      <p id="profileEmail">
-        Loading account...
-      </p>
+      <a href="friends.html">
+        Friends
+      </a>
 
-      <button onclick="editProfile()">
-        ✏️ Edit Profile
+      <a href="index.html#requests">
+        Requests
+      </a>
+
+      <a href="profile.html">
+        Profile
+      </a>
+
+      <a href="index.html#myFriends">
+        My Friends
+      </a>
+
+      <a href="index.html#about">
+        About
+      </a>
+
+    </nav>
+
+
+    <!-- ACCOUNT BUTTON -->
+
+    <div
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
+
+      <div
+        id="navAvatar"
+        class="nav-avatar">
+
+        ?
+
+      </div>
+
+      <span id="loginButton">
+        Login
+      </span>
+
+    </div>
+
+
+    <!-- ACCOUNT MENU -->
+
+    <div
+      id="accountMenu"
+      class="account-menu">
+
+      <button
+        onclick="goToMyProfile()">
+
+        My Profile
+
+      </button>
+
+      <button
+        onclick="openEditProfile()">
+
+        Edit Profile
+
+      </button>
+
+      <button
+        onclick="logout()">
+
+        Logout
+
       </button>
 
     </div>
 
-  </section>
+  </header>
 
-  <section class="profile-card">
 
-    <h2>About You</h2>
+  <!-- =====================================================
+       PROFILE PAGE
+       ===================================================== -->
 
-    <div class="profile-field">
-      <span>Name</span>
-      <strong id="displayName">Not set</strong>
+  <main>
+
+
+    <!-- PROFILE HERO -->
+
+    <section
+      class="profile-section"
+      id="profile">
+
+      <h1>
+        My Profile
+      </h1>
+
+      <p class="section-text">
+        Your YouRemo profile
+      </p>
+
+
+      <!-- PROFILE CARD -->
+
+      <div class="my-profile-card">
+
+
+        <!-- PROFILE AVATAR -->
+
+        <div
+          class="profile-avatar-large"
+          id="profileAvatar">
+
+          ?
+
+        </div>
+
+
+        <!-- PROFILE INFORMATION -->
+
+        <div class="my-profile-info">
+
+          <h2 id="profileName">
+            Your Name
+          </h2>
+
+          <p id="profileUsername">
+            @username
+          </p>
+
+
+          <!-- PROFILE STATS -->
+
+          <div class="profile-stats">
+
+            <div class="profile-stat">
+
+              <strong id="profileFriendCount">
+                0
+              </strong>
+
+              <span>
+                Friends
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- PROFILE ACTIONS -->
+
+          <div class="profile-actions">
+
+            <button
+              type="button"
+              class="profile-action-btn edit-profile-btn"
+              onclick="openEditProfile()">
+
+              ✏️ Edit Profile
+
+            </button>
+
+
+            <label
+              class="profile-action-btn upload-avatar-btn">
+
+              📷 Change Photo
+
+              <input
+                type="file"
+                id="avatarInput"
+                accept="image/*"
+                hidden>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ABOUT YOU
+         ===================================================== -->
+
+    <section class="profile-card">
+
+      <h2>
+        About You
+      </h2>
+
+
+      <div class="profile-field">
+
+        <span>
+          Name
+        </span>
+
+        <strong id="displayName">
+          Not set
+        </strong>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <span>
+          Username
+        </span>
+
+        <strong id="displayUsername">
+          Not set
+        </strong>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <span>
+          Email
+        </span>
+
+        <strong id="displayEmail">
+          Not available
+        </strong>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <span>
+          Joined
+        </span>
+
+        <strong id="joinedDate">
+          -
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EDIT PROFILE MODAL
+         ===================================================== -->
+
+    <div
+      id="editProfileModal"
+      class="auth-modal">
+
+
+      <div class="auth-box">
+
+
+        <button
+          class="close-auth"
+          onclick="closeEditProfile()">
+
+          ×
+
+        </button>
+
+
+        <h2>
+          Edit Profile
+        </h2>
+
+
+        <p>
+          Update your YouRemo profile information.
+        </p>
+
+
+        <input
+          type="text"
+          id="editProfileName"
+          placeholder="Full name">
+
+
+        <input
+          type="text"
+          id="editProfileUsername"
+          placeholder="Username">
+
+
+        <button
+          class="auth-submit"
+          onclick="saveEditProfile()">
+
+          Save Changes
+
+        </button>
+
+
+      </div>
+
     </div>
 
-    <div class="profile-field">
-      <span>Username</span>
-      <strong id="displayUsername">Not set</strong>
-    </div>
+  </main>
 
-    <div class="profile-field">
-      <span>Email</span>
-      <strong id="displayEmail">Not available</strong>
-    </div>
 
-    <div class="profile-field">
-      <span>Joined</span>
-      <strong id="joinedDate">-</strong>
-    </div>
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
 
-  </section>
+  <footer>
 
-</main>
+    <p>
+      © 2026 YouRemo. All rights reserved.
+    </p>
 
-<script src="script.js"></script>
+  </footer>
 
-<script>
-function editProfile() {
-  alert("Profile editing will be added next.");
-}
-</script>
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       YOUREMO JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
 
 </body>
+
 </html>
