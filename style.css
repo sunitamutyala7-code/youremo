@@ -1520,3 +1520,21 @@ footer {
   top: 15px;
   right: 18px;
 }
+/* ============================================
+   REMOVE FRIEND BUTTON
+   ============================================ */
+
+.remove-friend-btn {
+  margin-top: 20px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-friend-btn:hover {
+  background: #fecaca;
+}
