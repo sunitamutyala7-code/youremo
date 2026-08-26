@@ -646,22 +646,22 @@ async function loadFriendRequests() {
       String((requests || []).length);
   }
 
-  if (!requests || requests.length === 0) {
+ if (!requests || requests.length === 0) {
 
   container.innerHTML =
     "<p>No new friend requests.</p>";
 
-  if (requestBadge) {
-    requestBadge.textContent = "0";
-    requestBadge.style.display = "none";
+  if (badge) {
+    badge.textContent = "0";
+    badge.style.display = "none";
   }
 
   return;
 }
 
-if (requestBadge) {
-  requestBadge.textContent = requests.length;
-  requestBadge.style.display = "inline-flex";
+if (badge) {
+  badge.textContent = requests.length;
+  badge.style.display = "inline-flex";
 }
 
   for (const request of requests) {
