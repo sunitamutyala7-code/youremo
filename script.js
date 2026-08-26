@@ -1,6 +1,6 @@
 // =====================================================
 // YouRemo - Complete script.js
-// Mutual Friends + Correct Friendship Detection
+// User Profiles + Mutual Friends + Friendship Detection
 // =====================================================
 
 
@@ -122,33 +122,41 @@ function showLogin() {
       "Welcome Back";
   }
 
+
   if (subtitle) {
     subtitle.textContent =
       "Login to your YouRemo account";
   }
 
+
   if (name) {
     name.style.display = "none";
   }
+
 
   if (username) {
     username.style.display = "none";
   }
 
+
   if (email) {
     email.style.display = "block";
   }
 
+
   if (password) {
     password.style.display = "block";
   }
+
 
   if (button) {
     button.textContent = "Login";
     button.onclick = login;
   }
 
+
   if (switchText) {
+
     switchText.innerHTML =
       `Don't have an account?
        <span onclick="showSignup()">Sign Up</span>`;
@@ -188,26 +196,32 @@ function showSignup() {
       "Welcome to YouRemo";
   }
 
+
   if (subtitle) {
     subtitle.textContent =
       "Create your account";
   }
 
+
   if (name) {
     name.style.display = "block";
   }
+
 
   if (username) {
     username.style.display = "block";
   }
 
+
   if (email) {
     email.style.display = "block";
   }
 
+
   if (password) {
     password.style.display = "block";
   }
+
 
   if (button) {
     button.textContent =
@@ -217,7 +231,9 @@ function showSignup() {
       signUp;
   }
 
+
   if (switchText) {
+
     switchText.innerHTML =
       `Already have an account?
        <span onclick="showLogin()">Login</span>`;
@@ -232,26 +248,38 @@ function showSignup() {
 async function signUp() {
 
   const name =
-    document.getElementById("authName")
-      ?.value.trim();
+    document
+      .getElementById("authName")
+      ?.value
+      .trim();
+
 
   const username =
-    document.getElementById("authUsername")
-      ?.value.trim();
+    document
+      .getElementById("authUsername")
+      ?.value
+      .trim();
+
 
   const email =
-    document.getElementById("authEmail")
-      ?.value.trim();
+    document
+      .getElementById("authEmail")
+      ?.value
+      .trim();
+
 
   const password =
-    document.getElementById("authPassword")
+    document
+      .getElementById("authPassword")
       ?.value;
 
 
-  if (!name ||
-      !username ||
-      !email ||
-      !password) {
+  if (
+    !name ||
+    !username ||
+    !email ||
+    !password
+  ) {
 
     alert(
       "Please fill in all fields."
@@ -321,7 +349,9 @@ async function signUp() {
       .upsert({
 
         id: data.user.id,
+
         username: username,
+
         full_name: name
 
       });
@@ -346,6 +376,7 @@ async function signUp() {
     "Account created successfully!"
   );
 
+
   closeAuth();
 
   await refreshAccountUI();
@@ -359,11 +390,15 @@ async function signUp() {
 async function login() {
 
   const email =
-    document.getElementById("authEmail")
-      ?.value.trim();
+    document
+      .getElementById("authEmail")
+      ?.value
+      .trim();
+
 
   const password =
-    document.getElementById("authPassword")
+    document
+      .getElementById("authPassword")
       ?.value;
 
 
@@ -406,6 +441,7 @@ async function login() {
     "Login successful!"
   );
 
+
   closeAuth();
 
   await refreshAccountUI();
@@ -437,6 +473,7 @@ async function refreshAccountUI() {
       "friendSearch"
     );
 
+
   const friendResults =
     document.getElementById(
       "friendResults"
@@ -444,19 +481,22 @@ async function refreshAccountUI() {
 
 
   if (searchInput) {
+
     searchInput.value = "";
+
     searchInput.blur();
   }
 
 
   if (friendResults) {
+
     friendResults.innerHTML = "";
   }
 
 
-  // -----------------------------------------------
+  // -------------------------------------------------
   // LOGGED OUT
-  // -----------------------------------------------
+  // -------------------------------------------------
 
   if (!session) {
 
@@ -472,6 +512,7 @@ async function refreshAccountUI() {
         "friendRequests"
       );
 
+
     if (friendRequests) {
 
       friendRequests.innerHTML =
@@ -484,9 +525,11 @@ async function refreshAccountUI() {
         "requestBadge"
       );
 
+
     if (requestBadge) {
 
-      requestBadge.textContent = "0";
+      requestBadge.textContent =
+        "0";
 
       requestBadge.style.display =
         "none";
@@ -497,6 +540,7 @@ async function refreshAccountUI() {
       document.getElementById(
         "myFriendsList"
       );
+
 
     if (myFriends) {
 
@@ -509,9 +553,9 @@ async function refreshAccountUI() {
   }
 
 
-  // -----------------------------------------------
+  // -------------------------------------------------
   // LOGGED IN
-  // -----------------------------------------------
+  // -------------------------------------------------
 
   await updateLoginButton();
 
@@ -534,10 +578,12 @@ function resetProfileUI() {
       "myProfileAvatar"
     );
 
+
   const name =
     document.getElementById(
       "myProfileName"
     );
+
 
   const username =
     document.getElementById(
@@ -546,15 +592,21 @@ function resetProfileUI() {
 
 
   if (avatar) {
-    avatar.textContent = "?";
+
+    avatar.textContent =
+      "?";
   }
 
+
   if (name) {
+
     name.textContent =
       "Your Name";
   }
 
+
   if (username) {
+
     username.textContent =
       "@username";
   }
@@ -572,6 +624,7 @@ function resetFriendCounts() {
       "friendCount"
     );
 
+
   const profileFriendCount =
     document.getElementById(
       "profileFriendCount"
@@ -579,11 +632,14 @@ function resetFriendCounts() {
 
 
   if (friendCount) {
+
     friendCount.textContent =
       "0 Friends";
   }
 
+
   if (profileFriendCount) {
+
     profileFriendCount.textContent =
       "0";
   }
@@ -600,6 +656,7 @@ async function updateLoginButton() {
     document.getElementById(
       "loginButton"
     );
+
 
   const navAvatar =
     document.getElementById(
@@ -624,10 +681,13 @@ async function updateLoginButton() {
     button.textContent =
       "Login";
 
+
     if (navAvatar) {
+
       navAvatar.textContent =
         "?";
     }
+
 
     return;
   }
@@ -646,7 +706,10 @@ async function updateLoginButton() {
       .select(
         "full_name, username, avatar_url"
       )
-      .eq("id", user.id)
+      .eq(
+        "id",
+        user.id
+      )
       .maybeSingle();
 
 
@@ -657,8 +720,10 @@ async function updateLoginButton() {
       error
     );
 
+
     button.textContent =
       "Account";
+
 
     return;
   }
@@ -674,12 +739,13 @@ async function updateLoginButton() {
 
     if (profile?.avatar_url) {
 
-      navAvatar.innerHTML = `
+      navAvatar.innerHTML =
+        `
         <img
           src="${profile.avatar_url}?v=${Date.now()}"
           alt="Profile"
         >
-      `;
+        `;
 
     } else {
 
@@ -692,205 +758,11 @@ async function updateLoginButton() {
           .charAt(0)
           .toUpperCase();
 
+
       navAvatar.textContent =
         letter;
     }
   }
-}
-
-
-// =====================================================
-// GET MY FRIEND IDS
-// =====================================================
-
-async function getMyFriendIds(userId) {
-
-  if (!userId) {
-    return [];
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("friendships")
-      .select("friend_id")
-      .eq("user_id", userId);
-
-
-  if (error) {
-
-    console.error(
-      "Get my friends error:",
-      error
-    );
-
-    return [];
-  }
-
-
-  return [
-    ...new Set(
-      (data || [])
-        .map(row => row.friend_id)
-        .filter(Boolean)
-    )
-  ];
-}
-
-
-// =====================================================
-// GET ANOTHER USER'S FRIEND IDS
-// =====================================================
-
-async function getFriendIdsForUser(userId) {
-
-  if (!userId) {
-    return [];
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("friendships")
-      .select("friend_id")
-      .eq("user_id", userId);
-
-
-  if (error) {
-
-    console.error(
-      "Get user's friends error:",
-      error
-    );
-
-    return [];
-  }
-
-
-  return [
-    ...new Set(
-      (data || [])
-        .map(row => row.friend_id)
-        .filter(Boolean)
-    )
-  ];
-}
-
-
-// =====================================================
-// CHECK DIRECT FRIENDSHIP
-//
-// IMPORTANT:
-//
-// This checks ONLY:
-// currentUser <-> person
-//
-// It does NOT look at friendships with other people.
-// =====================================================
-
-async function areDirectFriends(
-  currentUserId,
-  otherUserId
-) {
-
-  if (
-    !currentUserId ||
-    !otherUserId ||
-    currentUserId === otherUserId
-  ) {
-    return false;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("friendships")
-      .select(
-        "id, user_id, friend_id"
-      )
-      .or(
-        `and(user_id.eq.${currentUserId},friend_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},friend_id.eq.${currentUserId})`
-      );
-
-
-  if (error) {
-
-    console.error(
-      "Direct friendship check error:",
-      error
-    );
-
-    return false;
-  }
-
-
-  return Array.isArray(data) &&
-    data.some(row =>
-
-      (
-        row.user_id === currentUserId &&
-        row.friend_id === otherUserId
-      )
-
-      ||
-
-      (
-        row.user_id === otherUserId &&
-        row.friend_id === currentUserId
-      )
-
-    );
-}
-
-
-// =====================================================
-// GET MUTUAL FRIEND IDS
-// =====================================================
-
-async function getMutualFriendIds(
-  currentUserId,
-  otherUserId
-) {
-
-  if (
-    !currentUserId ||
-    !otherUserId ||
-    currentUserId === otherUserId
-  ) {
-    return [];
-  }
-
-
-  const myFriendIds =
-    await getMyFriendIds(
-      currentUserId
-    );
-
-
-  const theirFriendIds =
-    await getFriendIdsForUser(
-      otherUserId
-    );
-
-
-  const theirFriendSet =
-    new Set(theirFriendIds);
-
-
-  return myFriendIds.filter(
-    id =>
-      id !== otherUserId &&
-      theirFriendSet.has(id)
-  );
 }
 
 
@@ -907,6 +779,7 @@ async function searchFriends() {
     document.getElementById(
       "friendSearch"
     );
+
 
   const results =
     document.getElementById(
@@ -925,7 +798,8 @@ async function searchFriends() {
 
   if (searchText.length === 0) {
 
-    results.innerHTML = "";
+    results.innerHTML =
+      "";
 
     return;
   }
@@ -946,365 +820,599 @@ async function searchFriends() {
 
 
   friendSearchTimer =
-    setTimeout(async () => {
-
-      const {
-        data: {
-          user
-        },
-        error: userError
-      } =
-        await supabaseClient.auth
-          .getUser();
-
-
-      if (userError || !user) {
-
-        results.innerHTML =
-          "<p>Please login first.</p>";
-
-        return;
-      }
-
-
-      results.innerHTML =
-        "<p>Searching...</p>";
-
-
-      // ---------------------------------------------
-      // SEARCH PROFILES
-      // ---------------------------------------------
-
-      const {
-        data: users,
-        error: searchError
-      } =
-        await supabaseClient
-          .from("profiles")
-          .select(
-            "id, username, full_name, avatar_url"
-          )
-          .or(
-            `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
-          )
-          .limit(20);
-
-
-      if (searchError) {
-
-        console.error(
-          "Search users error:",
-          searchError
-        );
-
-        results.innerHTML =
-          "<p>Unable to search users.</p>";
-
-        return;
-      }
-
-
-      // Remove current user
-      const otherUsers =
-        (users || []).filter(
-          person =>
-            person.id !== user.id
-        );
-
-
-      if (
-        otherUsers.length === 0
-      ) {
-
-        results.innerHTML =
-          "<p>No users found.</p>";
-
-        return;
-      }
-
-
-      results.innerHTML = "";
-
-
-      // ---------------------------------------------
-      // GET CURRENT USER'S FRIENDS ONCE
-      // ---------------------------------------------
-
-      const myFriendIds =
-        await getMyFriendIds(
-          user.id
-        );
-
-
-      const myFriendSet =
-        new Set(myFriendIds);
-
-
-      // ---------------------------------------------
-      // CREATE USER CARDS
-      // ---------------------------------------------
-
-      for (
-        const person of otherUsers
-      ) {
-
-        // -------------------------------------------
-        // DIRECT FRIEND CHECK
-        // -------------------------------------------
-
-        const isFriend =
-          myFriendSet.has(
-            person.id
-          );
-
-
-        // -------------------------------------------
-        // PENDING REQUEST
-        // -------------------------------------------
+    setTimeout(
+      async () => {
 
         const {
-          data: requests,
-          error: requestError
+          data: {
+            user
+          },
+          error: userError
+        } =
+          await supabaseClient.auth
+            .getUser();
+
+
+        if (
+          userError ||
+          !user
+        ) {
+
+          results.innerHTML =
+            "<p>Please login first.</p>";
+
+          return;
+        }
+
+
+        results.innerHTML =
+          "<p>Searching...</p>";
+
+
+        const {
+          data: users,
+          error: searchError
         } =
           await supabaseClient
-            .from("friend_requests")
+            .from("profiles")
             .select(
-              "id, sender_id, receiver_id, status"
-            )
-            .eq(
-              "status",
-              "pending"
+              "id, username, full_name, avatar_url"
             )
             .or(
-              `and(sender_id.eq.${user.id},receiver_id.eq.${person.id}),and(sender_id.eq.${person.id},receiver_id.eq.${user.id})`
+              `username.ilike.%${searchText}%,full_name.ilike.%${searchText}%`
             )
-            .order(
-              "id",
-              {
-                ascending: false
-              }
-            )
-            .limit(1);
+            .limit(20);
 
 
-        if (requestError) {
+        if (searchError) {
 
           console.error(
-            "Friend request check error:",
-            requestError
-          );
-        }
-
-
-        const request =
-          requests &&
-          requests.length > 0
-            ? requests[0]
-            : null;
-
-
-        // -------------------------------------------
-        // MUTUAL FRIENDS
-        //
-        // ONLY calculate if they are NOT
-        // already direct friends.
-        // -------------------------------------------
-
-        let mutualFriendIds = [];
-
-
-        if (!isFriend) {
-
-          const theirFriendIds =
-            await getFriendIdsForUser(
-              person.id
-            );
-
-
-          const theirFriendSet =
-            new Set(
-              theirFriendIds
-            );
-
-
-          mutualFriendIds =
-            myFriendIds.filter(
-              friendId =>
-
-                friendId !== person.id &&
-                theirFriendSet.has(
-                  friendId
-                )
-            );
-        }
-
-
-        // -------------------------------------------
-        // USER INFORMATION
-        // -------------------------------------------
-
-        const name =
-          person.full_name ||
-          "User";
-
-        const username =
-          person.username ||
-          "username";
-
-        const firstLetter =
-          name
-            .charAt(0)
-            .toUpperCase();
-
-
-        let avatarHTML =
-          firstLetter;
-
-
-        if (person.avatar_url) {
-
-          avatarHTML = `
-            <img
-              src="${person.avatar_url}?v=${Date.now()}"
-              alt="${name}"
-            >
-          `;
-        }
-
-
-        // -------------------------------------------
-        // BUTTON / STATUS
-        // -------------------------------------------
-
-        let buttonHTML = "";
-
-
-        if (isFriend) {
-
-          // YOU ARE ACTUALLY FRIENDS
-          buttonHTML = `
-            <button
-              class="friend-button"
-              disabled>
-              ✓ Friends
-            </button>
-          `;
-
-        }
-
-        else if (
-          request &&
-          request.sender_id === user.id
-        ) {
-
-          buttonHTML = `
-            <button
-              class="friend-button"
-              disabled>
-              ⏳ Request Sent
-            </button>
-          `;
-
-        }
-
-        else if (
-          request &&
-          request.receiver_id === user.id
-        ) {
-
-          buttonHTML = `
-            <button
-              class="friend-button"
-              onclick="acceptFriendRequest('${request.id}')">
-              ✓ Accept Request
-            </button>
-          `;
-
-        }
-
-        else if (
-          mutualFriendIds.length > 0
-        ) {
-
-          // NOT FRIENDS
-          // BUT THEY HAVE MUTUAL FRIENDS
-
-          buttonHTML = `
-            <div class="friend-status mutual-friend-status">
-              👥 ${mutualFriendIds.length}
-              ${mutualFriendIds.length === 1
-                ? "Mutual Friend"
-                : "Mutual Friends"}
-            </div>
-
-            <button
-              class="friend-button"
-              data-user-id="${person.id}"
-              onclick="addFriend(this)">
-              + Add Friend
-            </button>
-          `;
-
-        }
-
-        else {
-
-          buttonHTML = `
-            <button
-              class="friend-button"
-              data-user-id="${person.id}"
-              onclick="addFriend(this)">
-              + Add Friend
-            </button>
-          `;
-        }
-
-
-        // -------------------------------------------
-        // CARD
-        // -------------------------------------------
-
-        const card =
-          document.createElement(
-            "div"
+            "Search users error:",
+            searchError
           );
 
 
-        card.className =
-          "friend-card";
+          results.innerHTML =
+            "<p>Unable to search users.</p>";
+
+          return;
+        }
 
 
-        card.innerHTML = `
-
-          <div class="avatar">
-            ${avatarHTML}
-          </div>
-
-          <div class="friend-info">
-
-            <h3>
-              ${name}
-            </h3>
-
-            <p>
-              @${username}
-            </p>
-
-          </div>
-
-          <div class="friend-actions">
-            ${buttonHTML}
-          </div>
-
-        `;
+        const otherUsers =
+          (users || []).filter(
+            person =>
+              person.id !== user.id
+          );
 
 
-        results.appendChild(
-          card
+        if (
+          otherUsers.length === 0
+        ) {
+
+          results.innerHTML =
+            "<p>No users found.</p>";
+
+          return;
+        }
+
+
+        results.innerHTML =
+          "";
+
+
+        for (
+          const person
+          of otherUsers
+        ) {
+
+          await createSearchFriendCard(
+            person,
+            user,
+            results
+          );
+        }
+
+      },
+      250
+    );
+}
+
+
+// =====================================================
+// CREATE SEARCH FRIEND CARD
+// =====================================================
+
+async function createSearchFriendCard(
+  person,
+  currentUser,
+  results
+) {
+
+  const relationship =
+    await getRelationshipStatus(
+      currentUser.id,
+      person.id
+    );
+
+
+  const mutualFriends =
+    await getMutualFriends(
+      currentUser.id,
+      person.id
+    );
+
+
+  const name =
+    person.full_name ||
+    "User";
+
+
+  const username =
+    person.username ||
+    "username";
+
+
+  const firstLetter =
+    name
+      .charAt(0)
+      .toUpperCase();
+
+
+  let avatarHTML =
+    firstLetter;
+
+
+  if (person.avatar_url) {
+
+    avatarHTML =
+      `
+      <img
+        src="${person.avatar_url}?v=${Date.now()}"
+        alt="${name}"
+      >
+      `;
+  }
+
+
+  let buttonHTML =
+    "";
+
+
+  if (
+    relationship.status ===
+    "friend"
+  ) {
+
+    buttonHTML =
+      `
+      <button
+        class="friend-button"
+        disabled>
+        ✓ Friends
+      </button>
+      `;
+
+  } else if (
+    relationship.status ===
+    "sent"
+  ) {
+
+    buttonHTML =
+      `
+      <button
+        class="friend-button"
+        disabled>
+        📤 Request Sent
+      </button>
+      `;
+
+  } else if (
+    relationship.status ===
+    "received"
+  ) {
+
+    buttonHTML =
+      `
+      <button
+        class="friend-button"
+        onclick="acceptFriendRequest('${relationship.requestId}')">
+        ✓ Accept Request
+      </button>
+      `;
+
+  } else {
+
+    buttonHTML =
+      `
+      <button
+        class="friend-button"
+        data-user-id="${person.id}"
+        onclick="addFriend(this)">
+        ＋ Add Friend
+      </button>
+      `;
+  }
+
+
+  let mutualHTML =
+    "";
+
+
+  if (
+    mutualFriends.length > 0
+  ) {
+
+    const mutualNames =
+      mutualFriends
+        .slice(0, 3)
+        .map(
+          friend =>
+            friend.full_name ||
+            friend.username ||
+            "User"
         );
+
+
+    mutualHTML =
+      `
+      <div class="mutual-friends">
+        🤝
+        ${mutualFriends.length}
+        mutual
+        ${
+          mutualNames.length > 0
+            ? `· ${mutualNames.join(", ")}`
+            : ""
+        }
+      </div>
+      `;
+  }
+
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+
+  card.className =
+    "friend-card";
+
+
+  card.innerHTML =
+    `
+
+    <div class="avatar">
+      ${avatarHTML}
+    </div>
+
+    <div class="friend-info">
+
+      <h3>
+        ${escapeHTML(name)}
+      </h3>
+
+      <p>
+        @${escapeHTML(username)}
+      </p>
+
+      ${mutualHTML}
+
+    </div>
+
+    ${buttonHTML}
+
+    `;
+
+
+  // Clicking the person opens profile
+  card.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target.closest(
+          "button"
+        )
+      ) {
+        return;
       }
 
-    }, 250);
+
+      openUserProfile(
+        person.id
+      );
+    }
+  );
+
+
+  results.appendChild(
+    card
+  );
+}
+
+
+// =====================================================
+// RELATIONSHIP STATUS
+// =====================================================
+
+async function getRelationshipStatus(
+  currentUserId,
+  otherUserId
+) {
+
+  if (
+    !currentUserId ||
+    !otherUserId
+  ) {
+
+    return {
+      status: "none",
+      requestId: null
+    };
+  }
+
+
+  // -------------------------------------------------
+  // CHECK ACTUAL FRIENDSHIP
+  // -------------------------------------------------
+
+  const {
+    data: friendship,
+    error: friendshipError
+  } =
+    await supabaseClient
+      .from("friendships")
+      .select(
+        "id, user_id, friend_id"
+      )
+      .or(
+        `and(user_id.eq.${currentUserId},friend_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},friend_id.eq.${currentUserId})`
+      )
+      .limit(1)
+      .maybeSingle();
+
+
+  if (friendshipError) {
+
+    console.error(
+      "Friendship check error:",
+      friendshipError
+    );
+  }
+
+
+  if (friendship) {
+
+    return {
+      status: "friend",
+      requestId: null
+    };
+  }
+
+
+  // -------------------------------------------------
+  // CHECK PENDING REQUEST
+  // -------------------------------------------------
+
+  const {
+    data: requests,
+    error: requestError
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .select(
+        "id, sender_id, receiver_id, status"
+      )
+      .eq(
+        "status",
+        "pending"
+      )
+      .or(
+        `and(sender_id.eq.${currentUserId},receiver_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${currentUserId})`
+      )
+      .order(
+        "id",
+        {
+          ascending: false
+        }
+      )
+      .limit(1);
+
+
+  if (requestError) {
+
+    console.error(
+      "Friend request check error:",
+      requestError
+    );
+  }
+
+
+  const request =
+    requests &&
+    requests.length > 0
+      ? requests[0]
+      : null;
+
+
+  if (!request) {
+
+    return {
+      status: "none",
+      requestId: null
+    };
+  }
+
+
+  if (
+    request.sender_id ===
+    currentUserId
+  ) {
+
+    return {
+      status: "sent",
+      requestId: request.id
+    };
+  }
+
+
+  if (
+    request.receiver_id ===
+    currentUserId
+  ) {
+
+    return {
+      status: "received",
+      requestId: request.id
+    };
+  }
+
+
+  return {
+    status: "none",
+    requestId: null
+  };
+}
+
+
+// =====================================================
+// MUTUAL FRIENDS
+// =====================================================
+
+async function getMutualFriends(
+  currentUserId,
+  otherUserId
+) {
+
+  if (
+    !currentUserId ||
+    !otherUserId
+  ) {
+    return [];
+  }
+
+
+  const {
+    data: mine,
+    error: mineError
+  } =
+    await supabaseClient
+      .from("friendships")
+      .select(
+        "friend_id"
+      )
+      .eq(
+        "user_id",
+        currentUserId
+      );
+
+
+  if (mineError) {
+
+    console.error(
+      "My friends error:",
+      mineError
+    );
+
+    return [];
+  }
+
+
+  const {
+    data: theirs,
+    error: theirsError
+  } =
+    await supabaseClient
+      .from("friendships")
+      .select(
+        "friend_id"
+      )
+      .eq(
+        "user_id",
+        otherUserId
+      );
+
+
+  if (theirsError) {
+
+    console.error(
+      "Other friends error:",
+      theirsError
+    );
+
+    return [];
+  }
+
+
+  const myIds =
+    new Set(
+      (mine || [])
+        .map(
+          row =>
+            row.friend_id
+        )
+    );
+
+
+  const mutualIds =
+    (theirs || [])
+      .map(
+        row =>
+          row.friend_id
+      )
+      .filter(
+        id =>
+          myIds.has(id) &&
+          id !== currentUserId &&
+          id !== otherUserId
+      );
+
+
+  const uniqueIds =
+    [
+      ...new Set(
+        mutualIds
+      )
+    ];
+
+
+  if (
+    uniqueIds.length === 0
+  ) {
+
+    return [];
+  }
+
+
+  const {
+    data: profiles,
+    error: profileError
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id, full_name, username, avatar_url"
+      )
+      .in(
+        "id",
+        uniqueIds
+      );
+
+
+  if (profileError) {
+
+    console.error(
+      "Mutual profile error:",
+      profileError
+    );
+
+    return [];
+  }
+
+
+  return profiles || [];
 }
 
 
@@ -1312,7 +1420,9 @@ async function searchFriends() {
 // ADD FRIEND
 // =====================================================
 
-async function addFriend(button) {
+async function addFriend(
+  button
+) {
 
   const receiverId =
     button.dataset.userId;
@@ -1343,114 +1453,68 @@ async function addFriend(button) {
 
 
   if (
-    user.id === receiverId
+    user.id ===
+    receiverId
   ) {
+
     return;
   }
 
 
-  // -----------------------------------------------
-  // CHECK DIRECT FRIENDSHIP
-  // -----------------------------------------------
-
-  const isFriend =
-    await areDirectFriends(
+  const relationship =
+    await getRelationshipStatus(
       user.id,
       receiverId
     );
 
 
-  if (isFriend) {
+  if (
+    relationship.status ===
+    "friend"
+  ) {
 
     button.textContent =
       "✓ Friends";
 
-    button.disabled = true;
+    button.disabled =
+      true;
 
     return;
   }
 
 
-  // -----------------------------------------------
-  // CHECK PENDING REQUEST
-  // -----------------------------------------------
+  if (
+    relationship.status ===
+    "sent"
+  ) {
 
-  const {
-    data: requestRows,
-    error: requestError
-  } =
-    await supabaseClient
-      .from("friend_requests")
-      .select(
-        "id, sender_id, receiver_id, status"
-      )
-      .or(
-        `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
-      )
-      .eq(
-        "status",
-        "pending"
-      )
-      .order(
-        "id",
-        {
-          ascending: false
-        }
-      )
-      .limit(1);
+    button.textContent =
+      "📤 Request Sent";
 
+    button.disabled =
+      true;
 
-  if (requestError) {
-
-    console.error(
-      "Friend request check error:",
-      requestError
-    );
+    return;
   }
 
 
-  const request =
-    requestRows &&
-    requestRows.length > 0
-      ? requestRows[0]
-      : null;
+  if (
+    relationship.status ===
+    "received"
+  ) {
 
+    button.textContent =
+      "✓ Accept Request";
 
-  if (request) {
-
-    if (
-      request.sender_id === user.id
-    ) {
-
-      button.textContent =
-        "⏳ Request Sent";
-
-      button.disabled = true;
-
-      return;
-    }
-
-
-    if (
-      request.receiver_id === user.id
-    ) {
-
-      button.textContent =
-        "✓ Accept Request";
-
-      button.onclick = () =>
+    button.onclick =
+      () =>
         acceptFriendRequest(
-          request.id
+          relationship.requestId
         );
 
-      return;
-    }
+    return;
   }
 
-
-  // -----------------------------------------------
-  // SEND FRIEND REQUEST
-  // -----------------------------------------------
 
   const {
     error
@@ -1459,9 +1523,14 @@ async function addFriend(button) {
       .from("friend_requests")
       .insert({
 
-        sender_id: user.id,
-        receiver_id: receiverId,
-        status: "pending"
+        sender_id:
+          user.id,
+
+        receiver_id:
+          receiverId,
+
+        status:
+          "pending"
 
       });
 
@@ -1482,9 +1551,10 @@ async function addFriend(button) {
 
 
   button.textContent =
-    "⏳ Request Sent";
+    "📤 Request Sent";
 
-  button.disabled = true;
+  button.disabled =
+    true;
 }
 
 
@@ -1528,7 +1598,8 @@ async function loadFriendRequests() {
 
     if (badge) {
 
-      badge.textContent = "0";
+      badge.textContent =
+        "0";
 
       badge.style.display =
         "none";
@@ -1583,7 +1654,8 @@ async function loadFriendRequests() {
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   const count =
@@ -1612,7 +1684,8 @@ async function loadFriendRequests() {
 
 
   for (
-    const request of requests
+    const request
+    of requests
   ) {
 
     const {
@@ -1667,31 +1740,25 @@ async function loadFriendRequests() {
 
     if (avatarUrl) {
 
-      avatarHTML = `
+      avatarHTML =
+        `
         <img
           src="${avatarUrl}?v=${Date.now()}"
           alt="Profile picture"
         >
-      `;
+        `;
     }
 
 
-    card.innerHTML = `
-
+    card.innerHTML =
+      `
       <div class="avatar">
         ${avatarHTML}
       </div>
 
       <div class="friend-info">
-
-        <h3>
-          ${name}
-        </h3>
-
-        <p>
-          @${username}
-        </p>
-
+        <h3>${escapeHTML(name)}</h3>
+        <p>@${escapeHTML(username)}</p>
       </div>
 
       <button
@@ -1704,8 +1771,20 @@ async function loadFriendRequests() {
         onclick="declineFriendRequest('${request.id}')">
         Decline
       </button>
+      `;
 
-    `;
+
+    card.querySelector(
+      ".friend-info"
+    )?.addEventListener(
+      "click",
+      () => {
+
+        openUserProfile(
+          request.sender_id
+        );
+      }
+    );
 
 
     container.appendChild(
@@ -1766,7 +1845,10 @@ async function acceptFriendRequest(
       .single();
 
 
-  if (error || !request) {
+  if (
+    error ||
+    !request
+  ) {
 
     alert(
       "Friend request not found."
@@ -1776,32 +1858,36 @@ async function acceptFriendRequest(
   }
 
 
-  // -----------------------------------------------
-  // CHECK EXISTING FRIENDSHIP
-  // -----------------------------------------------
+  const {
+    data: existingFriendship
+  } =
+    await supabaseClient
+      .from("friendships")
+      .select(
+        "id"
+      )
+      .or(
+        `and(user_id.eq.${user.id},friend_id.eq.${request.sender_id}),and(user_id.eq.${request.sender_id},friend_id.eq.${user.id})`
+      )
+      .limit(1)
+      .maybeSingle();
 
-  const alreadyFriends =
-    await areDirectFriends(
-      user.id,
-      request.sender_id
-    );
 
-
-  // -----------------------------------------------
-  // CREATE TWO-WAY FRIENDSHIP
-  // -----------------------------------------------
-
-  if (!alreadyFriends) {
+  if (
+    !existingFriendship
+  ) {
 
     const {
-      error: friendshipError
+      error:
+        friendshipError
     } =
       await supabaseClient
         .from("friendships")
         .insert([
-
           {
-            user_id: user.id,
+            user_id:
+              user.id,
+
             friend_id:
               request.sender_id
           },
@@ -1809,19 +1895,22 @@ async function acceptFriendRequest(
           {
             user_id:
               request.sender_id,
+
             friend_id:
               user.id
           }
-
         ]);
 
 
-    if (friendshipError) {
+    if (
+      friendshipError
+    ) {
 
       console.error(
         "Friendship error:",
         friendshipError
       );
+
 
       alert(
         friendshipError.message
@@ -1832,17 +1921,15 @@ async function acceptFriendRequest(
   }
 
 
-  // -----------------------------------------------
-  // MARK REQUEST ACCEPTED
-  // -----------------------------------------------
-
   const {
-    error: updateError
+    error:
+      updateError
   } =
     await supabaseClient
       .from("friend_requests")
       .update({
-        status: "accepted"
+        status:
+          "accepted"
       })
       .eq(
         "id",
@@ -1872,21 +1959,6 @@ async function acceptFriendRequest(
   await loadFriendRequests();
 
   await loadMyFriends();
-
-  // Refresh search results if search box
-  // currently contains something.
-  const searchInput =
-    document.getElementById(
-      "friendSearch"
-    );
-
-  if (
-    searchInput &&
-    searchInput.value.trim()
-  ) {
-
-    await searchFriends();
-  }
 }
 
 
@@ -1923,7 +1995,8 @@ async function declineFriendRequest(
     await supabaseClient
       .from("friend_requests")
       .update({
-        status: "declined"
+        status:
+          "declined"
       })
       .eq(
         "id",
@@ -1959,7 +2032,9 @@ let loadingMyFriends =
 
 async function loadMyFriends() {
 
-  if (loadingMyFriends) {
+  if (
+    loadingMyFriends
+  ) {
     return;
   }
 
@@ -2001,7 +2076,8 @@ async function loadMyFriends() {
 
     const {
       data: friendships,
-      error: friendshipsError
+      error:
+        friendshipsError
     } =
       await supabaseClient
         .from("friendships")
@@ -2014,7 +2090,9 @@ async function loadMyFriends() {
         );
 
 
-    if (friendshipsError) {
+    if (
+      friendshipsError
+    ) {
 
       console.error(
         "Friends loading error:",
@@ -2045,10 +2123,6 @@ async function loadMyFriends() {
       uniqueFriendIds.length;
 
 
-    // -----------------------------------------------
-    // UPDATE COUNTS
-    // -----------------------------------------------
-
     const friendCount =
       document.getElementById(
         "friendCount"
@@ -2072,7 +2146,9 @@ async function loadMyFriends() {
     }
 
 
-    if (profileFriendCount) {
+    if (
+      profileFriendCount
+    ) {
 
       profileFriendCount.textContent =
         totalFriends;
@@ -2084,7 +2160,8 @@ async function loadMyFriends() {
 
 
     if (
-      uniqueFriendIds.length === 0
+      uniqueFriendIds.length ===
+      0
     ) {
 
       container.innerHTML =
@@ -2094,10 +2171,6 @@ async function loadMyFriends() {
     }
 
 
-    // -----------------------------------------------
-    // LOAD FRIEND PROFILES
-    // -----------------------------------------------
-
     for (
       const friendId
       of uniqueFriendIds
@@ -2105,7 +2178,8 @@ async function loadMyFriends() {
 
       const {
         data: profile,
-        error: profileError
+        error:
+          profileError
       } =
         await supabaseClient
           .from("profiles")
@@ -2119,7 +2193,9 @@ async function loadMyFriends() {
           .maybeSingle();
 
 
-      if (profileError) {
+      if (
+        profileError
+      ) {
 
         console.error(
           "Friend profile error:",
@@ -2172,51 +2248,40 @@ async function loadMyFriends() {
 
       if (avatarUrl) {
 
-        avatarHTML = `
+        avatarHTML =
+          `
           <img
             src="${avatarUrl}?v=${Date.now()}"
             alt="Profile picture"
           >
-        `;
+          `;
       }
 
 
-      card.innerHTML = `
-
+      card.innerHTML =
+        `
         <div class="avatar">
           ${avatarHTML}
         </div>
 
         <div class="friend-info">
-
-          <h3>
-            ${name}
-          </h3>
-
-          <p>
-            @${username}
-          </p>
-
+          <h3>${escapeHTML(name)}</h3>
+          <p>@${escapeHTML(username)}</p>
         </div>
 
         <span class="friend-status">
           ✓ Friends
         </span>
-
-      `;
+        `;
 
 
       card.addEventListener(
         "click",
         function () {
 
-          openFriendProfile(
-            profile.id,
-            name,
-            username,
-            avatarUrl
+          openUserProfile(
+            profile.id
           );
-
         }
       );
 
@@ -2225,7 +2290,6 @@ async function loadMyFriends() {
         card
       );
     }
-
 
   } catch (error) {
 
@@ -2246,7 +2310,6 @@ async function loadMyFriends() {
       container.innerHTML =
         "<p>Unable to load friends.</p>";
     }
-
 
   } finally {
 
@@ -2287,24 +2350,28 @@ async function loadMyProfile() {
 
 
   if (avatar) {
+
     avatar.textContent =
       "?";
   }
 
 
   if (nameElement) {
+
     nameElement.textContent =
       "Your Name";
   }
 
 
   if (usernameElement) {
+
     usernameElement.textContent =
       "@username";
   }
 
 
   if (profileFriendCount) {
+
     profileFriendCount.textContent =
       "0";
   }
@@ -2382,14 +2449,17 @@ async function loadMyProfile() {
 
   if (avatar) {
 
-    if (profile.avatar_url) {
+    if (
+      profile.avatar_url
+    ) {
 
-      avatar.innerHTML = `
+      avatar.innerHTML =
+        `
         <img
           src="${profile.avatar_url}?v=${Date.now()}"
           alt="Profile picture"
         >
-      `;
+        `;
 
     } else {
 
@@ -2403,25 +2473,122 @@ async function loadMyProfile() {
 
 
 // =====================================================
-// FRIEND PROFILE
+// USER PROFILE
 // =====================================================
 
-function openFriendProfile(
-  userId,
-  name,
-  username,
-  avatarUrl = ""
+async function openUserProfile(
+  userId
 ) {
+
+  if (!userId) {
+    return;
+  }
+
+
+  const {
+    data: {
+      user
+    }
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+
+  if (!user) {
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
+  if (
+    user.id ===
+    userId
+  ) {
+
+    goToMyProfile();
+
+    return;
+  }
+
 
   const oldModal =
     document.getElementById(
-      "friendProfileModal"
+      "userProfileModal"
     );
 
 
   if (oldModal) {
     oldModal.remove();
   }
+
+
+  const {
+    data: profile,
+    error:
+      profileError
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id, full_name, username, avatar_url"
+      )
+      .eq(
+        "id",
+        userId
+      )
+      .maybeSingle();
+
+
+  if (
+    profileError ||
+    !profile
+  ) {
+
+    alert(
+      "Unable to load this profile."
+    );
+
+    return;
+  }
+
+
+  const relationship =
+    await getRelationshipStatus(
+      user.id,
+      userId
+    );
+
+
+  const mutualFriends =
+    await getMutualFriends(
+      user.id,
+      userId
+    );
+
+
+  const friendCount =
+    await getUserFriendCount(
+      userId
+    );
+
+
+  const name =
+    profile.full_name ||
+    "User";
+
+
+  const username =
+    profile.username ||
+    "username";
+
+
+  const avatarUrl =
+    profile.avatar_url ||
+    "";
 
 
   const firstLetter =
@@ -2436,13 +2603,167 @@ function openFriendProfile(
 
   if (avatarUrl) {
 
-    avatarHTML = `
+    avatarHTML =
+      `
       <img
         src="${avatarUrl}?v=${Date.now()}"
-        alt="Profile picture"
+        alt="${escapeHTML(name)}"
       >
-    `;
+      `;
   }
+
+
+  let relationshipHTML =
+    "";
+
+
+  if (
+    relationship.status ===
+    "friend"
+  ) {
+
+    relationshipHTML =
+      `
+      <div class="profile-status">
+        🤝 You are friends
+      </div>
+      `;
+
+  } else if (
+    relationship.status ===
+    "sent"
+  ) {
+
+    relationshipHTML =
+      `
+      <div class="profile-status">
+        📤 Friend request sent
+      </div>
+      `;
+
+  } else if (
+    relationship.status ===
+    "received"
+  ) {
+
+    relationshipHTML =
+      `
+      <button
+        class="profile-add-btn"
+        onclick="acceptFriendRequest('${relationship.requestId}'); closeUserProfile();">
+        ✓ Accept Friend Request
+      </button>
+      `;
+
+  } else {
+
+    relationshipHTML =
+      `
+      <button
+        class="profile-add-btn"
+        onclick="sendFriendFromProfile('${userId}', this)">
+        ＋ Add Friend
+      </button>
+      `;
+  }
+
+
+  let mutualHTML =
+    `
+    <div class="profile-mutual-section">
+      <h3>
+        🤝 Mutual Friends
+      </h3>
+    `;
+
+
+  if (
+    mutualFriends.length ===
+    0
+  ) {
+
+    mutualHTML +=
+      `
+      <p>
+        No mutual friends yet.
+      </p>
+      `;
+
+  } else {
+
+    mutualHTML +=
+      `
+      <p>
+        You have
+        <strong>
+          ${mutualFriends.length}
+        </strong>
+        mutual
+        ${
+          mutualFriends.length === 1
+            ? "friend"
+            : "friends"
+        }.
+      </p>
+      `;
+
+
+    mutualFriends
+      .slice(0, 5)
+      .forEach(
+        friend => {
+
+          const mutualName =
+            friend.full_name ||
+            friend.username ||
+            "User";
+
+
+          mutualHTML +=
+            `
+            <div
+              class="mutual-profile-item"
+              onclick="openUserProfile('${friend.id}')">
+
+              <div class="avatar">
+                ${
+                  friend.avatar_url
+                    ? `
+                      <img
+                        src="${friend.avatar_url}?v=${Date.now()}"
+                        alt="${escapeHTML(mutualName)}"
+                      >
+                      `
+                    : escapeHTML(
+                        mutualName
+                          .charAt(0)
+                          .toUpperCase()
+                      )
+                }
+              </div>
+
+              <div>
+                <strong>
+                  ${escapeHTML(mutualName)}
+                </strong>
+
+                <small>
+                  @${escapeHTML(
+                    friend.username ||
+                    "username"
+                  )}
+                </small>
+              </div>
+
+            </div>
+            `;
+        }
+      );
+  }
+
+
+  mutualHTML +=
+    `</div>`;
 
 
   const modal =
@@ -2452,7 +2773,7 @@ function openFriendProfile(
 
 
   modal.id =
-    "friendProfileModal";
+    "userProfileModal";
 
 
   modal.className =
@@ -2463,41 +2784,75 @@ function openFriendProfile(
     "flex";
 
 
-  modal.innerHTML = `
-
-    <div class="auth-box friend-profile-box">
+  modal.innerHTML =
+    `
+    <div
+      class="auth-box user-profile-box">
 
       <button
         class="close-auth"
-        onclick="closeFriendProfile()">
+        onclick="closeUserProfile()">
         ×
       </button>
 
-      <div class="profile-avatar">
+
+      <div
+        class="profile-avatar user-profile-avatar">
+
         ${avatarHTML}
+
       </div>
 
+
       <h2>
-        ${name}
+        ${escapeHTML(name)}
       </h2>
 
+
       <p>
-        @${username}
+        @${escapeHTML(username)}
       </p>
 
-      <p class="profile-friend-status">
-        ✓ You are friends
-      </p>
 
-      <button
-        class="remove-friend-btn"
-        onclick="removeFriend('${userId}')">
-        Remove Friend
-      </button>
+      <div
+        class="profile-friend-count">
+
+        👥
+        <strong>
+          ${friendCount}
+        </strong>
+
+        ${
+          friendCount === 1
+            ? "Friend"
+            : "Friends"
+        }
+
+      </div>
+
+
+      ${relationshipHTML}
+
+
+      ${mutualHTML}
 
     </div>
+    `;
 
-  `;
+
+  modal.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target ===
+        modal
+      ) {
+
+        closeUserProfile();
+      }
+    }
+  );
 
 
   document.body.appendChild(
@@ -2506,11 +2861,192 @@ function openFriendProfile(
 }
 
 
-function closeFriendProfile() {
+// =====================================================
+// GET USER FRIEND COUNT
+// =====================================================
+
+async function getUserFriendCount(
+  userId
+) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("friendships")
+      .select(
+        "friend_id"
+      )
+      .eq(
+        "user_id",
+        userId
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Friend count error:",
+      error
+    );
+
+    return 0;
+  }
+
+
+  return [
+    ...new Set(
+      (data || [])
+        .map(
+          row =>
+            row.friend_id
+        )
+    )
+  ].length;
+}
+
+
+// =====================================================
+// SEND FRIEND FROM PROFILE
+// =====================================================
+
+async function sendFriendFromProfile(
+  receiverId,
+  button
+) {
+
+  const {
+    data: {
+      user
+    }
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+
+  if (!user) {
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
+  const relationship =
+    await getRelationshipStatus(
+      user.id,
+      receiverId
+    );
+
+
+  if (
+    relationship.status ===
+    "friend"
+  ) {
+
+    button.textContent =
+      "✓ Friends";
+
+    button.disabled =
+      true;
+
+    return;
+  }
+
+
+  if (
+    relationship.status ===
+    "sent"
+  ) {
+
+    button.textContent =
+      "📤 Request Sent";
+
+    button.disabled =
+      true;
+
+    return;
+  }
+
+
+  if (
+    relationship.status ===
+    "received"
+  ) {
+
+    button.textContent =
+      "✓ Accept Request";
+
+
+    button.onclick =
+      async () => {
+
+        await acceptFriendRequest(
+          relationship.requestId
+        );
+
+        closeUserProfile();
+      };
+
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .insert({
+
+        sender_id:
+          user.id,
+
+        receiver_id:
+          receiverId,
+
+        status:
+          "pending"
+
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Profile friend request error:",
+      error
+    );
+
+    alert(
+      error.message
+    );
+
+    return;
+  }
+
+
+  button.textContent =
+    "📤 Request Sent";
+
+  button.disabled =
+    true;
+}
+
+
+// =====================================================
+// CLOSE USER PROFILE
+// =====================================================
+
+function closeUserProfile() {
 
   const modal =
     document.getElementById(
-      "friendProfileModal"
+      "userProfileModal"
     );
 
 
@@ -2521,461 +3057,437 @@ function closeFriendProfile() {
 
 
 // =====================================================
-// REMOVE FRIEND
+// ESCAPE HTML
 // =====================================================
 
-async function removeFriend(
-  friendId
+function escapeHTML(
+  value
 ) {
 
-  const {
-    data: {
-      user
-    },
-    error: userError
-  } =
-    await supabaseClient.auth
-      .getUser();
-
-
-  if (userError || !user) {
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  if (!friendId) {
-
-    alert(
-      "Friend ID is missing."
-    );
-
-    return;
-  }
-
-
-  const confirmed =
-    confirm(
-      "Are you sure you want to remove this friend?"
-    );
-
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  console.log(
-    "Removing friendship:",
-    {
-      currentUser: user.id,
-      friend: friendId
-    }
-  );
-
-
-  // -----------------------------------------------
-  // DELETE BOTH DIRECTIONS
-  // -----------------------------------------------
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("friendships")
-      .delete()
-      .or(
-        `and(user_id.eq.${user.id},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${user.id})`
-      );
-
-
-  if (error) {
-
-    console.error(
-      "Remove friend error:",
-      error
-    );
-
-
-    alert(
-      "Unable to remove friend.\n\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  console.log(
-    "Friendship removed successfully."
-  );
-
-
-  closeFriendProfile();
-
-
-  // Refresh current user's list
-  await loadMyFriends();
-
-
-  // Refresh search
-  const searchInput =
-    document.getElementById(
-      "friendSearch"
-    );
-
-
   if (
-    searchInput &&
-    searchInput.value.trim()
+    value === null ||
+    value === undefined
   ) {
 
-    await searchFriends();
+    return "";
   }
 
 
-  alert(
-    "Friend removed successfully."
-  );
-}
-
-
-// =====================================================
-// PROFILE PICTURE
-// =====================================================
-
-async function uploadProfilePicture() {
-
-  const input =
-    document.getElementById(
-      "avatarInput"
-    );
-
-
-  if (!input?.files?.[0]) {
-    return;
-  }
-
-
-  const file =
-    input.files[0];
-
-
-  const {
-    data: {
-      user
-    }
-  } =
-    await supabaseClient.auth
-      .getUser();
-
-
-  if (!user) {
-
-    alert(
-      "Please login first."
-    );
-
-    input.value =
-      "";
-
-    return;
-  }
-
-
-  if (
-    !file.type.startsWith(
-      "image/"
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
     )
-  ) {
-
-    alert(
-      "Please select an image file."
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
     );
-
-    input.value =
-      "";
-
-    return;
-  }
-
-
-  if (
-    file.size >
-    5 * 1024 * 1024
-  ) {
-
-    alert(
-      "Image must be smaller than 5 MB."
-    );
-
-    input.value =
-      "";
-
-    return;
-  }
-
-
-  const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
-
-  const filePath =
-    `${user.id}.${extension}`;
-
-
-  const {
-    error: uploadError
-  } =
-    await supabaseClient.storage
-      .from("avatars")
-      .upload(
-        filePath,
-        file,
-        {
-          upsert: true,
-          contentType:
-            file.type
-        }
-      );
-
-
-  if (uploadError) {
-
-    console.error(
-      "Upload error:",
-      uploadError
-    );
-
-    alert(
-      uploadError.message
-    );
-
-    input.value =
-      "";
-
-    return;
-  }
-
-
-  const {
-    data: publicUrlData
-  } =
-    supabaseClient.storage
-      .from("avatars")
-      .getPublicUrl(
-        filePath
-      );
-
-
-  const avatarUrl =
-    publicUrlData.publicUrl;
-
-
-  const {
-    error: profileError
-  } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        avatar_url:
-          avatarUrl
-      })
-      .eq(
-        "id",
-        user.id
-      );
-
-
-  if (profileError) {
-
-    console.error(
-      "Profile update error:",
-      profileError
-    );
-
-    alert(
-      profileError.message
-    );
-
-    input.value =
-      "";
-
-    return;
-  }
-
-
-  alert(
-    "Profile picture updated! 🎉"
-  );
-
-
-  input.value =
-    "";
-
-
-  await refreshAccountUI();
 }
+// =====================================================
+// PART 2 — USER PROFILES
+// =====================================================
 
 
 // =====================================================
-// EDIT PROFILE
+// OPEN USER PROFILE
 // =====================================================
 
-async function openEditProfile() {
+async function openUserProfile(userId) {
 
-  const menu =
-    document.getElementById(
-      "accountMenu"
-    );
-
-
-  if (menu) {
-
-    menu.classList.remove(
-      "show"
-    );
-  }
-
-
-  const modal =
-    document.getElementById(
-      "editProfileModal"
-    );
-
-
-  const nameInput =
-    document.getElementById(
-      "editProfileName"
-    );
-
-
-  const usernameInput =
-    document.getElementById(
-      "editProfileUsername"
-    );
-
-
-  if (
-    !modal ||
-    !nameInput ||
-    !usernameInput
-  ) {
+  if (!userId) {
     return;
   }
-
 
   const {
     data: {
       user
     }
-  } =
-    await supabaseClient.auth
-      .getUser();
-
+  } = await supabaseClient.auth.getUser();
 
   if (!user) {
-
-    alert(
-      "Please login first."
-    );
-
+    alert("Please login first.");
     return;
   }
 
+  // Remove old profile modal
+  const oldModal =
+    document.getElementById("userProfileModal");
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  // ---------------------------------------------------
+  // Load user profile
+  // ---------------------------------------------------
 
   const {
     data: profile,
     error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "full_name, username"
-      )
-      .eq(
-        "id",
-        user.id
-      )
-      .maybeSingle();
-
+  } = await supabaseClient
+    .from("profiles")
+    .select(
+      "id, full_name, username, avatar_url"
+    )
+    .eq("id", userId)
+    .maybeSingle();
 
   if (error) {
 
+    console.error(
+      "User profile error:",
+      error
+    );
+
     alert(
-      error.message
+      "Unable to load this profile."
     );
 
     return;
   }
 
+  if (!profile) {
 
-  nameInput.value =
-    profile?.full_name ||
-    "";
+    alert(
+      "User profile not found."
+    );
+
+    return;
+  }
+
+  const name =
+    profile.full_name || "User";
+
+  const username =
+    profile.username || "username";
+
+  const avatarUrl =
+    profile.avatar_url || "";
+
+  const firstLetter =
+    name.charAt(0).toUpperCase();
+
+  let avatarHTML =
+    firstLetter;
+
+  if (avatarUrl) {
+
+    avatarHTML = `
+      <img
+        src="${avatarUrl}?v=${Date.now()}"
+        alt="${name}"
+      >
+    `;
+  }
 
 
-  usernameInput.value =
-    profile?.username ||
-    "";
+  // ---------------------------------------------------
+  // Determine friendship status
+  // ---------------------------------------------------
 
+  let friendshipStatus =
+    "not-friends";
+
+  let requestId =
+    null;
+
+  let requestDirection =
+    null;
+
+
+  // Check friendship
+
+  const {
+    data: friendship
+  } = await supabaseClient
+    .from("friendships")
+    .select(
+      "id, user_id, friend_id"
+    )
+    .or(
+      `and(user_id.eq.${user.id},friend_id.eq.${userId}),and(user_id.eq.${userId},friend_id.eq.${user.id})`
+    )
+    .limit(1)
+    .maybeSingle();
+
+
+  if (friendship) {
+
+    friendshipStatus =
+      "friends";
+
+  } else {
+
+    // Check pending request
+
+    const {
+      data: requests
+    } = await supabaseClient
+      .from("friend_requests")
+      .select(
+        "id, sender_id, receiver_id, status"
+      )
+      .eq(
+        "status",
+        "pending"
+      )
+      .or(
+        `and(sender_id.eq.${user.id},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${user.id})`
+      )
+      .order(
+        "id",
+        {
+          ascending: false
+        }
+      )
+      .limit(1);
+
+
+    if (
+      requests &&
+      requests.length > 0
+    ) {
+
+      const request =
+        requests[0];
+
+      requestId =
+        request.id;
+
+
+      if (
+        request.sender_id === user.id
+      ) {
+
+        friendshipStatus =
+          "request-sent";
+
+        requestDirection =
+          "sent";
+
+      } else {
+
+        friendshipStatus =
+          "request-received";
+
+        requestDirection =
+          "received";
+      }
+    }
+  }
+
+
+  // ---------------------------------------------------
+  // Friendship button
+  // ---------------------------------------------------
+
+  let actionHTML = "";
+
+
+  if (
+    friendshipStatus ===
+    "friends"
+  ) {
+
+    actionHTML = `
+      <button
+        class="profile-friend-btn friends"
+        disabled>
+
+        ✓ Friends
+
+      </button>
+    `;
+
+  } else if (
+    friendshipStatus ===
+    "request-sent"
+  ) {
+
+    actionHTML = `
+      <button
+        class="profile-friend-btn"
+        disabled>
+
+        ✓ Request Sent
+
+      </button>
+    `;
+
+  } else if (
+    friendshipStatus ===
+    "request-received"
+  ) {
+
+    actionHTML = `
+      <button
+        class="profile-friend-btn"
+        onclick="acceptFriendRequest('${requestId}'); closeUserProfile();">
+
+        Accept Request
+
+      </button>
+    `;
+
+  } else {
+
+    actionHTML = `
+      <button
+        class="profile-friend-btn"
+        onclick="sendFriendRequestFromProfile('${userId}', this)">
+
+        + Add Friend
+
+      </button>
+    `;
+  }
+
+
+  // ---------------------------------------------------
+  // Profile modal
+  // ---------------------------------------------------
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "userProfileModal";
+
+  modal.className =
+    "auth-modal";
 
   modal.style.display =
     "flex";
+
+
+  modal.innerHTML = `
+
+    <div
+      class="auth-box user-profile-box">
+
+      <button
+        class="close-auth"
+        onclick="closeUserProfile()">
+
+        ×
+
+      </button>
+
+
+      <div
+        class="profile-avatar-large user-profile-avatar">
+
+        ${avatarHTML}
+
+      </div>
+
+
+      <h2>
+        ${name}
+      </h2>
+
+
+      <p class="user-profile-username">
+        @${username}
+      </p>
+
+
+      <div
+        class="user-profile-status">
+
+        ${actionHTML}
+
+      </div>
+      <div
+  id="profileMutualFriends">
+
+  <p>Loading mutual friends...</p>
+
+</div>
+
+      <div
+        class="user-profile-info">
+
+        <div>
+          <strong>
+            YouRemo User
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(modal);
+
+
+  // ---------------------------------------------------
+  // Close when clicking outside
+  // ---------------------------------------------------
+
+  modal.addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target === modal
+      ) {
+
+        closeUserProfile();
+
+      }
+
+    }
+  );
 }
 
 
-function closeEditProfile() {
+
+// =====================================================
+// CLOSE USER PROFILE
+// =====================================================
+
+function closeUserProfile() {
 
   const modal =
     document.getElementById(
-      "editProfileModal"
+      "userProfileModal"
     );
-
 
   if (modal) {
 
-    modal.style.display =
-      "none";
+    modal.remove();
+
   }
 }
 
 
-async function saveEditProfile() {
 
-  const nameInput =
-    document.getElementById(
-      "editProfileName"
-    );
+// =====================================================
+// SEND FRIEND REQUEST FROM PROFILE
+// =====================================================
 
+async function sendFriendRequestFromProfile(
+  receiverId,
+  button
+) {
 
-  const usernameInput =
-    document.getElementById(
-      "editProfileUsername"
-    );
-
-
-  const name =
-    nameInput?.value.trim();
-
-
-  const username =
-    usernameInput?.value.trim();
-
-
-  if (!name || !username) {
-
-    alert(
-      "Please enter your name and username."
-    );
-
+  if (!receiverId) {
     return;
   }
 
@@ -2984,9 +3496,7 @@ async function saveEditProfile() {
     data: {
       user
     }
-  } =
-    await supabaseClient.auth
-      .getUser();
+  } = await supabaseClient.auth.getUser();
 
 
   if (!user) {
@@ -2999,176 +3509,159 @@ async function saveEditProfile() {
   }
 
 
+  if (
+    user.id === receiverId
+  ) {
+
+    return;
+  }
+
+
+  // ---------------------------------------------------
+  // Check friendship
+  // ---------------------------------------------------
+
   const {
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .update({
-
-        full_name:
-          name,
-
-        username:
-          username
-
-      })
-      .eq(
-        "id",
-        user.id
-      );
+    data: friendship
+  } = await supabaseClient
+    .from("friendships")
+    .select("id")
+    .or(
+      `and(user_id.eq.${user.id},friend_id.eq.${receiverId}),and(user_id.eq.${receiverId},friend_id.eq.${user.id})`
+    )
+    .limit(1)
+    .maybeSingle();
 
 
-  if (error) {
+  if (friendship) {
+
+    button.textContent =
+      "✓ Friends";
+
+    button.disabled =
+      true;
+
+    return;
+  }
+
+
+  // ---------------------------------------------------
+  // Check existing request
+  // ---------------------------------------------------
+
+  const {
+    data: requests,
+    error: requestError
+  } = await supabaseClient
+    .from("friend_requests")
+    .select(
+      "id, sender_id, receiver_id, status"
+    )
+    .eq(
+      "status",
+      "pending"
+    )
+    .or(
+      `and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`
+    )
+    .order(
+      "id",
+      {
+        ascending: false
+      }
+    )
+    .limit(1);
+
+
+  if (requestError) {
+
+    console.error(
+      "Profile request error:",
+      requestError
+    );
 
     alert(
-      error.message
+      requestError.message
     );
 
     return;
   }
 
 
-  alert(
-    "Profile updated successfully! 🎉"
-  );
+  if (
+    requests &&
+    requests.length > 0
+  ) {
+
+    const request =
+      requests[0];
 
 
-  closeEditProfile();
+    if (
+      request.sender_id ===
+      user.id
+    ) {
 
+      button.textContent =
+        "✓ Request Sent";
 
-  await refreshAccountUI();
-}
+      button.disabled =
+        true;
 
-
-// =====================================================
-// ACCOUNT MENU
-// =====================================================
-
-function setupAccountMenu() {
-
-  const accountButton =
-    document.getElementById(
-      "accountButton"
-    );
-
-
-  const accountMenu =
-    document.getElementById(
-      "accountMenu"
-    );
-
-
-  if (accountButton) {
-
-    accountButton.addEventListener(
-      "click",
-      async event => {
-
-        event.stopPropagation();
-
-
-        const {
-          data: {
-            session
-          }
-        } =
-          await supabaseClient.auth
-            .getSession();
-
-
-        if (!session) {
-
-          openAuth();
-
-          return;
-        }
-
-
-        if (accountMenu) {
-
-          accountMenu.classList.toggle(
-            "show"
-          );
-        }
-
-      }
-    );
-  }
-
-
-  document.addEventListener(
-    "click",
-    () => {
-
-      if (accountMenu) {
-
-        accountMenu.classList.remove(
-          "show"
-        );
-      }
-
+      return;
     }
-  );
-}
 
 
-// =====================================================
-// GO TO MY PROFILE
-// =====================================================
+    if (
+      request.receiver_id ===
+      user.id
+    ) {
 
-function goToMyProfile() {
+      button.textContent =
+        "Accept Request";
 
-  const accountMenu =
-    document.getElementById(
-      "accountMenu"
-    );
+      button.onclick =
+        async function() {
 
+          await acceptFriendRequest(
+            request.id
+          );
 
-  if (accountMenu) {
+          closeUserProfile();
 
-    accountMenu.classList.remove(
-      "show"
-    );
+        };
+
+      return;
+    }
   }
 
 
-  const profile =
-    document.getElementById(
-      "profile"
-    );
-
-
-  if (profile) {
-
-    profile.scrollIntoView({
-      behavior:
-        "smooth"
-    });
-  }
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-async function logout() {
+  // ---------------------------------------------------
+  // Send request
+  // ---------------------------------------------------
 
   const {
     error
-  } =
-    await supabaseClient.auth
-      .signOut();
+  } = await supabaseClient
+    .from("friend_requests")
+    .insert({
+      sender_id:
+        user.id,
+
+      receiver_id:
+        receiverId,
+
+      status:
+        "pending"
+    });
 
 
   if (error) {
 
     console.error(
-      "Logout error:",
+      "Send profile request error:",
       error
     );
-
 
     alert(
       error.message
@@ -3178,222 +3671,1196 @@ async function logout() {
   }
 
 
-  const searchInput =
-    document.getElementById(
-      "friendSearch"
-    );
+  button.textContent =
+    "✓ Request Sent";
+
+  button.disabled =
+    true;
+}
 
 
-  const friendResults =
-    document.getElementById(
-      "friendResults"
-    );
 
+// =====================================================
+// MAKE SEARCH USERS CLICKABLE
+// =====================================================
 
-  if (searchInput) {
+function makeUserCardClickable(
+  card,
+  userId
+) {
 
-    searchInput.value =
-      "";
-
-    searchInput.blur();
+  if (!card || !userId) {
+    return;
   }
 
-
-  if (friendResults) {
-
-    friendResults.innerHTML =
-      "";
-
-    friendResults.style.display =
-      "";
-  }
+  card.style.cursor =
+    "pointer";
 
 
-  const friendRequests =
-    document.getElementById(
-      "friendRequests"
-    );
+  card.addEventListener(
+    "click",
+    function(event) {
+
+      // Don't open profile when
+      // clicking a button
+
+      if (
+        event.target.closest(
+          "button"
+        )
+      ) {
+
+        return;
+      }
 
 
-  if (friendRequests) {
+      openUserProfile(
+        userId
+      );
 
-    friendRequests.innerHTML =
-      "<p>Please login to see friend requests.</p>";
-  }
-
-
-  const requestBadge =
-    document.getElementById(
-      "requestBadge"
-    );
-
-
-  if (requestBadge) {
-
-    requestBadge.textContent =
-      "0";
-
-    requestBadge.style.display =
-      "none";
-  }
-
-
-  const myFriends =
-    document.getElementById(
-      "myFriendsList"
-    );
-
-
-  if (myFriends) {
-
-    myFriends.innerHTML =
-      "<p>Please login to see your friends.</p>";
-  }
-
-
-  resetFriendCounts();
-
-  resetProfileUI();
-
-  await updateLoginButton();
-
-
-  const accountMenu =
-    document.getElementById(
-      "accountMenu"
-    );
-
-
-  if (accountMenu) {
-
-    accountMenu.classList.remove(
-      "show"
-    );
-  }
-
-
-  alert(
-    "Logged out successfully."
+    }
   );
 }
 
 
+
 // =====================================================
-// INITIALIZATION
+// USER PROFILE — ESC KEY
 // =====================================================
 
 document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+  "keydown",
+  function(event) {
 
-    console.log(
-      "YouRemo loaded."
-    );
+    if (
+      event.key === "Escape"
+    ) {
 
+      closeUserProfile();
 
-    const searchInput =
-      document.getElementById(
-        "friendSearch"
-      );
-
-
-    const friendResults =
-      document.getElementById(
-        "friendResults"
-      );
-
-
-    if (searchInput) {
-
-      searchInput.value =
-        "";
     }
 
-
-    if (friendResults) {
-
-      friendResults.innerHTML =
-        "";
-    }
-
-
-    setupAccountMenu();
-
-
-    const avatarInput =
-      document.getElementById(
-        "avatarInput"
-      );
-
-
-    if (avatarInput) {
-
-      avatarInput.addEventListener(
-        "change",
-        uploadProfilePicture
-      );
-    }
-
-
-    const navLinks =
-      document.querySelectorAll(
-        ".navbar nav a"
-      );
-
-
-    navLinks.forEach(
-      function (link) {
-
-        link.addEventListener(
-          "click",
-          function () {
-
-            navLinks.forEach(
-              function (item) {
-
-                item.classList.remove(
-                  "active"
-                );
-              }
-            );
-
-
-            this.classList.add(
-              "active"
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-    refreshAccountUI();
   }
 );
 
 
+
 // =====================================================
-// AUTH STATE CHANGE
+// PROFILE INITIALIZATION
 // =====================================================
 
-supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
+async function initializeUserProfiles() {
 
-    console.log(
-      "Auth event:",
-      event
+  console.log(
+    "User profile system ready."
+  );
+
+}
+// =====================================================
+// PART 3 — CONNECT USER PROFILES TO FRIEND CARDS
+// =====================================================
+
+
+// =====================================================
+// OPEN PROFILE FROM SEARCH RESULT
+// =====================================================
+
+function openProfileFromCard(userId) {
+
+  if (!userId) {
+    return;
+  }
+
+  openUserProfile(userId);
+}
+
+
+
+// =====================================================
+// MAKE SEARCH RESULT CARD CLICKABLE
+// =====================================================
+
+function attachProfileClick(
+  card,
+  userId
+) {
+
+  if (!card || !userId) {
+    return;
+  }
+
+  card.classList.add(
+    "profile-clickable"
+  );
+
+  card.style.cursor =
+    "pointer";
+
+
+  card.addEventListener(
+    "click",
+    function(event) {
+
+      // Ignore buttons
+
+      if (
+        event.target.closest("button")
+      ) {
+        return;
+      }
+
+
+      openUserProfile(
+        userId
+      );
+
+    }
+  );
+}
+
+
+
+// =====================================================
+// MAKE MY FRIEND CARD CLICKABLE
+// =====================================================
+
+function attachFriendProfileClick(
+  card,
+  profile
+) {
+
+  if (
+    !card ||
+    !profile ||
+    !profile.id
+  ) {
+    return;
+  }
+
+
+  card.classList.add(
+    "profile-clickable"
+  );
+
+
+  card.style.cursor =
+    "pointer";
+
+
+  card.addEventListener(
+    "click",
+    function(event) {
+
+      // Don't open profile
+      // when clicking a button
+
+      if (
+        event.target.closest(
+          "button"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      openUserProfile(
+        profile.id
+      );
+
+    }
+  );
+}
+
+
+
+// =====================================================
+// PROFILE CARD AVATAR HELPER
+// =====================================================
+
+function createProfileAvatarHTML(
+  profile
+) {
+
+  if (!profile) {
+    return "?";
+  }
+
+
+  const name =
+    profile.full_name ||
+    profile.username ||
+    "User";
+
+
+  const firstLetter =
+    name
+      .charAt(0)
+      .toUpperCase();
+
+
+  if (
+    profile.avatar_url
+  ) {
+
+    return `
+      <img
+        src="${profile.avatar_url}?v=${Date.now()}"
+        alt="${name}"
+      >
+    `;
+
+  }
+
+
+  return firstLetter;
+}
+
+
+
+// =====================================================
+// FRIENDSHIP STATUS HELPER
+// =====================================================
+
+async function getUserRelationship(
+  currentUserId,
+  otherUserId
+) {
+
+  if (
+    !currentUserId ||
+    !otherUserId
+  ) {
+
+    return {
+      type: "none",
+      request: null
+    };
+
+  }
+
+
+  // ---------------------------------------------------
+  // Check friendship
+  // ---------------------------------------------------
+
+  const {
+    data: friendship,
+    error: friendshipError
+  } = await supabaseClient
+    .from("friendships")
+    .select(
+      "id, user_id, friend_id"
+    )
+    .or(
+      `and(user_id.eq.${currentUserId},friend_id.eq.${otherUserId}),and(user_id.eq.${otherUserId},friend_id.eq.${currentUserId})`
+    )
+    .limit(1)
+    .maybeSingle();
+
+
+  if (friendshipError) {
+
+    console.error(
+      "Relationship friendship error:",
+      friendshipError
+    );
+
+  }
+
+
+  if (friendship) {
+
+    return {
+      type: "friends",
+      request: null
+    };
+
+  }
+
+
+  // ---------------------------------------------------
+  // Check pending request
+  // ---------------------------------------------------
+
+  const {
+    data: requests,
+    error: requestError
+  } = await supabaseClient
+    .from("friend_requests")
+    .select(
+      "id, sender_id, receiver_id, status"
+    )
+    .eq(
+      "status",
+      "pending"
+    )
+    .or(
+      `and(sender_id.eq.${currentUserId},receiver_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${currentUserId})`
+    )
+    .order(
+      "id",
+      {
+        ascending: false
+      }
+    )
+    .limit(1);
+
+
+  if (requestError) {
+
+    console.error(
+      "Relationship request error:",
+      requestError
+    );
+
+  }
+
+
+  if (
+    requests &&
+    requests.length > 0
+  ) {
+
+    const request =
+      requests[0];
+
+
+    if (
+      request.sender_id ===
+      currentUserId
+    ) {
+
+      return {
+        type: "request-sent",
+        request: request
+      };
+
+    }
+
+
+    if (
+      request.receiver_id ===
+      currentUserId
+    ) {
+
+      return {
+        type: "request-received",
+        request: request
+      };
+
+    }
+
+  }
+
+
+  return {
+    type: "none",
+    request: null
+  };
+}
+
+
+
+// =====================================================
+// GET FRIENDSHIP STATUS LOGO
+// =====================================================
+
+function getRelationshipLogo(
+  relationship
+) {
+
+  if (
+    relationship ===
+    "friends"
+  ) {
+
+    return `
+      <span
+        class="relationship-logo friends-logo"
+        title="Friends">
+
+        ✓
+
+      </span>
+    `;
+
+  }
+
+
+  if (
+    relationship ===
+    "request-sent"
+  ) {
+
+    return `
+      <span
+        class="relationship-logo request-logo"
+        title="Friend request sent">
+
+        ⏳
+
+      </span>
+    `;
+
+  }
+
+
+  if (
+    relationship ===
+    "request-received"
+  ) {
+
+    return `
+      <span
+        class="relationship-logo received-logo"
+        title="Friend request received">
+
+        👋
+
+      </span>
+    `;
+
+  }
+
+
+  return `
+    <span
+      class="relationship-logo not-friends-logo"
+      title="Not friends">
+
+      +
+
+    </span>
+  `;
+}
+
+
+
+// =====================================================
+// PROFILE RELATIONSHIP BUTTON
+// =====================================================
+
+function createRelationshipButton(
+  relationship,
+  otherUserId
+) {
+
+  if (
+    relationship.type ===
+    "friends"
+  ) {
+
+    return `
+      <button
+        class="friend-button friends-button"
+        disabled>
+
+        ✓ Friends
+
+      </button>
+    `;
+
+  }
+
+
+  if (
+    relationship.type ===
+    "request-sent"
+  ) {
+
+    return `
+      <button
+        class="friend-button"
+        disabled>
+
+        ✓ Request Sent
+
+      </button>
+    `;
+
+  }
+
+
+  if (
+    relationship.type ===
+    "request-received"
+  ) {
+
+    const requestId =
+      relationship.request?.id;
+
+
+    return `
+      <button
+        class="friend-button"
+        onclick="acceptFriendRequest('${requestId}')">
+
+        Accept Request
+
+      </button>
+    `;
+
+  }
+
+
+  return `
+    <button
+      class="friend-button"
+      data-user-id="${otherUserId}"
+      onclick="addFriend(this)">
+
+      + Add Friend
+
+    </button>
+  `;
+}
+
+
+
+// =====================================================
+// MUTUAL FRIENDS
+// =====================================================
+
+async function getMutualFriends(
+  currentUserId,
+  otherUserId
+) {
+
+  if (
+    !currentUserId ||
+    !otherUserId
+  ) {
+
+    return [];
+
+  }
+
+
+  // ---------------------------------------------------
+  // Current user's friends
+  // ---------------------------------------------------
+
+  const {
+    data: myFriendRows,
+    error: myError
+  } = await supabaseClient
+    .from("friendships")
+    .select("friend_id")
+    .eq(
+      "user_id",
+      currentUserId
     );
 
 
-    setTimeout(
-      () => {
+  if (myError) {
 
-        refreshAccountUI();
+    console.error(
+      "My friends error:",
+      myError
+    );
 
-      },
-      100
+    return [];
+
+  }
+
+
+  // ---------------------------------------------------
+  // Other user's friends
+  // ---------------------------------------------------
+
+  const {
+    data: theirFriendRows,
+    error: theirError
+  } = await supabaseClient
+    .from("friendships")
+    .select("friend_id")
+    .eq(
+      "user_id",
+      otherUserId
+    );
+
+
+  if (theirError) {
+
+    console.error(
+      "Other friends error:",
+      theirError
+    );
+
+    return [];
+
+  }
+
+
+  const myFriends =
+    new Set(
+      (myFriendRows || [])
+        .map(
+          row =>
+            row.friend_id
+        )
+    );
+
+
+  const theirFriends =
+    (theirFriendRows || [])
+      .map(
+        row =>
+          row.friend_id
+      );
+
+
+  const mutualIds =
+    theirFriends.filter(
+      id =>
+        myFriends.has(id)
+    );
+
+
+  return [
+    ...new Set(
+      mutualIds
+    )
+  ];
+}
+
+
+
+// =====================================================
+// LOAD MUTUAL FRIEND PROFILES
+// =====================================================
+
+async function loadMutualFriendProfiles(
+  currentUserId,
+  otherUserId
+) {
+
+  const mutualIds =
+    await getMutualFriends(
+      currentUserId,
+      otherUserId
+    );
+
+
+  if (
+    mutualIds.length === 0
+  ) {
+
+    return [];
+
+  }
+
+
+  const {
+    data: profiles,
+    error
+  } = await supabaseClient
+    .from("profiles")
+    .select(
+      "id, full_name, username, avatar_url"
+    )
+    .in(
+      "id",
+      mutualIds
+    );
+
+
+  if (error) {
+
+    console.error(
+      "Mutual profiles error:",
+      error
+    );
+
+    return [];
+
+  }
+
+
+  return profiles || [];
+}
+
+
+
+// =====================================================
+// CREATE MUTUAL FRIEND SECTION
+// =====================================================
+
+function createMutualFriendsHTML(
+  profiles
+) {
+
+  if (
+    !profiles ||
+    profiles.length === 0
+  ) {
+
+    return "";
+
+  }
+
+
+  const preview =
+    profiles
+      .slice(0, 5)
+      .map(
+        profile => {
+
+          const avatar =
+            createProfileAvatarHTML(
+              profile
+            );
+
+
+          return `
+            <div
+              class="mutual-avatar"
+              title="${profile.full_name || profile.username}">
+
+              ${avatar}
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+
+  const count =
+    profiles.length;
+
+
+  return `
+
+    <div
+      class="mutual-friends">
+
+      <div
+        class="mutual-avatar-list">
+
+        ${preview}
+
+      </div>
+
+      <span>
+        ${count}
+        mutual
+        ${count === 1 ? "friend" : "friends"}
+      </span>
+
+    </div>
+
+  `;
+}
+
+
+
+// =====================================================
+// USER PROFILE WITH MUTUAL FRIENDS
+// =====================================================
+
+async function loadMutualFriendsIntoProfile(
+  currentUserId,
+  otherUserId
+) {
+
+  const container =
+    document.getElementById(
+      "profileMutualFriends"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML =
+    "<p>Loading mutual friends...</p>";
+
+
+  const profiles =
+    await loadMutualFriendProfiles(
+      currentUserId,
+      otherUserId
+    );
+
+
+  if (
+    profiles.length === 0
+  ) {
+
+    container.innerHTML = "";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    createMutualFriendsHTML(
+      profiles
+    );
+}
+
+
+
+// =====================================================
+// OPEN USER PROFILE WITH MUTUAL FRIENDS
+// =====================================================
+
+async function openUserProfileWithMutuals(
+  userId
+) {
+
+  await openUserProfile(
+    userId
+  );
+
+
+  const {
+    data: {
+      user
+    }
+  } = await supabaseClient.auth.getUser();
+
+
+  if (!user) {
+    return;
+  }
+
+
+  await loadMutualFriendsIntoProfile(
+    user.id,
+    userId
+  );
+}
+
+
+
+// =====================================================
+// UPDATE EXISTING PROFILE FUNCTION
+// =====================================================
+
+// This replaces the old profile opener
+// so mutual friends are loaded automatically.
+
+const originalOpenUserProfile =
+  window.openUserProfile;
+
+
+window.openUserProfile =
+  async function(userId) {
+
+    await originalOpenUserProfile(
+      userId
+    );
+
+
+    const {
+      data: {
+        user
+      }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (!user) {
+      return;
+    }
+
+
+    await loadMutualFriendsIntoProfile(
+      user.id,
+      userId
+    );
+
+  };
+
+
+
+// =====================================================
+// PROFILE CARD CSS CLASS SETUP
+// =====================================================
+
+function setupProfileCardClasses() {
+
+  const style =
+    document.createElement(
+      "style"
+    );
+
+
+  style.textContent = `
+
+    .profile-clickable {
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+
+    .profile-clickable:hover {
+      transform:
+        translateY(-2px);
+    }
+
+
+    .relationship-logo {
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      width:
+        30px;
+
+      height:
+        30px;
+
+      border-radius:
+        50%;
+
+      font-size:
+        15px;
+
+      font-weight:
+        700;
+
+      margin-left:
+        8px;
+    }
+
+
+    .friends-logo {
+      background:
+        #dcfce7;
+
+      color:
+        #16a34a;
+    }
+
+
+    .request-logo {
+      background:
+        #fef3c7;
+
+      color:
+        #d97706;
+    }
+
+
+    .received-logo {
+      background:
+        #dbeafe;
+
+      color:
+        #2563eb;
+    }
+
+
+    .not-friends-logo {
+      background:
+        #f1f5f9;
+
+      color:
+        #64748b;
+    }
+
+
+    .mutual-friends {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        10px;
+
+      margin-top:
+        15px;
+
+      padding:
+        10px 12px;
+
+      border-radius:
+        12px;
+
+      background:
+        #f8fafc;
+
+      font-size:
+        14px;
+
+      color:
+        #64748b;
+    }
+
+
+    .mutual-avatar-list {
+      display:
+        flex;
+
+      align-items:
+        center;
+    }
+
+
+    .mutual-avatar {
+      width:
+        30px;
+
+      height:
+        30px;
+
+      border-radius:
+        50%;
+
+      overflow:
+        hidden;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      background:
+        #e2e8f0;
+
+      color:
+        #475569;
+
+      font-size:
+        12px;
+
+      font-weight:
+        700;
+
+      border:
+        2px solid white;
+
+      margin-left:
+        -7px;
+    }
+
+
+    .mutual-avatar:first-child {
+      margin-left:
+        0;
+    }
+
+
+    .mutual-avatar img {
+      width:
+        100%;
+
+      height:
+        100%;
+
+      object-fit:
+        cover;
+    }
+
+
+    .user-profile-box {
+      position:
+        relative;
+    }
+
+
+    .user-profile-avatar {
+      overflow:
+        hidden;
+    }
+
+
+    .user-profile-avatar img {
+      width:
+        100%;
+
+      height:
+        100%;
+
+      object-fit:
+        cover;
+    }
+
+
+    .profile-friend-btn {
+      margin-top:
+        15px;
+
+      padding:
+        11px 22px;
+
+      border:
+        none;
+
+      border-radius:
+        10px;
+
+      cursor:
+        pointer;
+    }
+
+
+    .profile-friend-btn.friends {
+      cursor:
+        default;
+    }
+
+
+    .user-profile-status {
+      margin-top:
+        10px;
+    }
+
+
+    .user-profile-info {
+      margin-top:
+        10px;
+    }
+
+
+    #profileMutualFriends {
+      margin-top:
+        10px;
+    }
+
+  `;
+
+
+  document.head.appendChild(
+    style
+  );
+}
+
+
+
+// =====================================================
+// INITIALIZE PROFILE FEATURES
+// =====================================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    setupProfileCardClasses();
+
+    console.log(
+      "User profile features initialized."
     );
 
   }
