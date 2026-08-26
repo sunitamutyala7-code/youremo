@@ -1201,43 +1201,50 @@ async function searchFriends() {
 
 
 /* =========================================================
-   19. CREATE FRIEND RESULT CARD
+   CREATE REQUEST CARD - FIXED AVATAR
    ========================================================= */
 
-function createFriendResultCard(person) {
+function createRequestCard(request, sender) {
 
   const name =
-    person.full_name ||
-    person.username ||
+    sender?.full_name ||
+    sender?.username ||
     "YouRemo User";
 
   const username =
-    person.username
-      ? `@${person.username}`
+    sender?.username
+      ? `@${sender.username}`
       : "";
 
-  const avatarHTML = person.avatar_url
-    ? `
-      <div class="friend-avatar">
+  let avatarHTML = "";
 
+  if (sender?.avatar_url) {
+
+    avatarHTML = `
+      <div class="friend-avatar">
         <img
-          src="${escapeHTML(person.avatar_url)}"
+          src="${escapeHTML(sender.avatar_url)}"
           alt="${escapeHTML(name)}"
+          class="friend-avatar-img"
           onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
         >
-
       </div>
-    `
-    : `
+    `;
+
+  } else {
+
+    avatarHTML = `
       <div class="friend-avatar">
         ${escapeHTML(getInitials(name))}
       </div>
     `;
 
+  }
+
   return `
     <div
       class="friend-card"
-      data-user-id="${escapeHTML(person.id)}">
+      data-request-id="${escapeHTML(request.id)}">
 
       ${avatarHTML}
 
@@ -1256,11 +1263,18 @@ function createFriendResultCard(person) {
       <div class="friend-card-actions">
 
         <button
-          class="primary-btn friend-request-btn"
-          data-user-id="${escapeHTML(person.id)}"
-          onclick="sendFriendRequest('${escapeJS(person.id)}')">
+          class="primary-btn"
+          onclick="acceptFriendRequest('${escapeJS(request.id)}')">
 
-          Add Friend
+          Accept
+
+        </button>
+
+        <button
+          class="secondary-btn"
+          onclick="declineFriendRequest('${escapeJS(request.id)}')">
+
+          Decline
 
         </button>
 
@@ -1269,7 +1283,6 @@ function createFriendResultCard(person) {
     </div>
   `;
 }
-
 
 /* =========================================================
    20. UPDATE SEARCH BUTTONS
@@ -2501,7 +2514,7 @@ async function loadMyFriends() {
 
 
 /* =========================================================
-   27. CREATE MY FRIEND CARD
+   CREATE MY FRIEND CARD - FIXED AVATAR
    ========================================================= */
 
 function createMyFriendCard(friend) {
@@ -2516,21 +2529,30 @@ function createMyFriendCard(friend) {
       ? `@${friend.username}`
       : "";
 
-  const avatarHTML = friend.avatar_url
-    ? `
+  let avatarHTML = "";
+
+  if (friend.avatar_url) {
+
+    avatarHTML = `
       <div class="friend-avatar">
         <img
           src="${escapeHTML(friend.avatar_url)}"
           alt="${escapeHTML(name)}"
+          class="friend-avatar-img"
           onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
         >
       </div>
-    `
-    : `
+    `;
+
+  } else {
+
+    avatarHTML = `
       <div class="friend-avatar">
         ${escapeHTML(getInitials(name))}
       </div>
     `;
+
+  }
 
   return `
     <div class="friend-card">
