@@ -5,17 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>YouRemo - Connect With Friends</title>
+  <title>YouRemo - Home</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- =====================================================
-       NAVBAR
-       ===================================================== -->
-
+  <!-- NAVBAR -->
   <header class="navbar">
 
     <div class="logo">
@@ -23,30 +20,32 @@
     </div>
 
     <nav>
-  <a href="index.html">Home</a>
-  <a href="friends.html">Friends</a>
-  <a href="requests.html">Requests</a>
-  <a href="profile.html">Profile</a>
-  <a href="myfriends.html">My Friends</a>
-  <a href="about.html">About</a>
-</nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
+    </nav>
 
     <div
-  id="accountButton"
-  class="account-button"
-  onclick="handleAccountClick()">
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
 
-  <div id="navAvatar" class="nav-avatar">
-    ?
-  </div>
+      <div id="navAvatar" class="nav-avatar">
+        ?
+      </div>
 
-  <span id="loginButton">
-    Login
-  </span>
+      <span id="loginButton">
+        Login
+      </span>
 
-</div>
+    </div>
 
-    <div id="accountMenu" class="account-menu">
+    <div
+      id="accountMenu"
+      class="account-menu">
 
       <button onclick="goToMyProfile()">
         My Profile
@@ -65,20 +64,11 @@
   </header>
 
 
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
+  <!-- HOME ONLY -->
 
   <main>
 
-
-    <!-- =====================================================
-         HOME / HERO
-         ===================================================== -->
-
-    <section
-      class="hero"
-      id="home">
+    <section class="hero" id="home">
 
       <div class="hero-content">
 
@@ -95,15 +85,19 @@
         <div class="hero-buttons">
 
           <button
-  class="primary-btn"
-  onclick="window.location.href='friends.html'">
-  Find Friends
-</button>
+            class="primary-btn"
+            onclick="window.location.href='friends.html'">
+
+            Find Friends
+
+          </button>
 
           <button
             class="secondary-btn"
-            onclick="learnMore()">
+            onclick="window.location.href='about.html'">
+
             Learn More
+
           </button>
 
         </div>
@@ -130,442 +124,135 @@
     </section>
 
 
-    <!-- =====================================================
-         FIND FRIENDS
-         ===================================================== -->
+    <!-- SMALL HOME FEATURES -->
 
-    <section
-      class="friends-section"
-      id="friends">
+    <section class="about">
 
       <h2>
-        Find Your Friends
+        Everything you need to stay connected
       </h2>
-
-      <p class="section-text">
-        Search for people and start connecting.
-      </p>
-
-      <div class="search-box">
-
-        <input
-          type="text"
-          id="friendSearch"
-          placeholder="Search for a person..."
-          onkeyup="searchFriends()">
-
-        <button onclick="searchFriends()">
-          Search
-        </button>
-
-      </div>
-
-      <div
-        id="friendResults"
-        class="friend-results">
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FRIEND REQUESTS
-         ===================================================== -->
-
-    <section
-      class="requests-section"
-      id="requests">
-
-      <h2>
-        Friend Requests
-      </h2>
-
-      <span
-        id="requestBadge"
-        class="request-badge">
-        0
-      </span>
-
-      <p class="section-text">
-        See who wants to connect with you.
-      </p>
-
-      <div
-        id="friendRequests"
-        class="friend-results">
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         MY PROFILE
-         ===================================================== -->
-
-    <section
-      class="profile-section"
-      id="profile">
-
-      <h2>
-        My Profile
-      </h2>
-
-      <p class="section-text">
-        Your YouRemo profile
-      </p>
-
-
-      <div class="my-profile-card">
-
-
-        <!-- PROFILE PHOTO -->
-
-        <div
-          class="profile-avatar-large"
-          id="myProfileAvatar">
-
-          ?
-
-        </div>
-
-
-        <!-- PROFILE INFORMATION -->
-
-        <div class="my-profile-info">
-
-
-          <h3 id="myProfileName">
-            Your Name
-          </h3>
-
-
-          <p id="myProfileUsername">
-            @username
-          </p>
-
-
-          <!-- PROFILE STATS -->
-
-          <div class="profile-stats">
-
-            <div class="profile-stat">
-
-              <strong id="profileFriendCount">
-                0
-              </strong>
-
-              <span>
-                Friends
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <!-- =================================================
-               PROFILE ACTION BUTTONS
-               ================================================= -->
-
-          <div class="profile-actions">
-
-
-            <!-- EDIT PROFILE -->
-
-            <button
-              type="button"
-              class="profile-action-btn edit-profile-btn"
-              onclick="openEditProfile()">
-
-              Edit Profile
-
-            </button>
-
-
-            <!-- CHANGE PHOTO -->
-
-            <label
-              class="profile-action-btn upload-avatar-btn">
-
-              Change Photo
-
-              <input
-                type="file"
-                id="avatarInput"
-                accept="image/*"
-                hidden>
-
-            </label>
-
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         MY FRIENDS
-         ===================================================== -->
-
-    <section
-      class="friends-list-section"
-      id="myFriends">
-
-      <h2>
-        My Friends
-      </h2>
-
-      <p class="section-text">
-        People you're connected with on YouRemo.
-      </p>
-
-      <p
-        id="friendCount"
-        class="friend-count">
-
-        0 Friends
-
-      </p>
-
-      <div
-        id="myFriendsList"
-        class="friend-results">
-
-        <p>
-          Loading friends...
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         ABOUT
-         ===================================================== -->
-
-    <section
-      class="about"
-      id="about">
-
-      <h2>
-        Why YouRemo?
-      </h2>
-
 
       <div class="features">
 
-
-        <!-- FEATURE 1 -->
-
         <div class="feature">
 
-          <span>
-            🔎
-          </span>
+          <span>🔎</span>
 
           <h3>
             Find Friends
           </h3>
 
           <p>
-            Search and discover people you know.
+            Discover people you know on YouRemo.
           </p>
 
         </div>
 
 
-        <!-- FEATURE 2 -->
-
         <div class="feature">
 
-          <span>
-            🤝
-          </span>
+          <span>🤝</span>
 
           <h3>
             Connect
           </h3>
 
           <p>
-            Send friend requests and grow your network.
+            Send and accept friend requests.
           </p>
 
         </div>
 
-
-        <!-- FEATURE 3 -->
 
         <div class="feature">
 
-          <span>
-            💬
-          </span>
+          <span>👥</span>
 
           <h3>
-            Stay Connected
+            Your Network
           </h3>
 
           <p>
-            Keep your connections close and meaningful.
+            Keep all your connections in one place.
           </p>
 
         </div>
-
 
       </div>
 
     </section>
 
-
-    <!-- =====================================================
-         AUTH MODAL
-         ===================================================== -->
-
-    <div
-      id="authModal"
-      class="auth-modal">
-
-
-      <div class="auth-box">
-
-
-        <button
-          class="close-auth"
-          onclick="closeAuth()">
-
-          ×
-
-        </button>
-
-
-        <h2 id="authTitle">
-          Welcome to YouRemo
-        </h2>
-
-
-        <p id="authSubtitle">
-          Create your account
-        </p>
-
-
-        <input
-          type="text"
-          id="authName"
-          placeholder="Full name">
-
-
-        <input
-          type="text"
-          id="authUsername"
-          placeholder="Username">
-
-
-        <input
-          type="email"
-          id="authEmail"
-          placeholder="Email address">
-
-
-        <input
-          type="password"
-          id="authPassword"
-          placeholder="Password">
-
-
-        <button
-          class="auth-submit"
-          onclick="signUp()">
-
-          Create Account
-
-        </button>
-
-
-        <p class="auth-switch">
-
-          Already have an account?
-
-          <span onclick="showLogin()">
-            Login
-          </span>
-
-        </p>
-
-
-      </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         EDIT PROFILE MODAL
-         ===================================================== -->
-
-    <div
-      id="editProfileModal"
-      class="auth-modal">
-
-
-      <div class="auth-box">
-
-
-        <button
-          class="close-auth"
-          onclick="closeEditProfile()">
-
-          ×
-
-        </button>
-
-
-        <h2>
-          Edit Profile
-        </h2>
-
-
-        <p>
-          Update your YouRemo profile information.
-        </p>
-
-
-        <input
-          type="text"
-          id="editProfileName"
-          placeholder="Full name">
-
-
-        <input
-          type="text"
-          id="editProfileUsername"
-          placeholder="Username">
-
-
-        <button
-          class="auth-submit"
-          onclick="saveEditProfile()">
-
-          Save Changes
-
-        </button>
-
-
-      </div>
-
-    </div>
-
-
   </main>
 
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
+  <!-- AUTH MODAL -->
+
+  <div
+    id="authModal"
+    class="auth-modal">
+
+    <div class="auth-box">
+
+      <button
+        class="close-auth"
+        onclick="closeAuth()">
+
+        ×
+
+      </button>
+
+      <h2 id="authTitle">
+        Welcome to YouRemo
+      </h2>
+
+      <p id="authSubtitle">
+        Create your account
+      </p>
+
+      <input
+        type="text"
+        id="authName"
+        placeholder="Full name">
+
+      <input
+        type="text"
+        id="authUsername"
+        placeholder="Username">
+
+      <input
+        type="email"
+        id="authEmail"
+        placeholder="Email address">
+
+      <input
+        type="password"
+        id="authPassword"
+        placeholder="Password">
+
+      <button
+        class="auth-submit"
+        onclick="signUp()">
+
+        Create Account
+
+      </button>
+
+      <p class="auth-switch">
+
+        Already have an account?
+
+        <span onclick="showLogin()">
+          Login
+        </span>
+
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- FOOTER -->
 
   <footer>
 
@@ -576,16 +263,9 @@
   </footer>
 
 
-  <!-- =====================================================
-       SUPABASE
-       ===================================================== -->
+  <!-- SUPABASE -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-  <!-- =====================================================
-       YOUR JAVASCRIPT
-       ===================================================== -->
 
   <script src="script.js"></script>
 
