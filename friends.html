@@ -1,77 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>YouRemo - Friends</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="top-bar">
-  <div class="logo">YouRemo</div>
-  <button onclick="window.location.href='index.html'">← Home</button>
-</header>
+  <!-- NAVBAR -->
 
-<main class="page-container">
+  <header class="navbar">
 
-  <h1>👥 Friends</h1>
-  <p>Find and connect with people on YouRemo.</p>
-
-  <div class="search-box">
-    <input
-      type="text"
-      id="friendSearch"
-      placeholder="Search for a person..."
-    >
-    <button onclick="searchFriends()">Search</button>
-  </div>
-
-  <div id="friendsResults">
-
-    <div class="empty-state">
-      <div>👥</div>
-      <h2>Find Friends</h2>
-      <p>Search for people using their name or username.</p>
+    <div class="logo">
+      YouRemo
     </div>
 
-  </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="index.html#requests">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="index.html#myFriends">My Friends</a>
+      <a href="index.html#about">About</a>
+    </nav>
 
-</main>
+    <div
+      id="accountButton"
+      class="account-button"
+      onclick="handleAccountClick()">
 
-<script src="script.js"></script>
-
-<script>
-function searchFriends() {
-
-  const search = document
-    .getElementById("friendSearch")
-    .value
-    .trim();
-
-  const results =
-    document.getElementById("friendsResults");
-
-  if (!search) {
-    results.innerHTML = `
-      <div class="empty-state">
-        <div>🔎</div>
-        <h2>Search for a friend</h2>
-        <p>Enter a name or username above.</p>
+      <div id="navAvatar" class="nav-avatar">
+        ?
       </div>
-    `;
-    return;
-  }
 
-  results.innerHTML = `
-    <div class="empty-state">
-      <div>🔍</div>
-      <h2>Searching...</h2>
-      <p>Looking for "${search}"</p>
+      <span id="loginButton">
+        Login
+      </span>
+
     </div>
-  `;
-}
-</script>
+
+    <div
+      id="accountMenu"
+      class="account-menu">
+
+      <button onclick="window.location.href='profile.html'">
+        My Profile
+      </button>
+
+      <button onclick="window.location.href='index.html#profile'">
+        Edit Profile
+      </button>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- FRIENDS PAGE -->
+
+  <main>
+
+    <section
+      class="friends-section"
+      id="friends">
+
+      <h1>
+        Find Your Friends
+      </h1>
+
+      <p class="section-text">
+        Search for people and start connecting.
+      </p>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-box">
+
+        <input
+          type="text"
+          id="friendSearch"
+          placeholder="Search for a person..."
+          onkeyup="searchFriends()">
+
+        <button onclick="searchFriends()">
+          Search
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH RESULTS -->
+
+      <div
+        id="friendResults"
+        class="friend-results">
+
+        <div class="empty-state">
+
+          <div>
+            👥
+          </div>
+
+          <h2>
+            Find Friends
+          </h2>
+
+          <p>
+            Enter a name or username to find people on YouRemo.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MY FRIENDS -->
+
+    <section
+      class="friends-list-section">
+
+      <h2>
+        My Friends
+      </h2>
+
+      <p class="section-text">
+        People you're connected with on YouRemo.
+      </p>
+
+      <p
+        id="friendCount"
+        class="friend-count">
+
+        0 Friends
+
+      </p>
+
+      <div
+        id="myFriendsList"
+        class="friend-results">
+
+        <p>
+          Please login to see your friends.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- SUPABASE -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- YOUR JAVASCRIPT -->
+
+  <script src="script.js"></script>
 
 </body>
+
 </html>
