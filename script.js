@@ -19,7 +19,35 @@ const supabaseClient =
     SUPABASE_URL,
     SUPABASE_KEY
   );
+async function logout() {
+  try {
+    const { error } = await supabaseClient.auth.signOut();
 
+    if (error) {
+      console.error("Logout error:", error);
+      alert("Unable to logout. Please try again.");
+      return;
+    }
+
+    console.log("Logged out successfully.");
+
+    // Close account menu
+    const accountMenu = document.getElementById("accountMenu");
+    if (accountMenu) {
+      accountMenu.style.display = "none";
+    }
+
+    // Refresh the UI
+    refreshAccountUI();
+
+    // Optional: go back to Home
+    window.location.hash = "home";
+
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Logout failed. Please try again.");
+  }
+}
 
 // =====================================================
 // NAVIGATION
