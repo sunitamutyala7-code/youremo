@@ -12,9 +12,9 @@
 
 <body>
 
-  <!-- =====================================================
+  <!-- =========================
        NAVBAR
-       ===================================================== -->
+       ========================= -->
 
   <header class="navbar">
 
@@ -22,16 +22,14 @@
       YouRemo
     </div>
 
-   <nav>
-     <a href="index.html">Home</a>
-     <a href="friends.html">Friends</a>
-     <a href="requests.html">Requests</a>
-     <a href="profile.html">Profile</a>
-     <a href="myfriends.html">My Friends</a>
-     <a href="about.html">About</a>
-   </nav>
-
-    <!-- ACCOUNT BUTTON -->
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
+    </nav>
 
     <div
       id="accountButton"
@@ -48,14 +46,11 @@
 
     </div>
 
-
-    <!-- ACCOUNT MENU -->
-
     <div
       id="accountMenu"
       class="account-menu">
 
-      <button onclick="window.location.href='profile.html'">
+      <button onclick="goToMyProfile()">
         My Profile
       </button>
 
@@ -72,15 +67,13 @@
   </header>
 
 
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
+  <!-- =========================
+       MY FRIENDS PAGE
+       ========================= -->
 
   <main>
 
-    <section
-      class="friends-list-section"
-      id="myFriends">
+    <section class="friends-list-section">
 
       <h1>
         My Friends
@@ -93,16 +86,20 @@
 
       <!-- FRIEND COUNT -->
 
-      <p
-        id="friendCount"
-        class="friend-count">
+      <div class="friend-count-box">
 
-        0 Friends
+        <span>
+          👥
+        </span>
 
-      </p>
+        <strong id="friendCount">
+          0 Friends
+        </strong>
+
+      </div>
 
 
-      <!-- FRIEND LIST -->
+      <!-- FRIENDS LIST -->
 
       <div
         id="myFriendsList"
@@ -111,18 +108,29 @@
         <div class="empty-state">
 
           <div>
-            🔐
+            ⏳
           </div>
 
-          <h2>
-            Loading Friends
-          </h2>
-
           <p>
-            Checking your friends...
+            Loading friends...
           </p>
 
         </div>
+
+      </div>
+
+
+      <!-- FIND MORE FRIENDS -->
+
+      <div class="my-friends-action">
+
+        <button
+          class="primary-btn"
+          onclick="window.location.href='friends.html'">
+
+          Find More Friends
+
+        </button>
 
       </div>
 
@@ -131,16 +139,16 @@
   </main>
 
 
-  <!-- =====================================================
+  <!-- =========================
        SUPABASE
-       ===================================================== -->
+       ========================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
-  <!-- =====================================================
-       YOUR JAVASCRIPT
-       ===================================================== -->
+  <!-- =========================
+       YOUREMO JAVASCRIPT
+       ========================= -->
 
   <script src="script.js"></script>
 
