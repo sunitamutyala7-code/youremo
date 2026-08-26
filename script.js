@@ -2660,7 +2660,10 @@ async function loadProfile() {
       "myProfileName",
       name
     );
-
+    setText(
+  "profileUsername",
+  `@${username}`
+);
     setText(
       "myProfileUsername",
       `@${username}`
