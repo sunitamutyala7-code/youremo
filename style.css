@@ -1462,3 +1462,297 @@ footer {
   }
 
 }
+/* =========================================================
+   YOUREMO - REQUESTS PAGE DESIGN
+   ========================================================= */
+
+.requests-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 70px 25px 100px;
+}
+
+
+/* =========================
+   HEADER
+   ========================= */
+
+.requests-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 35px;
+}
+
+.requests-heading h1 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.requests-heading .section-text {
+  margin: 0;
+}
+
+
+/* =========================
+   REQUEST COUNT
+   ========================= */
+
+.request-count-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 20px;
+
+  background: #ffffff;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.08);
+
+  white-space: nowrap;
+}
+
+.request-count-box span {
+  font-size: 23px;
+}
+
+.request-count-box strong {
+  font-size: 22px;
+}
+
+.request-count-box small {
+  opacity: 0.65;
+  font-size: 14px;
+}
+
+
+/* =========================
+   REQUEST GRID
+   ========================= */
+
+#friendRequests.friend-results {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(340px, 1fr));
+
+  gap: 20px;
+
+  width: 100%;
+}
+
+
+/* =========================
+   REQUEST CARD
+   ========================= */
+
+#friendRequests .friend-card {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#friendRequests .friend-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   REQUEST AVATAR
+   ========================= */
+
+#friendRequests .friend-avatar {
+  width: 68px;
+  height: 68px;
+
+  min-width: 68px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  border: 3px solid #ffffff;
+
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   REQUEST INFORMATION
+   ========================= */
+
+#friendRequests .friend-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#friendRequests .friend-info h3 {
+  margin: 0 0 6px;
+
+  font-size: 18px;
+  font-weight: 650;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#friendRequests .friend-info p {
+  margin: 0;
+
+  font-size: 14px;
+
+  opacity: 0.65;
+}
+
+
+/* =========================
+   REQUEST BUTTONS
+   ========================= */
+
+#friendRequests .friend-card-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+#friendRequests .friend-card-actions button {
+  min-width: 90px;
+
+  padding: 9px 14px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+#friendRequests .empty-state {
+  grid-column: 1 / -1;
+
+  text-align: center;
+
+  padding: 65px 25px;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.06);
+}
+
+#friendRequests .empty-state > div {
+  font-size: 48px;
+
+  margin-bottom: 15px;
+}
+
+#friendRequests .empty-state h2 {
+  margin-bottom: 10px;
+}
+
+
+/* =========================
+   FIND FRIENDS BUTTON
+   ========================= */
+
+.requests-action {
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 40px;
+}
+
+.requests-action .primary-btn {
+  padding: 13px 28px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 700px) {
+
+  .requests-page {
+    padding: 45px 18px 70px;
+  }
+
+  .requests-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .requests-heading h1 {
+    font-size: 30px;
+  }
+
+  #friendRequests.friend-results {
+    grid-template-columns: 1fr;
+  }
+
+  #friendRequests .friend-card {
+    padding: 16px;
+  }
+
+  #friendRequests .friend-avatar {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+  }
+
+}
