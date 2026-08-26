@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouRemo - Messages</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<header class="top-bar">
+  <div class="logo">YouRemo</div>
+  <button onclick="window.location.href='index.html'">← Home</button>
+</header>
+
+<main class="page-container">
+
+  <h1>💬 Messages</h1>
+  <p>Chat with your friends and connections.</p>
+
+  <div class="messages-layout">
+
+    <aside class="conversation-list">
+
+      <div class="conversation-search">
+        <input
+          type="text"
+          placeholder="Search messages..."
+        >
+      </div>
+
+      <div class="conversation empty-conversation">
+        <div class="conversation-icon">💬</div>
+        <div>
+          <strong>No conversations yet</strong>
+          <p>Start chatting with a friend.</p>
+        </div>
+      </div>
+
+    </aside>
+
+    <section class="chat-area">
+
+      <div class="empty-state">
+        <div>💬</div>
+        <h2>Your Messages</h2>
+        <p>Select a conversation to start chatting.</p>
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
