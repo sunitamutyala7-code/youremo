@@ -12,9 +12,9 @@
 
 <body>
 
-  <!-- =========================
+  <!-- =====================================================
        NAVBAR
-       ========================= -->
+       ===================================================== -->
 
   <header class="navbar">
 
@@ -25,19 +25,25 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="friends.html">Friends</a>
-      <a href="requests.html">Requests</a>
+      <a href="requests.html" class="active">Requests</a>
       <a href="profile.html">Profile</a>
       <a href="myfriends.html">My Friends</a>
       <a href="about.html">About</a>
     </nav>
+
+    <!-- ACCOUNT BUTTON -->
 
     <div
       id="accountButton"
       class="account-button"
       onclick="handleAccountClick()">
 
-      <div id="navAvatar" class="nav-avatar">
+      <div
+        id="navAvatar"
+        class="nav-avatar">
+
         ?
+
       </div>
 
       <span id="loginButton">
@@ -45,6 +51,9 @@
       </span>
 
     </div>
+
+
+    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -67,49 +76,53 @@
   </header>
 
 
-  <!-- =========================
-       REQUESTS PAGE
-       ========================= -->
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
 
   <main>
 
-    <section class="requests-section requests-page">
+    <section class="requests-section page-section">
 
-      <div class="requests-heading">
+      <!-- PAGE HEADER -->
 
-        <div>
+      <div class="page-header">
 
-          <h1>
-            Friend Requests
-          </h1>
+        <span class="page-icon">
+          🤝
+        </span>
 
-          <p class="section-text">
-            See who wants to connect with you.
-          </p>
+        <h1>
+          Friend Requests
+        </h1>
 
-        </div>
-
-
-        <div class="request-count-box">
-
-          <span>
-            🤝
-          </span>
-
-          <strong id="requestBadge">
-            0
-          </strong>
-
-          <small>
-            Pending
-          </small>
-
-        </div>
+        <p>
+          See who wants to connect with you.
+        </p>
 
       </div>
 
 
-      <!-- REQUEST LIST -->
+      <!-- REQUEST COUNT -->
+
+      <div class="request-header">
+
+        <h2>
+          Pending Requests
+        </h2>
+
+        <span
+          id="requestBadge"
+          class="request-badge">
+
+          0
+
+        </span>
+
+      </div>
+
+
+      <!-- FRIEND REQUESTS -->
 
       <div
         id="friendRequests"
@@ -118,30 +131,18 @@
         <div class="empty-state">
 
           <div>
-            ⏳
+            🔄
           </div>
 
+          <h2>
+            Loading Requests...
+          </h2>
+
           <p>
-            Loading requests...
+            Please wait while we load your friend requests.
           </p>
 
         </div>
-
-      </div>
-
-
-      <!-- FIND FRIENDS -->
-
-      <div class="requests-action">
-
-        <button
-          class="primary-btn"
-          type="button"
-          onclick="window.location.href='friends.html'">
-
-          Find Friends
-
-        </button>
 
       </div>
 
@@ -150,15 +151,29 @@
   </main>
 
 
-  <!-- =========================
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer>
+
+    <p>
+      © 2026 YouRemo. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =====================================================
        SUPABASE
-       ========================= -->
+       ===================================================== -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- =========================
-       YOUREMO JAVASCRIPT
-       ========================= -->
+
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
 
   <script src="script.js"></script>
 
