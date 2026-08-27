@@ -226,7 +226,81 @@
       </div>
 
     </section>
+<!-- =====================================================
+     LOGIN / SIGNUP MODAL
+     ===================================================== -->
 
+<div
+  id="authModal"
+  class="auth-modal">
+
+  <div class="auth-box">
+
+    <button
+      type="button"
+      class="close-auth"
+      onclick="closeAuth()">
+
+      ×
+
+    </button>
+
+    <h2 id="authTitle">
+      Welcome to YouRemo
+    </h2>
+
+    <p id="authSubtitle">
+      Create your account
+    </p>
+
+
+    <input
+      type="text"
+      id="authName"
+      placeholder="Full name">
+
+
+    <input
+      type="text"
+      id="authUsername"
+      placeholder="Username">
+
+
+    <input
+      type="email"
+      id="authEmail"
+      placeholder="Email address">
+
+
+    <input
+      type="password"
+      id="authPassword"
+      placeholder="Password">
+
+
+    <button
+      type="button"
+      class="auth-submit"
+      onclick="signUp()">
+
+      Create Account
+
+    </button>
+
+
+    <p class="auth-switch">
+
+      Already have an account?
+
+      <span onclick="showLogin()">
+        Login
+      </span>
+
+    </p>
+
+  </div>
+
+</div>
   </main>
 
 
