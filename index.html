@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>YouRemo - Home</title>
+  <title>YouRemo - Connect With Friends</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -13,6 +13,7 @@
 <body>
 
   <!-- NAVBAR -->
+
   <header class="navbar">
 
     <div class="logo">
@@ -20,7 +21,7 @@
     </div>
 
     <nav>
-      <a href="index.html" class="active">Home</a>
+      <a href="index.html">Home</a>
       <a href="friends.html">Friends</a>
       <a href="requests.html">Requests</a>
       <a href="profile.html">Profile</a>
@@ -33,7 +34,9 @@
       class="account-button"
       onclick="handleAccountClick()">
 
-      <div id="navAvatar" class="nav-avatar">
+      <div
+        id="navAvatar"
+        class="nav-avatar">
         ?
       </div>
 
@@ -64,11 +67,15 @@
   </header>
 
 
-  <!-- HOME ONLY -->
+  <!-- MAIN -->
 
   <main>
 
-    <section class="hero" id="home">
+    <!-- HOME HERO -->
+
+    <section
+      class="hero"
+      id="home">
 
       <div class="hero-content">
 
@@ -105,6 +112,8 @@
       </div>
 
 
+      <!-- HERO CARD -->
+
       <div class="hero-card">
 
         <div class="card-icon">
@@ -124,56 +133,92 @@
     </section>
 
 
-    <!-- SMALL HOME FEATURES -->
+    <!-- QUICK ACCESS -->
 
-    <section class="about">
+    <section class="home-links">
 
       <h2>
-        Everything you need to stay connected
+        YouRemo
       </h2>
+
+      <p class="section-text">
+        Everything you need to manage your connections.
+      </p>
+
 
       <div class="features">
 
-        <div class="feature">
+        <div
+          class="feature"
+          onclick="window.location.href='friends.html'">
 
-          <span>🔎</span>
+          <span>
+            🔎
+          </span>
 
           <h3>
             Find Friends
           </h3>
 
           <p>
-            Discover people you know on YouRemo.
+            Search for people and connect with them.
           </p>
 
         </div>
 
 
-        <div class="feature">
+        <div
+          class="feature"
+          onclick="window.location.href='requests.html'">
 
-          <span>🤝</span>
+          <span>
+            🤝
+          </span>
 
           <h3>
-            Connect
+            Friend Requests
           </h3>
 
           <p>
-            Send and accept friend requests.
+            See and respond to your incoming requests.
           </p>
 
         </div>
 
 
-        <div class="feature">
+        <div
+          class="feature"
+          onclick="window.location.href='profile.html'">
 
-          <span>👥</span>
+          <span>
+            👤
+          </span>
 
           <h3>
-            Your Network
+            My Profile
           </h3>
 
           <p>
-            Keep all your connections in one place.
+            View and manage your YouRemo profile.
+          </p>
+
+        </div>
+
+
+        <div
+          class="feature"
+          onclick="window.location.href='myfriends.html'">
+
+          <span>
+            👥
+          </span>
+
+          <h3>
+            My Friends
+          </h3>
+
+          <p>
+            See everyone you're connected with.
           </p>
 
         </div>
@@ -183,73 +228,6 @@
     </section>
 
   </main>
-
-
-  <!-- AUTH MODAL -->
-
-  <div
-    id="authModal"
-    class="auth-modal">
-
-    <div class="auth-box">
-
-      <button
-        class="close-auth"
-        onclick="closeAuth()">
-
-        ×
-
-      </button>
-
-      <h2 id="authTitle">
-        Welcome to YouRemo
-      </h2>
-
-      <p id="authSubtitle">
-        Create your account
-      </p>
-
-      <input
-        type="text"
-        id="authName"
-        placeholder="Full name">
-
-      <input
-        type="text"
-        id="authUsername"
-        placeholder="Username">
-
-      <input
-        type="email"
-        id="authEmail"
-        placeholder="Email address">
-
-      <input
-        type="password"
-        id="authPassword"
-        placeholder="Password">
-
-      <button
-        class="auth-submit"
-        onclick="signUp()">
-
-        Create Account
-
-      </button>
-
-      <p class="auth-switch">
-
-        Already have an account?
-
-        <span onclick="showLogin()">
-          Login
-        </span>
-
-      </p>
-
-    </div>
-
-  </div>
 
 
   <!-- FOOTER -->
@@ -266,6 +244,8 @@
   <!-- SUPABASE -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- YOUR JAVASCRIPT -->
 
   <script src="script.js"></script>
 
