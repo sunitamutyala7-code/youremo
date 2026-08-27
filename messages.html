@@ -1134,7 +1134,7 @@
     await loadConversation(
       friend.id
     );
-
+startSeenChecker();
 
     /* ===============================================
        IMPORTANT:
@@ -1922,7 +1922,77 @@ function updateMessageSeen(messageId) {
 
   meta.appendChild(seen);
 }
+async function checkSeenStatus() {
 
+  if (!currentMessageUser || !selectedMessageFriend) {
+    return;
+  }
+
+  try {
+
+    const userId =
+      currentMessageUser.id;
+
+    const friendId =
+      function updateMessageSeen(messageId) {
+
+  const row = document.querySelector(
+    `[data-message-id="${messageId}"]`
+  );
+
+  if (!row) {
+    console.log(
+      "Seen message row not found:",
+      messageId
+    );
+    return;
+  }
+
+  const meta =
+    row.querySelector(".message-meta");
+
+  if (!meta) return;
+
+
+  /* Already showing Seen */
+
+  if (
+    meta.querySelector(".message-seen")
+  ) {
+    return;
+  }
+
+
+  /* Remove ✓ Sent */
+
+  const sent =
+    meta.querySelector(".message-sent");
+
+  if (sent) {
+    sent.remove();
+  }
+
+
+  /* Add ✓✓ Seen */
+
+  const seen =
+    document.createElement("span");
+
+  seen.className =
+    "message-seen";
+
+  seen.textContent =
+    "✓✓ Seen";
+
+  meta.appendChild(seen);
+
+
+  console.log(
+    "✓✓ Seen displayed for:",
+    messageId
+  );
+
+}
   /* =====================================================
      FORMAT TIME
      ===================================================== */
@@ -1957,7 +2027,84 @@ function updateMessageSeen(messageId) {
     );
 
   }
+let seenCheckTimer = null;
 
+function startSeenChecker() {
+
+  if (seenCheckTimer) {
+    clearInterval(seenCheckTimer);
+  }
+
+  seenCheckTimer = setInterval(
+    async function () {
+
+      if (
+        !currentMessageUser ||
+        !selectedMessageFriend
+      ) {
+        return;
+      }
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("messages")
+            .select("id, seen")
+            .eq(
+              "sender_id",
+              selectedMessageFriend.id
+            )
+            .eq(
+              "receiver_id",
+              currentMessageUser.id
+            )
+            .eq(
+              "seen",
+              true
+            );
+
+        if (error) {
+
+          console.error(
+            "Seen check error:",
+            error
+          );
+
+          return;
+
+        }
+
+        if (!data) return;
+
+
+        data.forEach(
+          function (message) {
+
+            updateMessageSeen(
+              message.id
+            );
+
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Seen checker error:",
+          error
+        );
+
+      }
+
+    },
+    2000
+  );
+
+}
 
   /* =====================================================
      SCROLL
