@@ -1,59 +1,556 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>YouRemo - Messages</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="top-bar">
-  <div class="logo">YouRemo</div>
-  <button onclick="window.location.href='index.html'">← Home</button>
-</header>
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
 
-<main class="page-container">
+  <header class="navbar">
 
-  <h1>💬 Messages</h1>
-  <p>Chat with your friends and connections.</p>
+```
+<div class="logo">
+  YouRemo
+</div>
 
-  <div class="messages-layout">
+<nav class="main-nav">
 
-    <aside class="conversation-list">
+  <a href="index.html" title="Home">
+    🏠
+  </a>
 
-      <div class="conversation-search">
-        <input
-          type="text"
-          placeholder="Search messages..."
-        >
-      </div>
+  <a href="friends.html" title="Find Friends">
+    👥
+  </a>
 
-      <div class="conversation empty-conversation">
-        <div class="conversation-icon">💬</div>
-        <div>
-          <strong>No conversations yet</strong>
-          <p>Start chatting with a friend.</p>
-        </div>
-      </div>
+  <a href="requests.html" title="Friend Requests">
+    🤝
+  </a>
 
-    </aside>
+  <a href="myfriends.html" title="My Friends">
+    🧑‍🤝‍🧑
+  </a>
 
-    <section class="chat-area">
+  <a href="messages.html" title="Messages" class="active-nav">
+    💬
+  </a>
 
-      <div class="empty-state">
-        <div>💬</div>
-        <h2>Your Messages</h2>
-        <p>Select a conversation to start chatting.</p>
-      </div>
+  <a href="profile.html" title="Profile">
+    👤
+  </a>
 
-    </section>
+  <a href="about.html" title="About">
+    ℹ️
+  </a>
+
+</nav>
+
+
+<!-- ACCOUNT -->
+
+<div
+  id="accountButton"
+  class="account-button"
+  onclick="handleAccountClick()">
+
+  <div
+    id="navAvatar"
+    class="nav-avatar">
+
+    ?
 
   </div>
 
-</main>
+  <span id="loginButton">
+    Login
+  </span>
 
-<script src="script.js"></script>
+</div>
+
+
+<!-- ACCOUNT MENU -->
+
+<div
+  id="accountMenu"
+  class="account-menu">
+
+  <button onclick="goToMyProfile()">
+    My Profile
+  </button>
+
+  <button onclick="openEditProfile()">
+    Edit Profile
+  </button>
+
+  <button onclick="logout()">
+    Logout
+  </button>
+
+</div>
+```
+
+  </header>
+
+  <!-- =====================================================
+       MESSAGES PAGE
+       ===================================================== -->
+
+  <main class="messages-page">
+
+```
+<div class="messages-header">
+
+  <div>
+
+    <h1>
+      Messages
+    </h1>
+
+    <p>
+      Chat privately with your friends.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- =================================================
+     MESSAGES CONTAINER
+     ================================================= -->
+
+<section class="messages-layout">
+
+
+  <!-- ===============================================
+       CONVERSATION LIST
+       =============================================== -->
+
+  <aside class="conversation-list">
+
+    <div class="conversation-header">
+
+      <h2>
+        Messages
+      </h2>
+
+      <span id="conversationCount">
+        0
+      </span>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="conversation-search">
+
+      <input
+        type="text"
+        id="messageSearch"
+        placeholder="Search friends..."
+        autocomplete="off">
+
+    </div>
+
+
+    <!-- CONVERSATIONS -->
+
+    <div
+      id="conversationList"
+      class="conversation-items">
+
+      <div class="conversation-empty">
+
+        <div class="conversation-empty-icon">
+          💬
+        </div>
+
+        <h3>
+          No conversations yet
+        </h3>
+
+        <p>
+          Add friends and start a conversation.
+        </p>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ===============================================
+       CHAT AREA
+       =============================================== -->
+
+  <section class="chat-area">
+
+
+    <!-- CHAT HEADER -->
+
+    <div
+      id="chatHeader"
+      class="chat-header">
+
+      <div class="chat-placeholder">
+
+        <div class="chat-placeholder-icon">
+          💬
+        </div>
+
+        <div>
+
+          <h2>
+            Your Messages
+          </h2>
+
+          <p>
+            Select a friend to start chatting.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CHAT MESSAGES -->
+
+    <div
+      id="chatMessages"
+      class="chat-messages">
+
+      <div class="chat-empty">
+
+        <div>
+          💬
+        </div>
+
+        <h2>
+          Start a conversation
+        </h2>
+
+        <p>
+          Choose a friend from the left to send a message.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- MESSAGE INPUT -->
+
+    <div
+      id="messageInputArea"
+      class="message-input-area"
+      style="display:none;">
+
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Write a message..."
+        autocomplete="off">
+
+      <button
+        type="button"
+        id="sendMessageButton">
+
+        Send
+
+      </button>
+
+    </div>
+
+  </section>
+
+</section>
+```
+
+  </main>
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer>
+
+```
+<p>
+  © 2026 YouRemo. All rights reserved.
+</p>
+```
+
+  </footer>
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- =====================================================
+       YOUREMO JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+  <!-- =====================================================
+       MESSAGES JAVASCRIPT
+       ===================================================== -->
+
+  <script>
+
+    let selectedConversationUser = null;
+
+
+    /* ================================================
+       LOAD MESSAGE PAGE
+       ================================================ */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async function () {
+
+        console.log(
+          "YouRemo Messages page loaded."
+        );
+
+        setupMessageSearch();
+
+        setupMessageInput();
+
+        if (
+          typeof refreshAccountUI === "function"
+        ) {
+
+          setTimeout(
+            function () {
+
+              refreshAccountUI();
+
+            },
+            100
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ================================================
+       SEARCH FRIENDS
+       ================================================ */
+
+    function setupMessageSearch() {
+
+      const searchInput =
+        document.getElementById(
+          "messageSearch"
+        );
+
+      if (!searchInput) {
+        return;
+      }
+
+      searchInput.addEventListener(
+        "input",
+        function () {
+
+          const searchText =
+            searchInput.value
+              .trim()
+              .toLowerCase();
+
+          const conversations =
+            document.querySelectorAll(
+              ".conversation-item"
+            );
+
+          conversations.forEach(
+            function (conversation) {
+
+              const name =
+                conversation
+                  .innerText
+                  .toLowerCase();
+
+              if (
+                name.includes(searchText)
+              ) {
+
+                conversation.style.display =
+                  "flex";
+
+              } else {
+
+                conversation.style.display =
+                  "none";
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    /* ================================================
+       MESSAGE INPUT
+       ================================================ */
+
+    function setupMessageInput() {
+
+      const input =
+        document.getElementById(
+          "messageInput"
+        );
+
+      const button =
+        document.getElementById(
+          "sendMessageButton"
+        );
+
+      if (!input || !button) {
+        return;
+      }
+
+
+      button.addEventListener(
+        "click",
+        sendMessage
+      );
+
+
+      input.addEventListener(
+        "keydown",
+        function (event) {
+
+          if (
+            event.key === "Enter"
+          ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* ================================================
+       SEND MESSAGE
+       ================================================ */
+
+    function sendMessage() {
+
+      const input =
+        document.getElementById(
+          "messageInput"
+        );
+
+      if (!input) {
+        return;
+      }
+
+      const text =
+        input.value.trim();
+
+
+      if (!text) {
+        return;
+      }
+
+
+      if (!selectedConversationUser) {
+
+        alert(
+          "Please select a friend first."
+        );
+
+        return;
+
+      }
+
+
+      console.log(
+        "Message:",
+        text
+      );
+
+      console.log(
+        "To:",
+        selectedConversationUser
+      );
+
+
+      /*
+         Supabase message sending will be
+         connected here after we create the
+         messages database table.
+      */
+
+
+      input.value = "";
+
+    }
+
+
+    /* ================================================
+       OPEN CONVERSATION
+       ================================================ */
+
+    function openConversation(user) {
+
+      selectedConversationUser =
+        user;
+
+
+      const inputArea =
+        document.getElementById(
+          "messageInputArea"
+        );
+
+
+      if (inputArea) {
+
+        inputArea.style.display =
+          "flex";
+
+      }
+
+
+      console.log(
+        "Opened conversation:",
+        user
+      );
+
+    }
+
+  </script>
 
 </body>
+
 </html>
