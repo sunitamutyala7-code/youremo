@@ -85,13 +85,15 @@ async function loadCurrentUser() {
 
     if (currentUser) {
 
-      await loadProfile();
+  await loadProfile();
 
-      await loadFriendRequests();
+  await loadFriendRequests();
 
-      await loadMyFriends();
+  await loadMyFriends();
 
-    }
+  startMessageRealtime();
+
+}
 
   } catch (error) {
 
@@ -129,13 +131,19 @@ supabaseClient.auth.onAuthStateChange(
 
         if (currentUser) {
 
-          await loadProfile();
+  await loadProfile();
 
-          await loadFriendRequests();
+  await loadFriendRequests();
 
-          await loadMyFriends();
+  await loadMyFriends();
 
-        }
+  startMessageRealtime();
+
+} else {
+
+  stopMessageRealtime();
+
+}
 
       },
       100
