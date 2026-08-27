@@ -24,125 +24,78 @@
     </div>
 
 
-    <!-- ===================================================
-         MAIN NAVIGATION
-         =================================================== -->
-
+    <!-- ICON-ONLY NAVIGATION -->
     <nav class="main-nav">
 
       <!-- HOME -->
-      <a
-        href="index.html"
-        title="Home"
-        class="nav-link active">
-
+      <a href="index.html"
+         title="Home"
+         class="nav-link active">
         <span class="nav-icon">⌂</span>
-        <span class="nav-label">Home</span>
-
       </a>
-
 
       <!-- FIND FRIENDS -->
-      <a
-        href="friends.html"
-        title="Find Friends"
-        class="nav-link">
-
+      <a href="friends.html"
+         title="Find Friends"
+         class="nav-link">
         <span class="nav-icon">👥</span>
-        <span class="nav-label">Friends</span>
-
       </a>
-
 
       <!-- FRIEND REQUESTS -->
-      <a
-        href="requests.html"
-        title="Friend Requests"
-        class="nav-link">
-
+      <a href="requests.html"
+         title="Friend Requests"
+         class="nav-link">
         <span class="nav-icon">🤝</span>
-        <span class="nav-label">Requests</span>
-
       </a>
-
 
       <!-- MY FRIENDS -->
-      <a
-        href="myfriends.html"
-        title="My Friends"
-        class="nav-link">
-
+      <a href="myfriends.html"
+         title="My Friends"
+         class="nav-link">
         <span class="nav-icon">🧑‍🤝‍🧑</span>
-        <span class="nav-label">My Friends</span>
-
       </a>
-
 
       <!-- MESSAGES -->
-      <a
-        href="messages.html"
-        title="Messages"
-        class="nav-link">
-
+      <a href="messages.html"
+         title="Messages"
+         class="nav-link">
         <span class="nav-icon">💬</span>
-        <span class="nav-label">Messages</span>
-
       </a>
-
 
       <!-- NOTIFICATIONS -->
-      <a
-        href="notifications.html"
-        title="Notifications"
-        class="nav-link">
-
+      <a href="notifications.html"
+         title="Notifications"
+         class="nav-link">
         <span class="nav-icon">🔔</span>
-        <span class="nav-label">Notifications</span>
-
       </a>
-
 
       <!-- PROFILE -->
-      <a
-        href="profile.html"
-        title="Profile"
-        class="nav-link">
-
+      <a href="profile.html"
+         title="Profile"
+         class="nav-link">
         <span class="nav-icon">👤</span>
-        <span class="nav-label">Profile</span>
-
       </a>
-
 
       <!-- SETTINGS -->
-      <a
-        href="settings.html"
-        title="Settings"
-        class="nav-link">
-
+      <a href="settings.html"
+         title="Settings"
+         class="nav-link">
         <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Settings</span>
-
       </a>
 
-
       <!-- ABOUT -->
-      <a
-        href="about.html"
-        title="About YouRemo"
-        class="nav-link">
-
+      <a href="about.html"
+         title="About"
+         class="nav-link">
         <span class="nav-icon">ⓘ</span>
-        <span class="nav-label">About</span>
-
       </a>
 
     </nav>
 
 
-    <!-- ===================================================
+    <!-- =====================================================
          ACCOUNT BUTTON
-         =================================================== -->
+         ===================================================== -->
 
     <div
       id="accountButton"
@@ -152,9 +105,7 @@
       <div
         id="navAvatar"
         class="nav-avatar">
-
         ?
-
       </div>
 
       <span id="loginButton">
@@ -164,38 +115,24 @@
     </div>
 
 
-    <!-- ===================================================
+    <!-- =====================================================
          ACCOUNT MENU
-         =================================================== -->
+         ===================================================== -->
 
     <div
       id="accountMenu"
       class="account-menu">
 
-      <button
-        type="button"
-        onclick="goToMyProfile()">
-
+      <button onclick="goToMyProfile()">
         My Profile
-
       </button>
 
-
-      <button
-        type="button"
-        onclick="openEditProfile()">
-
+      <button onclick="openEditProfile()">
         Edit Profile
-
       </button>
 
-
-      <button
-        type="button"
-        onclick="logout()">
-
+      <button onclick="logout()">
         Logout
-
       </button>
 
     </div>
@@ -210,9 +147,9 @@
   <main>
 
 
-    <!-- ===================================================
+    <!-- =====================================================
          HOME HERO
-         =================================================== -->
+         ===================================================== -->
 
     <section
       class="hero"
@@ -225,7 +162,6 @@
           who matter most.
         </h1>
 
-
         <p>
           Find your friends, stay connected and build
           meaningful connections with YouRemo.
@@ -234,9 +170,7 @@
 
         <div class="hero-buttons">
 
-          <!-- FIND FRIENDS -->
           <button
-            type="button"
             class="primary-btn"
             onclick="window.location.href='friends.html'">
 
@@ -245,9 +179,7 @@
           </button>
 
 
-          <!-- LEARN MORE -->
           <button
-            type="button"
             class="secondary-btn"
             onclick="window.location.href='about.html'">
 
@@ -260,9 +192,7 @@
       </div>
 
 
-      <!-- =================================================
-           HERO CARD
-           ================================================= -->
+      <!-- HERO CARD -->
 
       <div class="hero-card">
 
@@ -270,11 +200,9 @@
           👥
         </div>
 
-
         <h2>
           Your people. Your connections.
         </h2>
-
 
         <p>
           Discover friends and connect with them easily.
@@ -285,16 +213,15 @@
     </section>
 
 
-    <!-- ===================================================
+    <!-- =====================================================
          QUICK ACCESS
-         =================================================== -->
+         ===================================================== -->
 
     <section class="home-links">
 
       <h2>
         YouRemo
       </h2>
-
 
       <p class="section-text">
         Everything you need to manage your connections.
@@ -305,22 +232,18 @@
 
 
         <!-- FIND FRIENDS -->
+
         <div
           class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='friends.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='friends.html'">
+          onclick="window.location.href='friends.html'">
 
-          <span class="feature-icon">
+          <span>
             🔎
           </span>
-
 
           <h3>
             Find Friends
           </h3>
-
 
           <p>
             Search for people and connect with them.
@@ -330,22 +253,18 @@
 
 
         <!-- FRIEND REQUESTS -->
+
         <div
           class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='requests.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='requests.html'">
+          onclick="window.location.href='requests.html'">
 
-          <span class="feature-icon">
+          <span>
             🤝
           </span>
-
 
           <h3>
             Friend Requests
           </h3>
-
 
           <p>
             See and respond to your incoming requests.
@@ -354,23 +273,19 @@
         </div>
 
 
-        <!-- MY PROFILE -->
+        <!-- PROFILE -->
+
         <div
           class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='profile.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='profile.html'">
+          onclick="window.location.href='profile.html'">
 
-          <span class="feature-icon">
+          <span>
             👤
           </span>
-
 
           <h3>
             My Profile
           </h3>
-
 
           <p>
             View and manage your YouRemo profile.
@@ -380,22 +295,18 @@
 
 
         <!-- MY FRIENDS -->
+
         <div
           class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='myfriends.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='myfriends.html'">
+          onclick="window.location.href='myfriends.html'">
 
-          <span class="feature-icon">
-            🧑‍🤝‍🧑
+          <span>
+            👥
           </span>
-
 
           <h3>
             My Friends
           </h3>
-
 
           <p>
             See everyone you're connected with.
@@ -404,123 +315,24 @@
         </div>
 
 
-        <!-- MESSAGES -->
-        <div
-          class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='messages.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='messages.html'">
-
-          <span class="feature-icon">
-            💬
-          </span>
-
-
-          <h3>
-            Messages
-          </h3>
-
-
-          <p>
-            Chat privately with your friends.
-          </p>
-
-        </div>
-
-
-        <!-- NOTIFICATIONS -->
-        <div
-          class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='notifications.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='notifications.html'">
-
-          <span class="feature-icon">
-            🔔
-          </span>
-
-
-          <h3>
-            Notifications
-          </h3>
-
-
-          <p>
-            Stay updated about your YouRemo activity.
-          </p>
-
-        </div>
-
-
-        <!-- SETTINGS -->
-        <div
-          class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='settings.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='settings.html'">
-
-          <span class="feature-icon">
-            ⚙️
-          </span>
-
-
-          <h3>
-            Settings
-          </h3>
-
-
-          <p>
-            Manage your YouRemo preferences.
-          </p>
-
-        </div>
-
-
-        <!-- ABOUT -->
-        <div
-          class="feature"
-          role="button"
-          tabindex="0"
-          onclick="window.location.href='about.html'"
-          onkeydown="if(event.key==='Enter') window.location.href='about.html'">
-
-          <span class="feature-icon">
-            ⓘ
-          </span>
-
-
-          <h3>
-            About YouRemo
-          </h3>
-
-
-          <p>
-            Learn more about YouRemo.
-          </p>
-
-        </div>
-
       </div>
 
     </section>
 
 
-    <!-- ===================================================
+    <!-- =====================================================
          LOGIN / SIGNUP MODAL
-         =================================================== -->
+         ===================================================== -->
 
     <div
       id="authModal"
       class="auth-modal">
 
-
       <div class="auth-box">
 
 
         <!-- CLOSE -->
+
         <button
           type="button"
           class="close-auth"
@@ -532,50 +344,51 @@
 
 
         <!-- TITLE -->
+
         <h2 id="authTitle">
           Welcome to YouRemo
         </h2>
 
 
-        <!-- SUBTITLE -->
         <p id="authSubtitle">
           Create your account
         </p>
 
 
-        <!-- FULL NAME -->
+        <!-- NAME -->
+
         <input
           type="text"
           id="authName"
-          placeholder="Full name"
-          autocomplete="name">
+          placeholder="Full name">
 
 
         <!-- USERNAME -->
+
         <input
           type="text"
           id="authUsername"
-          placeholder="Username"
-          autocomplete="username">
+          placeholder="Username">
 
 
         <!-- EMAIL -->
+
         <input
           type="email"
           id="authEmail"
-          placeholder="Email address"
-          autocomplete="email">
+          placeholder="Email address">
 
 
         <!-- PASSWORD -->
+
         <input
           type="password"
           id="authPassword"
-          placeholder="Password"
-          autocomplete="current-password">
+          placeholder="Password">
 
 
-        <!-- SUBMIT -->
+        <!-- SIGN UP -->
+
         <button
           type="button"
           class="auth-submit"
@@ -587,17 +400,13 @@
 
 
         <!-- LOGIN SWITCH -->
+
         <p class="auth-switch">
 
           Already have an account?
 
-          <span
-            onclick="showLogin()"
-            role="button"
-            tabindex="0">
-
+          <span onclick="showLogin()">
             Login
-
           </span>
 
         </p>
