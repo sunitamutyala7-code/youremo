@@ -4030,7 +4030,35 @@ function appendRealtimeMessage(
 
 
   bubble.textContent =
-    message.message || "";
+  message.message || "";
+
+
+/* Message time */
+
+const time =
+  document.createElement(
+    "div"
+  );
+
+time.className =
+  "message-time";
+
+time.textContent =
+  message.created_at
+    ? new Date(
+        message.created_at
+      ).toLocaleTimeString(
+        "en-IN",
+        {
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      )
+    : "";
+
+bubble.appendChild(
+  time
+);
 
 
   row.appendChild(
