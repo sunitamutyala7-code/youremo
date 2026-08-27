@@ -88,51 +88,121 @@ input {
   background: #f1f2ff;
 }
 
-/* =========================================================
-   COMPACT ICON NAVIGATION
-   Works with .main-nav
-   ========================================================= */
+/* =====================================================
+   YOUREMO ICON NAVIGATION
+   ===================================================== */
 
 .main-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  flex: 1;
+  gap: 8px;
 }
 
-.main-nav a {
-  width: 40px;
-  height: 40px;
+.nav-link {
+  width: 42px;
+  height: 42px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 10px;
-
   text-decoration: none;
-  color: #555d70;
 
-  transition: all 0.2s ease;
-}
+  border-radius: 12px;
 
-.main-nav a:hover {
-  background: #f1f2ff;
-  color: #4f46e5;
-  transform: translateY(-1px);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .nav-icon {
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.main-nav a.active {
-  background: #eef2ff;
-  color: #4f46e5;
+.nav-link:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
 }
 
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.nav-link:active {
+  transform: scale(0.94);
+}
+
+
+/* =====================================================
+   NAVBAR SPACING
+   ===================================================== */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
+.main-nav {
+  flex: 1;
+}
+
+
+/* =====================================================
+   MOBILE NAVIGATION
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+  .main-nav {
+    gap: 4px;
+  }
+
+  .nav-link {
+    width: 38px;
+    height: 38px;
+  }
+
+  .nav-icon {
+    font-size: 19px;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .navbar {
+    gap: 8px;
+  }
+
+  .main-nav {
+    gap: 2px;
+  }
+
+  .nav-link {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+
+  .nav-icon {
+    font-size: 17px;
+  }
+
+}
 /* =========================================================
    ACCOUNT BUTTON
    ========================================================= */
