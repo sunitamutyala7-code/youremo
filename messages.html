@@ -1346,7 +1346,22 @@
         return;
       }
 
+const unreadMessages = data.filter(
+  message =>
+    message.receiver_id === user.id &&
+    message.seen === false
+);
 
+if (unreadMessages.length > 0) {
+
+  await supabaseClient
+    .from("messages")
+    .update({ seen: true })
+    .eq("receiver_id", user.id)
+    .eq("sender_id", friendId)
+    .eq("seen", false);
+
+}
       if (!data || data.length === 0) {
 
         chat.innerHTML = `
