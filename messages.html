@@ -2,14 +2,21 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>YouRemo - Messages</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css">
 
   <style>
+
     /* =====================================================
        MESSAGES PAGE
        ===================================================== */
@@ -21,12 +28,13 @@
     }
 
     .messages-header {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .messages-header h1 {
       margin: 0 0 7px;
       font-size: 32px;
+      color: #172033;
     }
 
     .messages-header p {
@@ -34,14 +42,24 @@
       color: #737b8d;
     }
 
+
+    /* =====================================================
+       MAIN LAYOUT
+       ===================================================== */
+
     .messages-layout {
       display: flex;
-      height: calc(100vh - 210px);
-      min-height: 500px;
 
-      background: #fff;
+      width: 100%;
+
+      height: calc(100vh - 190px);
+
+      min-height: 520px;
+
+      background: #ffffff;
 
       border: 1px solid #e5e7eb;
+
       border-radius: 18px;
 
       overflow: hidden;
@@ -50,11 +68,18 @@
         0 10px 35px rgba(30, 35, 65, 0.08);
     }
 
-    /* LEFT */
+
+    /* =====================================================
+       LEFT SIDE
+       ===================================================== */
 
     .conversation-list {
+
       width: 320px;
+
       min-width: 320px;
+
+      height: 100%;
 
       background: #fafbff;
 
@@ -63,16 +88,21 @@
       overflow-y: auto;
     }
 
+
     .conversation-search {
+
       padding: 15px;
 
       border-bottom: 1px solid #e5e7eb;
 
-      background: #fff;
+      background: #ffffff;
     }
 
+
     .conversation-search input {
+
       width: 100%;
+
       height: 42px;
 
       padding: 0 13px;
@@ -84,13 +114,28 @@
       outline: none;
 
       font-size: 14px;
+
+      color: #202124;
     }
+
 
     .conversation-search input:focus {
+
       border-color: #4f46e5;
+
+      box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.08);
     }
 
+
+    /* =====================================================
+       FRIEND / CONVERSATION
+       ===================================================== */
+
     .conversation {
+
+      position: relative;
+
       display: flex;
 
       align-items: center;
@@ -103,22 +148,31 @@
 
       border-bottom: 1px solid #eeeeee;
 
-      transition: background .2s ease;
+      transition:
+        background 0.2s ease;
     }
 
+
     .conversation:hover {
+
       background: #f0f1ff;
     }
 
+
     .conversation.active {
+
       background: #eef2ff;
     }
 
+
     .conversation-avatar {
+
       width: 48px !important;
+
       height: 48px !important;
 
       min-width: 48px !important;
+
       max-width: 48px !important;
 
       border-radius: 50%;
@@ -128,6 +182,7 @@
       display: flex;
 
       align-items: center;
+
       justify-content: center;
 
       flex-shrink: 0;
@@ -139,280 +194,110 @@
           #764ba2
         );
 
-      color: #fff;
+      color: #ffffff;
 
       font-size: 17px;
 
       font-weight: 700;
     }
 
+
     .conversation-avatar img {
+
       width: 100% !important;
+
       height: 100% !important;
 
-      object-fit: cover;
+      max-width: 100% !important;
+
+      max-height: 100% !important;
+
+      object-fit: cover !important;
 
       border-radius: 50%;
+
+      display: block;
     }
+
 
     .conversation-info {
+
       flex: 1;
 
       min-width: 0;
     }
+
 
     .conversation-info strong {
+
       display: block;
 
       font-size: 15px;
 
       color: #202124;
 
-      white-space: nowrap;
-
       overflow: hidden;
 
       text-overflow: ellipsis;
+
+      white-space: nowrap;
     }
+
 
     .conversation-info p {
-      margin: 4px 0 0;
 
-      color: #777d8a;
+      margin: 4px 0 0;
 
       font-size: 12px;
 
-      white-space: nowrap;
+      color: #777d8a;
 
       overflow: hidden;
 
       text-overflow: ellipsis;
+
+      white-space: nowrap;
     }
 
-    /* RIGHT */
 
-    .chat-area {
-      flex: 1;
+    /* =====================================================
+       UNREAD BADGE
+       ===================================================== */
 
-      min-width: 0;
+    .unread-badge {
 
-      min-height: 0;
+      min-width: 20px;
+
+      height: 20px;
+
+      padding: 0 6px;
 
       display: flex;
-
-      flex-direction: column;
-
-      overflow: hidden;
-
-      background: #fff;
-    }
-
-    .chat-header {
-      height: 72px;
-
-      min-height: 72px;
-
-      padding: 12px 20px;
-
-      display: flex;
-
-      align-items: center;
-
-      border-bottom: 1px solid #e5e7eb;
-
-      background: #fff;
-    }
-
-    .chat-empty-title {
-      color: #777d8a;
-
-      font-size: 14px;
-    }
-
-    .chat-user {
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-    }
-
-    .chat-user .conversation-avatar {
-      width: 44px !important;
-      height: 44px !important;
-
-      min-width: 44px !important;
-      max-width: 44px !important;
-    }
-
-    .chat-user strong {
-      display: block;
-
-      font-size: 15px;
-    }
-
-    .chat-user p {
-      margin: 3px 0 0;
-
-      color: #777d8a;
-
-      font-size: 12px;
-    }
-
-    /* CHAT */
-
-    .chat-messages {
-      flex: 1 1 auto;
-
-      min-height: 0;
-
-      overflow-y: auto;
-
-      padding: 20px;
-
-      background: #f8f9fc;
-    }
-
-    .message-row {
-      display: flex;
-
-      margin-bottom: 12px;
-    }
-
-    .message-row.mine {
-      justify-content: flex-end;
-    }
-
-    .message-row.theirs {
-      justify-content: flex-start;
-    }
-
-    .message-bubble {
-      max-width: 65%;
-
-      padding: 10px 14px;
-
-      border-radius: 15px;
-
-      background: #fff;
-
-      border: 1px solid #e5e7eb;
-
-      color: #202124;
-
-      font-size: 14px;
-
-      line-height: 1.45;
-
-      word-break: break-word;
-
-      box-shadow:
-        0 2px 7px rgba(0,0,0,.04);
-    }
-
-    .message-row.mine .message-bubble {
-      background: #4f46e5;
-
-      color: #fff;
-
-      border-color: #4f46e5;
-    }
-
-    /* INPUT */
-
-    .message-input-area {
-      flex: 0 0 auto;
-
-      display: flex;
-
-      gap: 10px;
-
-      padding: 14px 16px;
-
-      border-top: 1px solid #e5e7eb;
-
-      background: #fff;
-    }
-
-    .message-input-area input {
-      flex: 1;
-
-      min-width: 0;
-
-      height: 44px;
-
-      padding: 0 14px;
-
-      border: 1px solid #dfe2ea;
-
-      border-radius: 10px;
-
-      outline: none;
-
-      font-size: 14px;
-    }
-
-    .message-input-area input:focus {
-      border-color: #4f46e5;
-    }
-
-    .message-input-area button {
-      height: 44px;
-
-      padding: 0 20px;
-
-      border: none;
-
-      border-radius: 10px;
-
-      background: #4f46e5;
-
-      color: #fff;
-
-      font-weight: 700;
-
-      cursor: pointer;
-    }
-
-    .message-input-area button:hover {
-      background: #4338ca;
-    }
-
-    /* EMPTY */
-
-    .empty-state {
-      height: 100%;
-
-      display: flex;
-
-      flex-direction: column;
 
       align-items: center;
 
       justify-content: center;
 
-      text-align: center;
+      border-radius: 999px;
 
-      color: #737b8d;
+      background: #4f46e5;
+
+      color: #ffffff;
+
+      font-size: 10px;
+
+      font-weight: 700;
+
+      flex-shrink: 0;
     }
 
-    .empty-state > div {
-      font-size: 42px;
 
-      margin-bottom: 12px;
-    }
-
-    .empty-state h2 {
-      margin-bottom: 8px;
-
-      color: #202124;
-    }
-
-    .empty-state p {
-      margin: 0;
-    }
+    /* =====================================================
+       EMPTY LEFT SIDE
+       ===================================================== */
 
     .empty-conversation {
+
       display: flex;
 
       align-items: center;
@@ -424,8 +309,11 @@
       color: #737b8d;
     }
 
+
     .conversation-icon {
+
       width: 45px;
+
       height: 45px;
 
       min-width: 45px;
@@ -443,7 +331,335 @@
       font-size: 21px;
     }
 
+
+    /* =====================================================
+       CHAT AREA
+       ===================================================== */
+
+    .chat-area {
+
+      flex: 1;
+
+      min-width: 0;
+
+      min-height: 0;
+
+      height: 100%;
+
+      display: flex;
+
+      flex-direction: column;
+
+      background: #ffffff;
+
+      overflow: hidden;
+    }
+
+
+    /* =====================================================
+       CHAT HEADER
+       ===================================================== */
+
+    .chat-header {
+
+      flex: 0 0 auto;
+
+      min-height: 72px;
+
+      display: flex;
+
+      align-items: center;
+
+      padding: 12px 20px;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      background: #ffffff;
+    }
+
+
+    .chat-empty-title {
+
+      color: #737b8d;
+
+      font-size: 14px;
+    }
+
+
+    .chat-user {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+    }
+
+
+    .chat-user .conversation-avatar {
+
+      width: 44px !important;
+
+      height: 44px !important;
+
+      min-width: 44px !important;
+
+      max-width: 44px !important;
+    }
+
+
+    .chat-user strong {
+
+      display: block;
+
+      font-size: 15px;
+
+      color: #202124;
+    }
+
+
+    .chat-user p {
+
+      margin: 3px 0 0;
+
+      font-size: 12px;
+
+      color: #777d8a;
+    }
+
+
+    /* =====================================================
+       CHAT MESSAGES
+       ===================================================== */
+
+    .chat-messages {
+
+      flex: 1 1 auto;
+
+      min-height: 0;
+
+      padding: 20px;
+
+      overflow-y: auto;
+
+      background: #f8f9fc;
+
+      scroll-behavior: smooth;
+    }
+
+
+    .message-row {
+
+      display: flex;
+
+      margin-bottom: 12px;
+
+      width: 100%;
+    }
+
+
+    .message-row.mine {
+
+      justify-content: flex-end;
+    }
+
+
+    .message-row.theirs {
+
+      justify-content: flex-start;
+    }
+
+
+    .message-bubble {
+
+      max-width: 65%;
+
+      padding: 10px 14px;
+
+      border-radius: 15px;
+
+      background: #ffffff;
+
+      border: 1px solid #e5e7eb;
+
+      color: #202124;
+
+      font-size: 14px;
+
+      line-height: 1.45;
+
+      word-break: break-word;
+
+      box-shadow:
+        0 2px 7px rgba(0, 0, 0, 0.04);
+    }
+
+
+    .message-row.mine .message-bubble {
+
+      background: #4f46e5;
+
+      color: #ffffff;
+
+      border-color: #4f46e5;
+    }
+
+
+    .message-text {
+
+      white-space: pre-wrap;
+    }
+
+
+    /* =====================================================
+       MESSAGE META
+       ===================================================== */
+
+    .message-meta {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: flex-end;
+
+      gap: 6px;
+
+      margin-top: 5px;
+    }
+
+
+    .message-time {
+
+      font-size: 10px;
+
+      line-height: 1;
+
+      opacity: 0.65;
+
+      white-space: nowrap;
+    }
+
+
+    .message-status {
+
+      font-size: 10px;
+
+      line-height: 1;
+
+      opacity: 0.9;
+
+      white-space: nowrap;
+    }
+
+
+    .message-row.mine .message-status {
+
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+
+    .message-row.theirs .message-time {
+
+      color: #777d8a;
+    }
+
+
+    /* =====================================================
+       INPUT AREA
+       ===================================================== */
+
+    .message-input-area {
+
+      flex: 0 0 auto;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      padding: 14px 16px;
+
+      border-top: 1px solid #e5e7eb;
+
+      background: #ffffff;
+    }
+
+
+    .message-input-area input {
+
+      flex: 1;
+
+      min-width: 0;
+
+      height: 44px;
+
+      padding: 0 14px;
+
+      border: 1px solid #dfe2ea;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      font-size: 14px;
+
+      color: #202124;
+    }
+
+
+    .message-input-area input:focus {
+
+      border-color: #4f46e5;
+
+      box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.08);
+    }
+
+
+    .message-input-area button {
+
+      height: 44px;
+
+      padding: 0 20px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #4f46e5;
+
+      color: #ffffff;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      flex-shrink: 0;
+    }
+
+
+    .message-input-area button:hover {
+
+      background: #4338ca;
+    }
+
+
+    .message-input-area button:disabled {
+
+      opacity: 0.6;
+
+      cursor: not-allowed;
+    }
+
+
+    /* =====================================================
+       LOADING
+       ===================================================== */
+
     .loading-conversations {
+
       padding: 30px 20px;
 
       text-align: center;
@@ -453,44 +669,126 @@
       font-size: 14px;
     }
 
-    /* MOBILE */
+
+    /* =====================================================
+       EMPTY CHAT
+       ===================================================== */
+
+    .chat-messages .empty-state {
+
+      height: 100%;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      color: #737b8d;
+    }
+
+
+    .chat-messages .empty-state > div {
+
+      font-size: 42px;
+
+      margin-bottom: 12px;
+    }
+
+
+    .chat-messages .empty-state h2 {
+
+      margin-bottom: 8px;
+
+      color: #202124;
+    }
+
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
 
     @media (max-width: 750px) {
 
       .messages-page {
-        padding: 30px 15px 50px;
+
+        padding: 25px 12px 40px;
       }
+
+
+      .messages-header h1 {
+
+        font-size: 27px;
+      }
+
 
       .messages-layout {
-        flex-direction: column;
 
-        height: auto;
+        height: calc(100vh - 155px);
+
+        min-height: 500px;
+
+        display: flex;
+
+        flex-direction: column;
       }
 
+
       .conversation-list {
+
         width: 100%;
 
         min-width: 0;
 
-        height: 280px;
+        height: 220px;
+
+        min-height: 220px;
 
         border-right: none;
 
         border-bottom: 1px solid #e5e7eb;
       }
 
+
       .chat-area {
-        height: 550px;
+
+        flex: 1;
+
+        min-height: 0;
+
+        height: auto;
       }
+
 
       .message-bubble {
+
         max-width: 80%;
       }
+
+
+      .message-input-area {
+
+        padding: 10px;
+      }
+
+
+      .message-input-area button {
+
+        padding: 0 15px;
+      }
     }
+
   </style>
+
 </head>
 
+
 <body>
+
 
   <!-- =====================================================
        NAVBAR
@@ -502,26 +800,67 @@
       YouRemo
     </div>
 
+
     <nav class="main-nav">
 
-      <a href="index.html" title="Home">🏠</a>
+      <a
+        href="index.html"
+        title="Home">
 
-      <a href="friends.html" title="Find Friends">🔎</a>
+        🏠
 
-      <a href="requests.html" title="Requests">🤝</a>
+      </a>
 
-      <a href="myfriends.html" title="My Friends">👥</a>
+
+      <a
+        href="friends.html"
+        title="Find Friends">
+
+        🔎
+
+      </a>
+
+
+      <a
+        href="requests.html"
+        title="Requests">
+
+        🤝
+
+      </a>
+
+
+      <a
+        href="myfriends.html"
+        title="My Friends">
+
+        👥
+
+      </a>
+
 
       <a
         href="messages.html"
-        title="Messages"
-        class="active">
+        class="active"
+        title="Messages">
+
         💬
+
       </a>
 
-      <a href="profile.html" title="Profile">👤</a>
+
+      <a
+        href="profile.html"
+        title="Profile">
+
+        👤
+
+      </a>
 
     </nav>
+
+
+    <!-- ACCOUNT -->
 
     <div
       id="accountButton"
@@ -536,11 +875,15 @@
 
       </div>
 
+
       <span id="loginButton">
         Login
       </span>
 
     </div>
+
+
+    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -550,9 +893,11 @@
         My Profile
       </button>
 
+
       <button onclick="openEditProfile()">
         Edit Profile
       </button>
+
 
       <button onclick="logout()">
         Logout
@@ -569,11 +914,13 @@
 
   <main class="messages-page">
 
+
     <div class="messages-header">
 
       <h1>
         💬 Messages
       </h1>
+
 
       <p>
         Chat with your friends and connections.
@@ -581,6 +928,10 @@
 
     </div>
 
+
+    <!-- ===================================================
+         MESSAGE LAYOUT
+         =================================================== -->
 
     <div class="messages-layout">
 
@@ -591,23 +942,29 @@
 
       <aside class="conversation-list">
 
+
         <div class="conversation-search">
 
           <input
             type="text"
             id="messageFriendSearch"
             placeholder="Search friends..."
-            autocomplete="off">
+            autocomplete="off"
+            oninput="filterMessageFriends()">
 
         </div>
+
 
         <div id="conversationList">
 
           <div class="loading-conversations">
+
             Loading friends...
+
           </div>
 
         </div>
+
 
       </aside>
 
@@ -618,16 +975,23 @@
 
       <section class="chat-area">
 
+
+        <!-- CHAT HEADER -->
+
         <div
           id="chatHeader"
           class="chat-header">
 
           <div class="chat-empty-title">
+
             💬 Select a friend
+
           </div>
 
         </div>
 
+
+        <!-- CHAT MESSAGES -->
 
         <div
           id="chatMessages"
@@ -635,11 +999,15 @@
 
           <div class="empty-state">
 
-            <div>💬</div>
+            <div>
+              💬
+            </div>
+
 
             <h2>
               Your Messages
             </h2>
+
 
             <p>
               Select a friend to start chatting.
@@ -650,6 +1018,8 @@
         </div>
 
 
+        <!-- INPUT -->
+
         <div
           id="messageInputArea"
           class="message-input-area"
@@ -659,17 +1029,21 @@
             type="text"
             id="messageInput"
             placeholder="Type a message..."
-            autocomplete="off">
+            autocomplete="off"
+            onkeydown="handleMessageKey(event)">
+
 
           <button
             type="button"
-            id="sendMessageButton">
+            id="sendMessageButton"
+            onclick="sendMessage()">
 
             Send
 
           </button>
 
         </div>
+
 
       </section>
 
@@ -684,20 +1058,23 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- YOUR MAIN SCRIPT -->
+
+  <!-- =====================================================
+       YOUR MAIN JAVASCRIPT
+       ===================================================== -->
+
   <script src="script.js"></script>
 
 
   <!-- =====================================================
-       MESSAGE PAGE LOGIC
-       
-       IMPORTANT:
-       NO REALTIME CHANNEL IS CREATED HERE.
-       
-       script.js already handles realtime.
+       MESSAGE JAVASCRIPT
        ===================================================== -->
 
   <script>
+
+    /* =====================================================
+       VARIABLES
+       ===================================================== */
 
     let messageFriends = [];
 
@@ -711,17 +1088,34 @@
     async function loadMessageFriends() {
 
       const container =
-        document.getElementById("conversationList");
+        document.getElementById(
+          "conversationList"
+        );
+
 
       if (!container) return;
+
+
+      container.innerHTML = `
+
+        <div class="loading-conversations">
+
+          Loading friends...
+
+        </div>
+
+      `;
 
 
       try {
 
         const {
+
           data: {
             user
+
           }
+
         } =
           await supabaseClient.auth.getUser();
 
@@ -756,9 +1150,15 @@
         }
 
 
+        /* ===============================================
+           GET FRIENDSHIPS
+           =============================================== */
+
         const {
+
           data,
           error
+
         } =
           await supabaseClient
             .from("friendships")
@@ -771,9 +1171,10 @@
         if (error) {
 
           console.error(
-            "Friendship loading error:",
+            "Error loading friendships:",
             error
           );
+
 
           container.innerHTML = `
 
@@ -790,7 +1191,7 @@
                 </strong>
 
                 <p>
-                  ${error.message}
+                  ${escapeMessage(error.message)}
                 </p>
 
               </div>
@@ -833,28 +1234,71 @@
         }
 
 
+        /* ===============================================
+           FIND OTHER USER IDS
+           =============================================== */
+
         const friendIds =
           data.map(friendship => {
 
             return friendship.user_id === user.id
+
               ? friendship.friend_id
+
               : friendship.user_id;
 
           });
 
 
         const uniqueFriendIds =
-          [...new Set(friendIds)];
+          [
+            ...new Set(friendIds)
+          ];
 
+
+        if (uniqueFriendIds.length === 0) {
+
+          container.innerHTML = `
+
+            <div class="empty-conversation">
+
+              <div class="conversation-icon">
+                👥
+              </div>
+
+              <div>
+
+                <strong>
+                  No friends yet
+                </strong>
+
+              </div>
+
+            </div>
+
+          `;
+
+          return;
+        }
+
+
+        /* ===============================================
+           LOAD PROFILES
+           =============================================== */
 
         const {
+
           data: profiles,
           error: profileError
+
         } =
           await supabaseClient
             .from("profiles")
             .select("*")
-            .in("id", uniqueFriendIds);
+            .in(
+              "id",
+              uniqueFriendIds
+            );
 
 
         if (profileError) {
@@ -863,6 +1307,7 @@
             "Profile loading error:",
             profileError
           );
+
 
           container.innerHTML = `
 
@@ -879,7 +1324,7 @@
                 </strong>
 
                 <p>
-                  ${profileError.message}
+                  ${escapeMessage(profileError.message)}
                 </p>
 
               </div>
@@ -896,14 +1341,45 @@
           profiles || [];
 
 
-        renderMessageFriends();
+        /* ===============================================
+           RENDER FRIENDS
+           =============================================== */
 
-      } catch (error) {
+        await renderMessageFriends();
+
+      }
+
+      catch (error) {
 
         console.error(
-          "loadMessageFriends error:",
+          "Messages error:",
           error
         );
+
+
+        container.innerHTML = `
+
+          <div class="empty-conversation">
+
+            <div class="conversation-icon">
+              ⚠️
+            </div>
+
+            <div>
+
+              <strong>
+                Something went wrong
+              </strong>
+
+              <p>
+                ${escapeMessage(error.message)}
+              </p>
+
+            </div>
+
+          </div>
+
+        `;
 
       }
 
@@ -914,7 +1390,7 @@
        RENDER FRIENDS
        ===================================================== */
 
-    function renderMessageFriends(
+    async function renderMessageFriends(
       searchText = ""
     ) {
 
@@ -923,38 +1399,45 @@
           "conversationList"
         );
 
+
       if (!container) return;
 
 
       const search =
-        searchText
+        String(searchText)
           .toLowerCase()
           .trim();
 
 
-      const filtered =
-        messageFriends.filter(friend => {
+      let filtered =
+        messageFriends.filter(
+          friend => {
 
-          const name =
-            (
-              friend.full_name ||
-              friend.name ||
-              friend.username ||
-              ""
-            ).toLowerCase();
+            const name =
+              (
+                friend.full_name ||
+                friend.name ||
+                friend.username ||
+                ""
+              )
+                .toLowerCase();
 
-          const username =
-            (
-              friend.username ||
-              ""
-            ).toLowerCase();
 
-          return (
-            name.includes(search) ||
-            username.includes(search)
-          );
+            const username =
+              (
+                friend.username ||
+                ""
+              )
+                .toLowerCase();
 
-        });
+
+            return (
+              name.includes(search) ||
+              username.includes(search)
+            );
+
+          }
+        );
 
 
       if (filtered.length === 0) {
@@ -987,95 +1470,188 @@
       }
 
 
-      container.innerHTML =
-        filtered.map(friend => {
+      /* ===============================================
+         CREATE FRIEND LIST
+         =============================================== */
 
-          const name =
-            friend.full_name ||
-            friend.name ||
-            friend.username ||
-            "Friend";
+      let html = "";
 
 
-          const initial =
-            name
-              .charAt(0)
-              .toUpperCase();
+      for (const friend of filtered) {
+
+        const name =
+          friend.full_name ||
+          friend.name ||
+          friend.username ||
+          "Friend";
 
 
-          const avatar =
-            friend.avatar_url ||
-            friend.profile_photo ||
-            friend.photo_url ||
-            "";
+        const initial =
+          name
+            .charAt(0)
+            .toUpperCase();
 
 
-          return `
+        const avatar =
+          friend.avatar_url ||
+          friend.profile_photo ||
+          friend.photo_url ||
+          "";
 
-            <div
-              class="conversation"
-              data-friend-id="${friend.id}">
 
-              <div class="conversation-avatar">
+        let unreadCount = 0;
 
-                ${
-                  avatar
+
+        /* =============================================
+           GET UNREAD COUNT
+           ============================================= */
+
+        try {
+
+          const {
+
+            data: {
+              user
+            }
+
+          } =
+            await supabaseClient.auth.getUser();
+
+
+          if (user) {
+
+            const {
+
+              count
+
+            } =
+              await supabaseClient
+                .from("messages")
+                .select(
+                  "id",
+                  {
+                    count: "exact",
+                    head: true
+                  }
+                )
+                .eq(
+                  "sender_id",
+                  friend.id
+                )
+                .eq(
+                  "receiver_id",
+                  user.id
+                )
+                .eq(
+                  "seen",
+                  false
+                );
+
+
+            unreadCount =
+              count || 0;
+
+          }
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "Unread count error:",
+            error
+          );
+
+        }
+
+
+        html += `
+
+          <div
+            class="conversation ${
+              selectedMessageFriend &&
+              selectedMessageFriend.id === friend.id
+                ? "active"
+                : ""
+            }"
+            onclick="openConversation('${friend.id}')">
+
+
+            <div class="conversation-avatar">
+
+              ${
+                avatar
 
                   ?
 
-                  `<img
-                    src="${avatar}"
-                    alt="">`
+                `<img
+                  src="${avatar}"
+                  alt="${escapeMessage(name)}">`
 
                   :
 
-                  initial
-
-                }
-
-              </div>
-
-              <div class="conversation-info">
-
-                <strong>
-                  ${name}
-                </strong>
-
-                <p>
-                  ${
-                    friend.username
-                      ? "@" + friend.username
-                      : "Start a conversation"
-                  }
-                </p>
-
-              </div>
+                initial
+              }
 
             </div>
 
-          `;
 
-        }).join("");
+            <div class="conversation-info">
+
+              <strong>
+                ${escapeMessage(name)}
+              </strong>
 
 
-      document
-        .querySelectorAll(
-          ".conversation"
-        )
-        .forEach(element => {
+              <p>
 
-          element.addEventListener(
-            "click",
-            () => {
+                ${
+                  friend.username
 
-              openConversation(
-                element.dataset.friendId
-              );
+                    ?
 
+                  "@" +
+                  escapeMessage(
+                    friend.username
+                  )
+
+                    :
+
+                  "Start a conversation"
+                }
+
+              </p>
+
+            </div>
+
+
+            ${
+              unreadCount > 0
+
+                ?
+
+              `<div class="unread-badge">
+                ${
+                  unreadCount > 99
+                    ? "99+"
+                    : unreadCount
+                }
+              </div>`
+
+                :
+
+              ""
             }
-          );
 
-        });
+          </div>
+
+        `;
+
+      }
+
+
+      container.innerHTML =
+        html;
 
     }
 
@@ -1084,23 +1660,19 @@
        SEARCH
        ===================================================== */
 
-    const searchInput =
-      document.getElementById(
-        "messageFriendSearch"
-      );
+    function filterMessageFriends() {
+
+      const input =
+        document.getElementById(
+          "messageFriendSearch"
+        );
 
 
-    if (searchInput) {
+      if (!input) return;
 
-      searchInput.addEventListener(
-        "input",
-        () => {
 
-          renderMessageFriends(
-            searchInput.value
-          );
-
-        }
+      renderMessageFriends(
+        input.value
       );
 
     }
@@ -1117,8 +1689,7 @@
       const friend =
         messageFriends.find(
           person =>
-            String(person.id) ===
-            String(friendId)
+            person.id === friendId
         );
 
 
@@ -1127,34 +1698,6 @@
 
       selectedMessageFriend =
         friend;
-
-
-      document
-        .querySelectorAll(
-          ".conversation"
-        )
-        .forEach(item => {
-
-          item.classList.remove(
-            "active"
-          );
-
-        });
-
-
-      const selected =
-        document.querySelector(
-          `.conversation[data-friend-id="${friendId}"]`
-        );
-
-
-      if (selected) {
-
-        selected.classList.add(
-          "active"
-        );
-
-      }
 
 
       const name =
@@ -1183,6 +1726,10 @@
         );
 
 
+      /* ===============================================
+         HEADER
+         =============================================== */
+
       if (header) {
 
         header.innerHTML = `
@@ -1194,34 +1741,46 @@
               ${
                 avatar
 
-                ?
+                  ?
 
                 `<img
                   src="${avatar}"
-                  alt="">`
+                  alt="${escapeMessage(name)}">`
 
-                :
+                  :
 
                 name
                   .charAt(0)
                   .toUpperCase()
-
               }
 
             </div>
 
+
             <div>
 
               <strong>
-                ${name}
+                ${escapeMessage(name)}
               </strong>
 
+
               <p>
+
                 ${
                   friend.username
-                    ? "@" + friend.username
-                    : ""
+
+                    ?
+
+                  "@" +
+                  escapeMessage(
+                    friend.username
+                  )
+
+                    :
+
+                  ""
                 }
+
               </p>
 
             </div>
@@ -1233,6 +1792,10 @@
       }
 
 
+      /* ===============================================
+         SHOW INPUT
+         =============================================== */
+
       if (inputArea) {
 
         inputArea.style.display =
@@ -1241,25 +1804,49 @@
       }
 
 
+      /* ===============================================
+         LOAD CHAT
+         =============================================== */
+
       await loadConversation(
-        friend.id
+        friendId
       );
 
 
-      const input =
+      /* ===============================================
+         REFRESH FRIEND LIST
+         Removes unread badge
+         =============================================== */
+
+      await renderMessageFriends(
         document.getElementById(
-          "messageInput"
-        );
+          "messageFriendSearch"
+        )?.value || ""
+      );
 
 
-      if (input) {
+      /* ===============================================
+         FOCUS INPUT
+         =============================================== */
 
-        setTimeout(
-          () => input.focus(),
-          50
-        );
+      setTimeout(
+        () => {
 
-      }
+          const input =
+            document.getElementById(
+              "messageInput"
+            );
+
+
+          if (input) {
+
+            input.focus();
+
+          }
+
+        },
+        100
+      );
 
     }
 
@@ -1277,32 +1864,46 @@
           "chatMessages"
         );
 
+
       if (!chat) return;
 
 
       const {
+
         data: {
           user
         }
+
       } =
         await supabaseClient.auth.getUser();
 
 
-      if (!user) return;
+      if (!user) {
+
+        return;
+      }
 
 
       chat.innerHTML = `
 
         <div class="loading-conversations">
+
           Loading messages...
+
         </div>
 
       `;
 
 
+      /* ===============================================
+         GET MESSAGES
+         =============================================== */
+
       const {
+
         data,
         error
+
       } =
         await supabaseClient
           .from("messages")
@@ -1318,6 +1919,10 @@
           );
 
 
+      /* ===============================================
+         ERROR
+         =============================================== */
+
       if (error) {
 
         console.error(
@@ -1325,18 +1930,23 @@
           error
         );
 
+
         chat.innerHTML = `
 
           <div class="empty-state">
 
-            <div>⚠️</div>
+            <div>
+              ⚠️
+            </div>
+
 
             <h2>
               Unable to load messages
             </h2>
 
+
             <p>
-              ${error.message}
+              ${escapeMessage(error.message)}
             </p>
 
           </div>
@@ -1346,33 +1956,29 @@
         return;
       }
 
-const unreadMessages = data.filter(
-  message =>
-    message.receiver_id === user.id &&
-    message.seen === false
-);
 
-if (unreadMessages.length > 0) {
+      /* ===============================================
+         NO MESSAGES
+         =============================================== */
 
-  await supabaseClient
-    .from("messages")
-    .update({ seen: true })
-    .eq("receiver_id", user.id)
-    .eq("sender_id", friendId)
-    .eq("seen", false);
-
-}
-      if (!data || data.length === 0) {
+      if (
+        !data ||
+        data.length === 0
+      ) {
 
         chat.innerHTML = `
 
           <div class="empty-state">
 
-            <div>👋</div>
+            <div>
+              👋
+            </div>
+
 
             <h2>
               Start chatting
             </h2>
+
 
             <p>
               Send your first message to this friend.
@@ -1382,112 +1988,200 @@ if (unreadMessages.length > 0) {
 
         `;
 
+
+        /* Mark any old incoming messages as seen */
+
+        await markMessagesAsSeen(
+          user.id,
+          friendId
+        );
+
+
         return;
       }
 
 
-      chat.innerHTML =
-  data.map(message => {
+      /* ===============================================
+         MARK RECEIVED MESSAGES AS SEEN
+         =============================================== */
 
-    const mine =
-      message.sender_id === user.id;
-
-    const messageTime =
-      new Date(
-        message.created_at
-      ).toLocaleTimeString(
-        [],
-        {
-          hour: "numeric",
-          minute: "2-digit"
-        }
+      await markMessagesAsSeen(
+        user.id,
+        friendId
       );
 
-    let status = "";
 
-    if (mine) {
+      /* ===============================================
+         RENDER MESSAGES
+         =============================================== */
 
-      status =
-        message.seen
-          ? "✓✓ Seen"
-          : "✓ Sent";
+      chat.innerHTML =
+        data.map(
+          message => {
+
+            const mine =
+              message.sender_id ===
+              user.id;
+
+
+            const messageTime =
+              new Date(
+                message.created_at
+              ).toLocaleTimeString(
+                [],
+                {
+                  hour: "numeric",
+                  minute: "2-digit"
+                }
+              );
+
+
+            let status = "";
+
+
+            if (mine) {
+
+              status =
+                message.seen
+                  ? "✓✓ Seen"
+                  : "✓ Sent";
+
+            }
+
+
+            return `
+
+              <div
+                class="message-row ${
+                  mine
+                    ? "mine"
+                    : "theirs"
+                }">
+
+
+                <div class="message-bubble">
+
+
+                  <div class="message-text">
+
+                    ${escapeMessage(
+                      message.message
+                    )}
+
+                  </div>
+
+
+                  <div class="message-meta">
+
+
+                    <span
+                      class="message-time">
+
+                      ${messageTime}
+
+                    </span>
+
+
+                    ${
+                      mine
+
+                        ?
+
+                      `<span
+                        class="message-status">
+
+                        ${status}
+
+                      </span>`
+
+                        :
+
+                      ""
+                    }
+
+
+                  </div>
+
+
+                </div>
+
+
+              </div>
+
+            `;
+
+          }
+        ).join("");
+
+
+      /* ===============================================
+         SCROLL TO BOTTOM
+         =============================================== */
+
+      requestAnimationFrame(
+        () => {
+
+          chat.scrollTop =
+            chat.scrollHeight;
+
+        }
+      );
 
     }
 
-    return `
 
-      <div
-        class="message-row ${mine ? "mine" : "theirs"}">
+    /* =====================================================
+       MARK MESSAGES AS SEEN
+       ===================================================== */
 
-        <div class="message-bubble">
+    async function markMessagesAsSeen(
+      userId,
+      friendId
+    ) {
 
-          <div class="message-text">
-            ${escapeMessage(message.message)}
-          </div>
+      try {
 
-          <div class="message-meta">
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("messages")
+            .update({
+              seen: true
+            })
+            .eq(
+              "receiver_id",
+              userId
+            )
+            .eq(
+              "sender_id",
+              friendId
+            )
+            .eq(
+              "seen",
+              false
+            );
 
-            <span class="message-time">
-              ${messageTime}
-            </span>
 
-            ${
-              mine
-                ? `
-                  <span class="message-status">
-                    ${status}
-                  </span>
-                `
-                : ""
-            }
+        if (error) {
 
-          </div>
+          console.error(
+            "Mark seen error:",
+            error
+          );
 
-        </div>
-
-      </div>
-
-    `;
-
-  }).join("");
-    const mine =
-      message.sender_id === user.id;
-
-    const messageTime =
-      new Date(message.created_at).toLocaleTimeString(
-        [],
-        {
-          hour: "numeric",
-          minute: "2-digit"
         }
-      );
 
-    return `
+      }
 
-      <div
-        class="message-row ${mine ? "mine" : "theirs"}">
+      catch (error) {
 
-        <div class="message-bubble">
+        console.error(
+          "Mark seen exception:",
+          error
+        );
 
-          <div class="message-text">
-            ${escapeMessage(message.message)}
-          </div>
-
-          <div class="message-time">
-            ${messageTime}
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-
-  }).join("");
-
-
-      chat.scrollTop =
-        chat.scrollHeight;
+      }
 
     }
 
@@ -1498,73 +2192,273 @@ if (unreadMessages.length > 0) {
 
     async function sendMessage() {
 
-  if (!selectedMessageFriend) return;
+      if (
+        !selectedMessageFriend
+      ) {
 
-  const input = document.getElementById("messageInput");
+        return;
+      }
 
-  if (!input) return;
 
-  const text = input.value.trim();
+      const input =
+        document.getElementById(
+          "messageInput"
+        );
 
-  if (!text) return;
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+      const button =
+        document.getElementById(
+          "sendMessageButton"
+        );
 
-  if (!user) {
-    alert("Please login first.");
-    return;
-  }
 
-  input.disabled = true;
+      if (!input) return;
 
-  const { error } = await supabaseClient
-    .from("messages")
-    .insert({
-      sender_id: user.id,
-      receiver_id: selectedMessageFriend.id,
-      message: text,
-      seen: false
-    });
 
-  input.disabled = false;
+      const text =
+        input.value.trim();
 
-  if (error) {
 
-    console.error("Send message error:", error);
+      if (!text) return;
 
-    alert(error.message);
 
-    return;
-  }
+      const {
 
-  input.value = "";
+        data: {
+          user
+        }
 
-  await loadConversation(
-    selectedMessageFriend.id
-  );
+      } =
+        await supabaseClient.auth.getUser();
 
-  input.focus();
-}
+
+      if (!user) {
+
+        alert(
+          "Please login first."
+        );
+
+        return;
+      }
+
+
+      if (button) {
+
+        button.disabled = true;
+
+      }
+
+
+      input.disabled = true;
+
+
+      /* ===============================================
+         INSERT MESSAGE
+         =============================================== */
+
+      const {
+
+        data,
+        error
+
+      } =
+        await supabaseClient
+          .from("messages")
+          .insert({
+
+            sender_id:
+              user.id,
+
+            receiver_id:
+              selectedMessageFriend.id,
+
+            message:
+              text,
+
+            seen:
+              false
+
+          })
+          .select()
+          .single();
+
+
+      input.disabled = false;
+
+
+      if (button) {
+
+        button.disabled = false;
+
+      }
+
+
+      if (error) {
+
+        console.error(
+          "Send message error:",
+          error
+        );
+
+
+        alert(
+          error.message
+        );
+
+
+        return;
+      }
+
+
+      /* ===============================================
+         CLEAR INPUT
+         =============================================== */
+
+      input.value = "";
+
+
+      /* ===============================================
+         ADD MESSAGE IMMEDIATELY
+         =============================================== */
+
+      if (data) {
+
+        addMessageToChat(
+          data,
+          user.id
+        );
+
+      }
+
+
+      input.focus();
+
+    }
 
 
     /* =====================================================
-       SEND BUTTON
+       ADD NEW MESSAGE TO CHAT
        ===================================================== */
 
-    const sendButton =
-      document.getElementById(
-        "sendMessageButton"
+    function addMessageToChat(
+      message,
+      currentUserId
+    ) {
+
+      const chat =
+        document.getElementById(
+          "chatMessages"
+        );
+
+
+      if (!chat) return;
+
+
+      /* Remove empty state */
+
+      const empty =
+        chat.querySelector(
+          ".empty-state"
+        );
+
+
+      if (empty) {
+
+        chat.innerHTML = "";
+
+      }
+
+
+      const mine =
+        message.sender_id ===
+        currentUserId;
+
+
+      const messageTime =
+        new Date(
+          message.created_at
+        ).toLocaleTimeString(
+          [],
+          {
+            hour: "numeric",
+            minute: "2-digit"
+          }
+        );
+
+
+      const status =
+        message.seen
+          ? "✓✓ Seen"
+          : "✓ Sent";
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "message-row " +
+        (
+          mine
+            ? "mine"
+            : "theirs"
+        );
+
+
+      row.innerHTML = `
+
+        <div class="message-bubble">
+
+          <div class="message-text">
+
+            ${escapeMessage(
+              message.message
+            )}
+
+          </div>
+
+
+          <div class="message-meta">
+
+            <span class="message-time">
+
+              ${messageTime}
+
+            </span>
+
+
+            ${
+              mine
+
+                ?
+
+              `<span class="message-status">
+
+                ${status}
+
+              </span>`
+
+                :
+
+              ""
+            }
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      chat.appendChild(
+        row
       );
 
 
-    if (sendButton) {
-
-      sendButton.addEventListener(
-        "click",
-        sendMessage
-      );
+      chat.scrollTop =
+        chat.scrollHeight;
 
     }
 
@@ -1573,37 +2467,26 @@ if (unreadMessages.length > 0) {
        ENTER KEY
        ===================================================== */
 
-    const messageInput =
-      document.getElementById(
-        "messageInput"
-      );
+    function handleMessageKey(
+      event
+    ) {
 
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
 
-    if (messageInput) {
+        event.preventDefault();
 
-      messageInput.addEventListener(
-        "keydown",
-        event => {
+        sendMessage();
 
-          if (
-            event.key === "Enter" &&
-            !event.shiftKey
-          ) {
-
-            event.preventDefault();
-
-            sendMessage();
-
-          }
-
-        }
-      );
+      }
 
     }
 
 
     /* =====================================================
-       ESCAPE
+       ESCAPE TEXT
        ===================================================== */
 
     function escapeMessage(
@@ -1615,8 +2498,10 @@ if (unreadMessages.length > 0) {
           "div"
         );
 
+
       div.textContent =
         text || "";
+
 
       return div.innerHTML;
 
@@ -1624,14 +2509,26 @@ if (unreadMessages.length > 0) {
 
 
     /* =====================================================
-       START PAGE
+       START
        ===================================================== */
 
     document.addEventListener(
       "DOMContentLoaded",
-      () => {
+      async () => {
 
-        loadMessageFriends();
+        /*
+         * Wait briefly for script.js
+         * and Supabase authentication.
+         */
+
+        setTimeout(
+          async () => {
+
+            await loadMessageFriends();
+
+          },
+          300
+        );
 
       }
     );
@@ -1641,35 +2538,3 @@ if (unreadMessages.length > 0) {
 </body>
 
 </html>
-/* =========================================================
-   MESSAGE STATUS
-   ========================================================= */
-
-.message-meta {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-top: 5px;
-}
-
-.message-time {
-  margin: 0;
-  font-size: 10px;
-  line-height: 1;
-  opacity: 0.65;
-}
-
-.message-status {
-  font-size: 10px;
-  line-height: 1;
-  opacity: 0.85;
-}
-
-.message-row.mine .message-status {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.message-row.theirs .message-status {
-  color: #777d8a;
-}
