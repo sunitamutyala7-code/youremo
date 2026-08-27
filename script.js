@@ -3936,150 +3936,100 @@ function handleRealtimeMessage(
    APPEND MESSAGE TO CHAT
    --------------------------------------------------------- */
 
-function appendRealtimeMessage(
-  message
-) {
+function appendRealtimeMessage(message) {
 
   const chat =
-    document.getElementById(
-      "chatMessages"
-    );
+    document.getElementById("chatMessages");
 
-
-  if (!chat) {
+  if (!chat || !currentUser) {
     return;
   }
 
-
-  /*
-   * Remove empty / loading message
-   * when the first real message arrives.
-   */
-
-  const emptyState =
-    chat.querySelector(
-      ".empty-state"
-    );
-
-
-  if (emptyState) {
-
-    chat.innerHTML = "";
-
-  }
-
-
-  /*
-   * Prevent duplicate messages.
-   */
+  /* Check if this message is already displayed */
 
   if (
     message.id &&
     chat.querySelector(
       '[data-message-id="' +
-      CSS.escape(
-        String(message.id)
-      ) +
+      CSS.escape(String(message.id)) +
       '"]'
     )
   ) {
-
     return;
-
   }
 
+  /* Remove empty state */
+
+  const emptyState =
+    chat.querySelector(".empty-state");
+
+  if (emptyState) {
+    chat.innerHTML = "";
+  }
+
+  /* Create message row */
 
   const mine =
-    message.sender_id ===
-    currentUser.id;
-
+    message.sender_id === currentUser.id;
 
   const row =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   row.className =
     "message-row " +
-    (
-      mine
-        ? "mine"
-        : "theirs"
-    );
+    (mine ? "mine" : "theirs");
 
+  row.setAttribute(
+    "data-message-id",
+    String(message.id)
+  );
 
-  if (message.id) {
-
-    row.setAttribute(
-      "data-message-id",
-      String(message.id)
-    );
-
-  }
-
+  /* Create bubble */
 
   const bubble =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   bubble.className =
     "message-bubble";
 
+  /* Message text */
 
   bubble.textContent =
-  message.message || "";
+    message.message || "";
 
+  /* Timestamp */
 
-/* Message time */
+  const time =
+    document.createElement("div");
 
-const time =
-  document.createElement(
-    "div"
-  );
+  time.className =
+    "message-time";
 
-time.className =
-  "message-time";
+  time.textContent =
+    message.created_at
+      ? new Date(
+          message.created_at
+        ).toLocaleTimeString(
+          "en-IN",
+          {
+            hour: "numeric",
+            minute: "2-digit"
+          }
+        )
+      : "";
 
-time.textContent =
-  message.created_at
-    ? new Date(
-        message.created_at
-      ).toLocaleTimeString(
-        "en-IN",
-        {
-          hour: "numeric",
-          minute: "2-digit"
-        }
-      )
-    : "";
+  bubble.appendChild(time);
 
-bubble.appendChild(
-  time
-);
+  row.appendChild(bubble);
 
+  chat.appendChild(row);
 
-  row.appendChild(
-    bubble
-  );
-
-
-  chat.appendChild(
-    row
-  );
-
-
-  /*
-   * Scroll to newest message.
-   */
+  /* Scroll to newest message */
 
   chat.scrollTop =
     chat.scrollHeight;
 
 }
-
 
 /* ---------------------------------------------------------
    STOP REAL-TIME LISTENER
