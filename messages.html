@@ -10,9 +10,7 @@
 
   <title>YouRemo - Messages</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css">
+  <link rel="stylesheet" href="style.css">
 
   <style>
 
@@ -45,7 +43,7 @@
       border: 1px solid #e5e7eb;
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 10px 35px rgba(30, 35, 65, 0.08);
+      box-shadow: 0 10px 35px rgba(30,35,65,0.08);
     }
 
     .conversation-list {
@@ -79,8 +77,7 @@
 
     .conversation-search input:focus {
       border-color: #4f46e5;
-      box-shadow:
-        0 0 0 3px rgba(79, 70, 229, 0.08);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
     }
 
     .conversation {
@@ -112,8 +109,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      background:
-        linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg,#667eea,#764ba2);
       color: #fff;
       font-size: 17px;
       font-weight: 700;
@@ -268,8 +264,7 @@
       font-size: 14px;
       line-height: 1.45;
       word-break: break-word;
-      box-shadow:
-        0 2px 7px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 7px rgba(0,0,0,0.04);
     }
 
     .message-row.mine .message-bubble {
@@ -291,11 +286,16 @@
       justify-content: flex-end;
     }
 
-    .message-sent,
-    .message-seen {
+    .message-sent {
       font-size: 10px;
       color: #4f46e5;
       font-weight: 600;
+    }
+
+    .message-seen {
+      font-size: 10px;
+      color: #4f46e5;
+      font-weight: 700;
     }
 
     .message-input-area {
@@ -316,14 +316,12 @@
       border-radius: 10px;
       outline: none;
       font-size: 14px;
-      background: #fff;
       box-sizing: border-box;
     }
 
     .message-input-area input:focus {
       border-color: #4f46e5;
-      box-shadow:
-        0 0 0 3px rgba(79, 70, 229, 0.08);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
     }
 
     .message-input-area button {
@@ -347,7 +345,7 @@
       cursor: not-allowed;
     }
 
-    .chat-messages .empty-state {
+    .empty-state {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -356,16 +354,16 @@
       text-align: center;
     }
 
-    .chat-messages .empty-state > div {
+    .empty-state > div {
       font-size: 42px;
       margin-bottom: 12px;
     }
 
-    .chat-messages .empty-state h2 {
+    .empty-state h2 {
       margin-bottom: 8px;
     }
 
-    .chat-messages .empty-state p {
+    .empty-state p {
       color: #777d8a;
     }
 
@@ -376,7 +374,7 @@
       font-size: 14px;
     }
 
-    @media (max-width: 750px) {
+    @media (max-width:750px) {
 
       .messages-page {
         padding: 25px 12px 40px;
@@ -410,19 +408,23 @@
       .message-bubble {
         font-size: 13px;
       }
+
     }
 
   </style>
 
 </head>
 
+
 <body>
+
 
 <header class="navbar">
 
   <div class="logo">
     YouRemo
   </div>
+
 
   <nav class="main-nav">
 
@@ -445,6 +447,7 @@
 
   </nav>
 
+
   <div
     id="accountButton"
     class="account-button"
@@ -461,6 +464,7 @@
     </span>
 
   </div>
+
 
   <div
     id="accountMenu"
@@ -483,7 +487,9 @@
 </header>
 
 
+
 <main class="messages-page">
+
 
   <div class="messages-header">
 
@@ -498,19 +504,23 @@
   </div>
 
 
+
   <div class="messages-layout">
 
+
     <aside class="conversation-list">
+
 
       <div class="conversation-search">
 
         <input
-          type="text"
           id="messageFriendSearch"
+          type="text"
           placeholder="Search friends..."
           autocomplete="off">
 
       </div>
+
 
       <div id="conversationList">
 
@@ -520,10 +530,13 @@
 
       </div>
 
+
     </aside>
 
 
+
     <section class="chat-area">
+
 
       <div
         id="chatHeader"
@@ -536,13 +549,16 @@
       </div>
 
 
+
       <div
         id="chatMessages"
         class="chat-messages">
 
         <div class="empty-state">
 
-          <div>💬</div>
+          <div>
+            💬
+          </div>
 
           <h2>
             Your Messages
@@ -557,14 +573,15 @@
       </div>
 
 
+
       <div
         id="messageInputArea"
         class="message-input-area"
         style="display:none;">
 
         <input
-          type="text"
           id="messageInput"
+          type="text"
           placeholder="Type a message..."
           autocomplete="off">
 
@@ -576,11 +593,15 @@
 
       </div>
 
+
     </section>
+
 
   </div>
 
+
 </main>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -588,64 +609,69 @@
 <script src="script.js"></script>
 
 
+
 <script>
 
-/* ==========================================================
-   MESSAGES PAGE
-   SENT → SEEN SYSTEM
-   ========================================================== */
+/* =========================================================
+   YOUREMO MESSAGE SYSTEM
+   IMPORTANT:
+   There is ONLY ONE copy of this system.
+   ========================================================= */
 
 
-/* ----------------------------------------------------------
-   PAGE VARIABLES
-   ---------------------------------------------------------- */
+/* ---------------------------------------------------------
+   PAGE STATE
+   --------------------------------------------------------- */
 
-let messagesPageUser = null;
+let messageFriends = [];
 
-let messagesPageFriends = [];
+let selectedMessageFriend = null;
 
-let messagesPageSelectedFriend = null;
+let currentMessageUser = null;
 
-let messagesPageSending = false;
+let messageSending = false;
 
 
 /*
  * IMPORTANT:
+ * Put the realtime channel on window.
  *
- * This name is intentionally unique.
+ * This prevents:
  *
- * We are NOT using:
+ * Identifier 'messageRealtimeChannel'
+ * has already been declared
  *
- * messageRealtimeChannel
- *
- * because script.js may already have that variable.
+ * even if an old cached script exists.
  */
 
-let messagesPageRealtimeChannel = null;
+window.youRemoMessagesChannel = null;
 
 
-/* ----------------------------------------------------------
-   GET LOGGED-IN USER
-   ---------------------------------------------------------- */
 
-async function messagesPageGetUser() {
+/* =========================================================
+   GET CURRENT USER
+   ========================================================= */
+
+async function getMessageUser() {
 
   try {
 
     const {
       data,
       error
-    } = await supabaseClient.auth.getUser();
+    } =
+      await supabaseClient.auth.getUser();
 
 
     if (error) {
 
       console.error(
-        "Messages user error:",
+        "Message user error:",
         error
       );
 
       return null;
+
     }
 
 
@@ -654,21 +680,23 @@ async function messagesPageGetUser() {
   } catch (error) {
 
     console.error(
-      "Messages get user error:",
+      "Get message user error:",
       error
     );
 
     return null;
+
   }
 
 }
 
 
-/* ----------------------------------------------------------
-   LOAD FRIENDS
-   ---------------------------------------------------------- */
 
-async function messagesPageLoadFriends() {
+/* =========================================================
+   LOAD FRIENDS
+   ========================================================= */
+
+async function loadMessageFriends() {
 
   const container =
     document.getElementById(
@@ -676,9 +704,7 @@ async function messagesPageLoadFriends() {
     );
 
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
 
   container.innerHTML = `
@@ -689,10 +715,10 @@ async function messagesPageLoadFriends() {
 
 
   const user =
-    await messagesPageGetUser();
+    await getMessageUser();
 
 
-  messagesPageUser =
+  currentMessageUser =
     user;
 
 
@@ -721,6 +747,7 @@ async function messagesPageLoadFriends() {
     `;
 
     return;
+
   }
 
 
@@ -741,7 +768,7 @@ async function messagesPageLoadFriends() {
     if (error) {
 
       console.error(
-        "Friendship error:",
+        "Friendship loading error:",
         error
       );
 
@@ -759,7 +786,7 @@ async function messagesPageLoadFriends() {
             </strong>
 
             <p>
-              ${messagesPageEscape(error.message)}
+              ${escapeMessageHtml(error.message)}
             </p>
 
           </div>
@@ -768,18 +795,28 @@ async function messagesPageLoadFriends() {
       `;
 
       return;
+
     }
 
 
     const friendIds =
       (data || [])
-        .map(friendship => {
+        .map(
+          friendship => {
 
-          return friendship.user_id === user.id
-            ? friendship.friend_id
-            : friendship.user_id;
+            if (
+              String(friendship.user_id) ===
+              String(user.id)
+            ) {
 
-        })
+              return friendship.friend_id;
+
+            }
+
+            return friendship.user_id;
+
+          }
+        )
         .filter(Boolean);
 
 
@@ -789,11 +826,12 @@ async function messagesPageLoadFriends() {
 
     if (!uniqueFriendIds.length) {
 
-      messagesPageFriends = [];
+      messageFriends = [];
 
-      messagesPageRenderFriends();
+      renderMessageFriends();
 
       return;
+
     }
 
 
@@ -803,7 +841,9 @@ async function messagesPageLoadFriends() {
     } =
       await supabaseClient
         .from("profiles")
-        .select("*")
+        .select(
+          "id,full_name,username,avatar_url"
+        )
         .in(
           "id",
           uniqueFriendIds
@@ -813,46 +853,25 @@ async function messagesPageLoadFriends() {
     if (profileError) {
 
       console.error(
-        "Profile error:",
+        "Profile loading error:",
         profileError
       );
 
-      container.innerHTML = `
-        <div class="empty-conversation">
-
-          <div class="conversation-icon">
-            ⚠️
-          </div>
-
-          <div>
-
-            <strong>
-              Could not load profiles
-            </strong>
-
-            <p>
-              ${messagesPageEscape(profileError.message)}
-            </p>
-
-          </div>
-
-        </div>
-      `;
-
       return;
+
     }
 
 
-    messagesPageFriends =
+    messageFriends =
       profiles || [];
 
 
-    messagesPageRenderFriends();
+    renderMessageFriends();
 
   } catch (error) {
 
     console.error(
-      "Load friends error:",
+      "Load friends exception:",
       error
     );
 
@@ -861,11 +880,12 @@ async function messagesPageLoadFriends() {
 }
 
 
-/* ----------------------------------------------------------
-   RENDER FRIENDS
-   ---------------------------------------------------------- */
 
-function messagesPageRenderFriends(
+/* =========================================================
+   RENDER FRIENDS
+   ========================================================= */
+
+function renderMessageFriends(
   searchText = ""
 ) {
 
@@ -875,9 +895,7 @@ function messagesPageRenderFriends(
     );
 
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
 
   const search =
@@ -887,7 +905,7 @@ function messagesPageRenderFriends(
 
 
   const filtered =
-    messagesPageFriends.filter(
+    messageFriends.filter(
       friend => {
 
         const name =
@@ -896,13 +914,16 @@ function messagesPageRenderFriends(
             friend.name ||
             friend.username ||
             ""
-          ).toLowerCase();
+          )
+            .toLowerCase();
 
 
         const username =
           String(
-            friend.username || ""
-          ).toLowerCase();
+            friend.username ||
+            ""
+          )
+            .toLowerCase();
 
 
         return (
@@ -939,119 +960,126 @@ function messagesPageRenderFriends(
     `;
 
     return;
+
   }
 
 
   container.innerHTML =
-    filtered.map(
-      friend => {
+    filtered
+      .map(
+        friend => {
 
-        const name =
-          friend.full_name ||
-          friend.name ||
-          friend.username ||
-          "Friend";
-
-
-        const initial =
-          name
-            .charAt(0)
-            .toUpperCase();
+          const name =
+            friend.full_name ||
+            friend.name ||
+            friend.username ||
+            "Friend";
 
 
-        const avatar =
-          friend.avatar_url ||
-          friend.profile_photo ||
-          friend.photo_url ||
-          "";
+          const initial =
+            name
+              .charAt(0)
+              .toUpperCase();
 
 
-        const selected =
-          messagesPageSelectedFriend &&
-          String(
-            messagesPageSelectedFriend.id
-          ) === String(friend.id)
-            ? "selected"
-            : "";
+          const avatar =
+            friend.avatar_url ||
+            friend.profile_photo ||
+            friend.photo_url ||
+            "";
 
 
-        return `
-
-          <div
-            class="conversation ${selected}"
-            data-friend-id="${messagesPageEscape(friend.id)}">
-
-            <div class="conversation-avatar">
-
-              ${
-                avatar
-
-                  ? `
-                    <img
-                      src="${messagesPageEscape(avatar)}"
-                      alt="${messagesPageEscape(name)}">
-                  `
-
-                  : messagesPageEscape(initial)
-              }
-
-            </div>
+          const selected =
+            selectedMessageFriend &&
+            String(
+              selectedMessageFriend.id
+            ) ===
+            String(friend.id)
+              ? "selected"
+              : "";
 
 
-            <div class="conversation-info">
+          return `
 
-              <strong>
-                ${messagesPageEscape(name)}
-              </strong>
+            <div
+              class="conversation ${selected}"
+              data-friend-id="${escapeMessageHtml(friend.id)}">
 
-              <p>
+              <div class="conversation-avatar">
 
                 ${
-                  friend.username
-                    ? "@" +
-                      messagesPageEscape(
-                        friend.username
-                      )
-                    : "Start a conversation"
+                  avatar
+
+                    ? `
+                      <img
+                        src="${escapeMessageHtml(avatar)}"
+                        alt="${escapeMessageHtml(name)}">
+                    `
+
+                    : escapeMessageHtml(initial)
                 }
 
-              </p>
+              </div>
+
+
+              <div class="conversation-info">
+
+                <strong>
+                  ${escapeMessageHtml(name)}
+                </strong>
+
+                <p>
+
+                  ${
+                    friend.username
+                      ? "@" +
+                        escapeMessageHtml(
+                          friend.username
+                        )
+                      : "Start a conversation"
+                  }
+
+                </p>
+
+              </div>
 
             </div>
 
-          </div>
+          `;
 
-        `;
-
-      }
-    ).join("");
+        }
+      )
+      .join("");
 
 
   container
     .querySelectorAll(".conversation")
-    .forEach(element => {
+    .forEach(
+      element => {
 
-      element.addEventListener(
-        "click",
-        function() {
+        element.addEventListener(
+          "click",
+          function() {
 
-          messagesPageOpenConversation(
-            element.dataset.friendId
-          );
+            openMessageConversation(
+              element.dataset.friendId
+            );
 
-        }
-      );
+          }
+        );
 
-    });
+      }
+    );
 
 }
 
 
-/* ----------------------------------------------------------
-   SEARCH FRIENDS
-   ---------------------------------------------------------- */
 
-function messagesPageFilterFriends() {
+/* =========================================================
+   SEARCH FRIENDS
+   ========================================================= */
+
+function filterMessageFriends() {
 
   const input =
     document.getElementById(
@@ -1059,28 +1087,27 @@ function messagesPageFilterFriends() {
     );
 
 
-  if (!input) {
-    return;
-  }
+  if (!input) return;
 
 
-  messagesPageRenderFriends(
+  renderMessageFriends(
     input.value
   );
 
 }
 
 
-/* ----------------------------------------------------------
-   OPEN CONVERSATION
-   ---------------------------------------------------------- */
 
-async function messagesPageOpenConversation(
+/* =========================================================
+   OPEN CONVERSATION
+   ========================================================= */
+
+async function openMessageConversation(
   friendId
 ) {
 
   const friend =
-    messagesPageFriends.find(
+    messageFriends.find(
       person =>
         String(person.id) ===
         String(friendId)
@@ -1095,22 +1122,25 @@ async function messagesPageOpenConversation(
     );
 
     return;
+
   }
 
 
   /*
-   * THIS IS THE IMPORTANT PART.
+   * THIS is the important point.
    *
-   * A conversation is now considered
-   * viewed ONLY because the user clicked
-   * the friend and opened the conversation.
+   * Simply being on messages.html
+   * DOES NOT call markMessagesAsSeen().
+   *
+   * It happens ONLY here,
+   * when the user clicks a friend.
    */
 
-  messagesPageSelectedFriend =
+  selectedMessageFriend =
     friend;
 
 
-  messagesPageRenderFriends(
+  renderMessageFriends(
     document.getElementById(
       "messageFriendSearch"
     )?.value || ""
@@ -1156,11 +1186,11 @@ async function messagesPageOpenConversation(
 
               ? `
                 <img
-                  src="${messagesPageEscape(avatar)}"
-                  alt="${messagesPageEscape(name)}">
+                  src="${escapeMessageHtml(avatar)}"
+                  alt="${escapeMessageHtml(name)}">
               `
 
-              : messagesPageEscape(
+              : escapeMessageHtml(
                   name
                     .charAt(0)
                     .toUpperCase()
@@ -1169,10 +1199,11 @@ async function messagesPageOpenConversation(
 
         </div>
 
+
         <div>
 
           <strong>
-            ${messagesPageEscape(name)}
+            ${escapeMessageHtml(name)}
           </strong>
 
           <p>
@@ -1180,7 +1211,7 @@ async function messagesPageOpenConversation(
             ${
               friend.username
                 ? "@" +
-                  messagesPageEscape(
+                  escapeMessageHtml(
                     friend.username
                   )
                 : ""
@@ -1206,24 +1237,39 @@ async function messagesPageOpenConversation(
 
 
   /*
-   * Load the conversation.
-   *
-   * loadConversation will mark ONLY
-   * messages received by the current user
-   * as seen.
+   * First load the conversation.
    */
 
-  await messagesPageLoadConversation(
+  await loadMessageConversation(
     friend.id
   );
 
 
   /*
-   * Focus message box.
+   * NOW mark incoming unread messages
+   * as seen.
+   *
+   * This only runs after the friend
+   * was clicked.
    */
 
+  await markIncomingMessagesSeen(
+    friend.id
+  );
+
+
+  /*
+   * Reload after UPDATE so the receiver
+   * immediately sees the correct state.
+   */
+
+  await loadMessageConversation(
+    friend.id
+  );
+
+
   setTimeout(
-    function() {
+    () => {
 
       const input =
         document.getElementById(
@@ -1232,7 +1278,9 @@ async function messagesPageOpenConversation(
 
 
       if (input) {
+
         input.focus();
+
       }
 
     },
@@ -1242,32 +1290,33 @@ async function messagesPageOpenConversation(
 }
 
 
-/* ----------------------------------------------------------
-   MARK RECEIVED MESSAGES AS SEEN
-   ---------------------------------------------------------- */
 
-async function messagesPageMarkSeen(
+/* =========================================================
+   MARK RECEIVED MESSAGES AS SEEN
+   ========================================================= */
+
+async function markIncomingMessagesSeen(
   friendId
 ) {
 
   const user =
-    messagesPageUser ||
-    await messagesPageGetUser();
+    currentMessageUser ||
+    await getMessageUser();
 
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
 
   try {
 
     /*
-     * ONLY received messages are updated.
+     * VERY IMPORTANT:
      *
-     * sender = friend
-     * receiver = current user
+     * sender_id = friend
+     * receiver_id = current user
      * seen = false
+     *
+     * Only these messages are changed.
      */
 
     const {
@@ -1297,18 +1346,18 @@ async function messagesPageMarkSeen(
     if (error) {
 
       console.error(
-        "Mark seen error:",
+        "❌ Mark seen error:",
         error
       );
 
       return;
+
     }
 
 
     console.log(
-      "👀 Conversation opened.",
-      "Messages marked seen:",
-      data?.length || 0
+      "👀 Messages marked seen:",
+      data || []
     );
 
   } catch (error) {
@@ -1323,11 +1372,12 @@ async function messagesPageMarkSeen(
 }
 
 
-/* ----------------------------------------------------------
-   LOAD CONVERSATION
-   ---------------------------------------------------------- */
 
-async function messagesPageLoadConversation(
+/* =========================================================
+   LOAD CONVERSATION
+   ========================================================= */
+
+async function loadMessageConversation(
   friendId
 ) {
 
@@ -1337,22 +1387,18 @@ async function messagesPageLoadConversation(
     );
 
 
-  if (!chat) {
-    return;
-  }
+  if (!chat) return;
 
 
   const user =
-    messagesPageUser ||
-    await messagesPageGetUser();
+    currentMessageUser ||
+    await getMessageUser();
 
 
-  if (!user) {
-    return;
-  }
+  if (!user) return;
 
 
-  messagesPageUser =
+  currentMessageUser =
     user;
 
 
@@ -1365,17 +1411,15 @@ async function messagesPageLoadConversation(
 
   try {
 
-    /*
-     * First load the messages.
-     */
-
     const {
       data,
       error
     } =
       await supabaseClient
         .from("messages")
-        .select("*")
+        .select(
+          "id,sender_id,receiver_id,message,seen,created_at"
+        )
         .or(
           `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
         )
@@ -1395,86 +1439,39 @@ async function messagesPageLoadConversation(
       );
 
       chat.innerHTML = `
-
         <div class="empty-state">
 
-          <div>⚠️</div>
+          <div>
+            ⚠️
+          </div>
 
           <h2>
             Unable to load messages
           </h2>
 
           <p>
-            ${messagesPageEscape(error.message)}
+            ${escapeMessageHtml(error.message)}
           </p>
 
         </div>
-
       `;
 
       return;
-    }
 
-
-    /*
-     * IMPORTANT:
-     *
-     * We ONLY mark messages as seen
-     * AFTER the user has clicked and opened
-     * this conversation.
-     */
-
-    await messagesPageMarkSeen(
-      friendId
-    );
-
-
-    /*
-     * Reload after marking them seen.
-     *
-     * This makes the receiver's own screen
-     * immediately show the correct state too.
-     */
-
-    const {
-      data: updatedMessages,
-      error: reloadError
-    } =
-      await supabaseClient
-        .from("messages")
-        .select("*")
-        .or(
-          `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
-        )
-        .order(
-          "created_at",
-          {
-            ascending: true
-          }
-        );
-
-
-    if (reloadError) {
-
-      console.error(
-        "Reload messages error:",
-        reloadError
-      );
-
-      return;
     }
 
 
     if (
-      !updatedMessages ||
-      updatedMessages.length === 0
+      !data ||
+      data.length === 0
     ) {
 
       chat.innerHTML = `
-
         <div class="empty-state">
 
-          <div>👋</div>
+          <div>
+            👋
+          </div>
 
           <h2>
             Start chatting
@@ -1485,22 +1482,22 @@ async function messagesPageLoadConversation(
           </p>
 
         </div>
-
       `;
 
       return;
+
     }
 
 
-    messagesPageRenderMessages(
-      updatedMessages,
+    renderMessageList(
+      data,
       user.id
     );
 
   } catch (error) {
 
     console.error(
-      "Load conversation error:",
+      "Conversation loading exception:",
       error
     );
 
@@ -1509,11 +1506,12 @@ async function messagesPageLoadConversation(
 }
 
 
-/* ----------------------------------------------------------
-   RENDER MESSAGES
-   ---------------------------------------------------------- */
 
-function messagesPageRenderMessages(
+/* =========================================================
+   RENDER MESSAGES
+   ========================================================= */
+
+function renderMessageList(
   messages,
   userId
 ) {
@@ -1524,104 +1522,109 @@ function messagesPageRenderMessages(
     );
 
 
-  if (!chat) {
-    return;
-  }
+  if (!chat) return;
 
 
   chat.innerHTML =
-    messages.map(
-      message => {
+    messages
+      .map(
+        message => {
 
-        const mine =
-          String(message.sender_id) ===
-          String(userId);
-
-
-        const seen =
-          mine &&
-          message.seen === true;
+          const mine =
+            String(
+              message.sender_id
+            ) ===
+            String(userId);
 
 
-        const time =
-          messagesPageFormatTime(
-            message.created_at
-          );
+          const seen =
+            message.seen === true;
 
 
-        return `
+          const time =
+            formatMessageTime(
+              message.created_at
+            );
 
-          <div
-            class="message-row ${mine ? "mine" : "theirs"}"
-            data-message-id="${messagesPageEscape(message.id)}">
 
-            <div class="message-content">
+          return `
 
-              <div class="message-bubble">
-                ${messagesPageEscape(message.message || "")}
-              </div>
+            <div
+              class="message-row ${mine ? "mine" : "theirs"}"
+              data-message-id="${escapeMessageHtml(message.id)}">
 
-              <div class="message-meta">
+              <div class="message-content">
 
-                <span>
-                  ${time}
-                </span>
+                <div class="message-bubble">
+                  ${escapeMessageHtml(
+                    message.message || ""
+                  )}
+                </div>
 
-                ${
-                  mine
 
-                    ? seen
+                <div class="message-meta">
 
-                      ? `
-                        <span class="message-seen">
-                          ✓✓ Seen
-                        </span>
-                      `
+                  <span>
+                    ${time}
+                  </span>
 
-                      : `
-                        <span class="message-sent">
-                          ✓ Sent
-                        </span>
-                      `
 
-                    : ""
-                }
+                  ${
+                    mine
+
+                      ? seen
+
+                        ? `
+                          <span class="message-seen">
+                            ✓✓ Seen
+                          </span>
+                        `
+
+                        : `
+                          <span class="message-sent">
+                            ✓ Sent
+                          </span>
+                        `
+
+                      : ""
+                  }
+
+                </div>
 
               </div>
 
             </div>
 
-          </div>
+          `;
 
-        `;
+        }
+      )
+      .join("");
 
-      }
-    ).join("");
 
-
-  messagesPageScrollBottom();
+  scrollMessageChat();
 
 }
 
 
-/* ----------------------------------------------------------
+
+/* =========================================================
    SEND MESSAGE
-   ---------------------------------------------------------- */
+   ========================================================= */
 
-async function messagesPageSendMessage() {
+async function sendMessage() {
 
-  if (messagesPageSending) {
-    return;
-  }
+  if (messageSending) return;
 
 
-  if (!messagesPageSelectedFriend) {
+  if (!selectedMessageFriend) {
 
     alert(
-      "Please select a friend first."
+      "Select a friend first."
     );
 
     return;
+
   }
 
 
@@ -1637,23 +1640,19 @@ async function messagesPageSendMessage() {
     );
 
 
-  if (!input) {
-    return;
-  }
+  if (!input) return;
 
 
   const text =
     input.value.trim();
 
 
-  if (!text) {
-    return;
-  }
+  if (!text) return;
 
 
   const user =
-    messagesPageUser ||
-    await messagesPageGetUser();
+    currentMessageUser ||
+    await getMessageUser();
 
 
   if (!user) {
@@ -1663,14 +1662,15 @@ async function messagesPageSendMessage() {
     );
 
     return;
+
   }
 
 
-  messagesPageUser =
+  currentMessageUser =
     user;
 
 
-  messagesPageSending =
+  messageSending =
     true;
 
 
@@ -1692,9 +1692,12 @@ async function messagesPageSendMessage() {
   try {
 
     /*
-     * IMPORTANT:
+     * Every NEW message starts as:
      *
-     * Every new message starts as FALSE.
+     * seen = false
+     *
+     * Therefore sender gets:
+     * ✓ Sent
      */
 
     const {
@@ -1709,7 +1712,7 @@ async function messagesPageSendMessage() {
             user.id,
 
           receiver_id:
-            messagesPageSelectedFriend.id,
+            selectedMessageFriend.id,
 
           message:
             text,
@@ -1718,7 +1721,9 @@ async function messagesPageSendMessage() {
             false
 
         })
-        .select()
+        .select(
+          "id,sender_id,receiver_id,message,seen,created_at"
+        )
         .single();
 
 
@@ -1734,22 +1739,16 @@ async function messagesPageSendMessage() {
       );
 
       return;
+
     }
 
 
     input.value = "";
 
 
-    /*
-     * Immediately show our own message.
-     *
-     * It MUST show Sent because
-     * seen is false.
-     */
-
     if (data) {
 
-      messagesPageAddMessage(
+      addMessageToScreen(
         data,
         user.id
       );
@@ -1765,7 +1764,7 @@ async function messagesPageSendMessage() {
 
   } finally {
 
-    messagesPageSending =
+    messageSending =
       false;
 
 
@@ -1791,11 +1790,12 @@ async function messagesPageSendMessage() {
 }
 
 
-/* ----------------------------------------------------------
-   ADD MESSAGE WITHOUT DUPLICATE
-   ---------------------------------------------------------- */
 
-function messagesPageAddMessage(
+/* =========================================================
+   ADD NEW MESSAGE
+   ========================================================= */
+
+function addMessageToScreen(
   message,
   userId
 ) {
@@ -1806,10 +1806,12 @@ function messagesPageAddMessage(
     );
 
 
-  if (!chat) {
-    return;
-  }
+  if (!chat) return;
 
+
+  /*
+   * Do not add the same message twice.
+   */
 
   if (message.id) {
 
@@ -1819,9 +1821,7 @@ function messagesPageAddMessage(
       );
 
 
-    if (existing) {
-      return;
-    }
+    if (existing) return;
 
   }
 
@@ -1833,12 +1833,16 @@ function messagesPageAddMessage(
 
 
   if (empty) {
+
     chat.innerHTML = "";
+
   }
 
 
   const mine =
-    String(message.sender_id) ===
+    String(
+      message.sender_id
+    ) ===
     String(userId);
 
 
@@ -1849,8 +1853,9 @@ function messagesPageAddMessage(
 
 
   row.className =
-    "message-row " +
-    (mine ? "mine" : "theirs");
+    mine
+      ? "message-row mine"
+      : "message-row theirs";
 
 
   if (message.id) {
@@ -1902,7 +1907,7 @@ function messagesPageAddMessage(
 
 
   time.textContent =
-    messagesPageFormatTime(
+    formatMessageTime(
       message.created_at
     );
 
@@ -1920,7 +1925,9 @@ function messagesPageAddMessage(
       );
 
 
-    if (message.seen === true) {
+    if (
+      message.seen === true
+    ) {
 
       status.className =
         "message-seen";
@@ -1950,29 +1957,273 @@ function messagesPageAddMessage(
     bubble
   );
 
+
   content.appendChild(
     meta
   );
 
+
   row.appendChild(
     content
   );
+
 
   chat.appendChild(
     row
   );
 
 
-  messagesPageScrollBottom();
+  scrollMessageChat();
 
 }
 
 
-/* ----------------------------------------------------------
-   UPDATE ONE MESSAGE TO SEEN
-   ---------------------------------------------------------- */
 
-function messagesPageUpdateSeen(
+/* =========================================================
+   REALTIME
+   ========================================================= */
+
+function startCleanMessageRealtime() {
+
+  /*
+   * Remove an existing channel first.
+   */
+
+  if (
+    window.youRemoMessagesChannel
+  ) {
+
+    console.log(
+      "Removing old message realtime channel..."
+    );
+
+
+    supabaseClient.removeChannel(
+      window.youRemoMessagesChannel
+    );
+
+
+    window.youRemoMessagesChannel =
+      null;
+
+  }
+
+
+  if (!currentMessageUser) {
+
+    console.log(
+      "Realtime: no current user."
+    );
+
+    return;
+
+  }
+
+
+  const channelName =
+    "youremo-message-realtime-" +
+    currentMessageUser.id +
+    "-" +
+    Date.now();
+
+
+  console.log(
+    "Starting realtime:",
+    channelName
+  );
+
+
+  window.youRemoMessagesChannel =
+    supabaseClient
+      .channel(
+        channelName
+      )
+
+
+      /* ---------------------------------------------------
+         NEW MESSAGE
+         --------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          const message =
+            payload.new;
+
+
+          if (!message) return;
+
+
+          if (!currentMessageUser) {
+            return;
+          }
+
+
+          /*
+           * Ignore unrelated messages.
+           */
+
+          const belongsToUser =
+            String(
+              message.sender_id
+            ) ===
+            String(
+              currentMessageUser.id
+            )
+            ||
+            String(
+              message.receiver_id
+            ) ===
+            String(
+              currentMessageUser.id
+            );
+
+
+          if (!belongsToUser) {
+            return;
+          }
+
+
+          /*
+           * Only show realtime messages
+           * inside the currently selected
+           * conversation.
+           */
+
+          if (
+            !selectedMessageFriend
+          ) {
+            return;
+          }
+
+
+          const friendId =
+            selectedMessageFriend.id;
+
+
+          const belongsToOpenChat =
+            (
+              String(message.sender_id) ===
+              String(currentMessageUser.id)
+              &&
+              String(message.receiver_id) ===
+              String(friendId)
+            )
+            ||
+            (
+              String(message.sender_id) ===
+              String(friendId)
+              &&
+              String(message.receiver_id) ===
+              String(currentMessageUser.id)
+            );
+
+
+          if (!belongsToOpenChat) {
+            return;
+          }
+
+
+          addMessageToScreen(
+            message,
+            currentMessageUser.id
+          );
+
+
+          /*
+           * IMPORTANT:
+           *
+           * We DO NOT set seen=true here.
+           *
+           * A new message received by realtime
+           * remains unseen until the conversation
+           * was actually opened by the receiver.
+           */
+
+        }
+      )
+
+
+      /* ---------------------------------------------------
+         MESSAGE UPDATED
+         --------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          const message =
+            payload.new;
+
+
+          if (!message) return;
+
+
+          console.log(
+            "👀 Message UPDATE:",
+            message.id,
+            "seen:",
+            message.seen
+          );
+
+
+          /*
+           * Only react to actual seen=true.
+           */
+
+          if (
+            message.seen !== true
+          ) {
+
+            return;
+
+          }
+
+
+          /*
+           * Update the visible message
+           * immediately.
+           */
+
+          updateVisibleMessageSeen(
+            message.id
+          );
+
+        }
+      )
+
+
+      .subscribe(
+        function(status) {
+
+          console.log(
+            "Message realtime status:",
+            status
+          );
+
+        }
+      );
+
+}
+
+
+
+/* =========================================================
+   UPDATE VISIBLE MESSAGE TO SEEN
+   ========================================================= */
+
+function updateVisibleMessageSeen(
   messageId
 ) {
 
@@ -1984,12 +2235,13 @@ function messagesPageUpdateSeen(
 
   if (!row) {
 
-    console.log(
-      "Seen row not currently visible:",
-      messageId
-    );
+    /*
+     * It may not be visible because
+     * another conversation is selected.
+     */
 
     return;
+
   }
 
 
@@ -1999,28 +2251,11 @@ function messagesPageUpdateSeen(
     );
 
 
-  if (!meta) {
-    return;
-  }
+  if (!meta) return;
 
 
   /*
-   * Only our own messages need
-   * Sent → Seen.
-   */
-
-  if (
-    !row.classList.contains(
-      "mine"
-    )
-  ) {
-
-    return;
-  }
-
-
-  /*
-   * Already Seen?
+   * Already Seen.
    */
 
   if (
@@ -2030,6 +2265,7 @@ function messagesPageUpdateSeen(
   ) {
 
     return;
+
   }
 
 
@@ -2044,7 +2280,9 @@ function messagesPageUpdateSeen(
 
 
   if (sent) {
+
     sent.remove();
+
   }
 
 
@@ -2079,285 +2317,12 @@ function messagesPageUpdateSeen(
 }
 
 
-/* ----------------------------------------------------------
-   REALTIME
-   ---------------------------------------------------------- */
 
-function messagesPageStartRealtime() {
+/* =========================================================
+   TIME
+   ========================================================= */
 
-  if (!messagesPageUser) {
-
-    console.log(
-      "Messages realtime: no user."
-    );
-
-    return;
-  }
-
-
-  /*
-   * Remove our page's old channel only.
-   */
-
-  if (messagesPageRealtimeChannel) {
-
-    supabaseClient.removeChannel(
-      messagesPageRealtimeChannel
-    );
-
-    messagesPageRealtimeChannel =
-      null;
-
-  }
-
-
-  console.log(
-    "Starting Messages page realtime..."
-  );
-
-
-  messagesPageRealtimeChannel =
-    supabaseClient
-      .channel(
-        "messages-page-" +
-        messagesPageUser.id +
-        "-" +
-        Date.now()
-      )
-
-
-      /* ====================================================
-         NEW MESSAGE
-         ==================================================== */
-
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages"
-        },
-        async function(payload) {
-
-          const message =
-            payload.new;
-
-
-          if (!message) {
-            return;
-          }
-
-
-          /*
-           * Ignore unrelated messages.
-           */
-
-          const belongsToUser =
-            String(message.sender_id) ===
-              String(messagesPageUser.id)
-            ||
-            String(message.receiver_id) ===
-              String(messagesPageUser.id);
-
-
-          if (!belongsToUser) {
-            return;
-          }
-
-
-          /*
-           * Is this message part of the
-           * conversation currently open?
-           */
-
-          const selected =
-            messagesPageSelectedFriend;
-
-
-          const belongsToOpenConversation =
-            selected &&
-            (
-              (
-                String(message.sender_id) ===
-                  String(messagesPageUser.id)
-                &&
-                String(message.receiver_id) ===
-                  String(selected.id)
-              )
-              ||
-              (
-                String(message.sender_id) ===
-                  String(selected.id)
-                &&
-                String(message.receiver_id) ===
-                  String(messagesPageUser.id)
-              )
-            );
-
-
-          /*
-           * If no conversation is open,
-           * DO NOT mark as seen.
-           *
-           * This is the critical fix.
-           */
-
-          if (!belongsToOpenConversation) {
-
-            console.log(
-              "📩 New message received.",
-              "Conversation is not open.",
-              "Keeping seen =",
-              message.seen
-            );
-
-            return;
-          }
-
-
-          /*
-           * Add the message to the open chat.
-           */
-
-          messagesPageAddMessage(
-            message,
-            messagesPageUser.id
-          );
-
-
-          /*
-           * If the incoming message belongs
-           * to the conversation currently open,
-           * the receiver is actually viewing it.
-           *
-           * Therefore it can be marked Seen.
-           */
-
-          if (
-            String(message.receiver_id) ===
-            String(messagesPageUser.id)
-            &&
-            message.seen !== true
-          ) {
-
-            await supabaseClient
-              .from("messages")
-              .update({
-                seen: true
-              })
-              .eq(
-                "id",
-                message.id
-              )
-              .eq(
-                "receiver_id",
-                messagesPageUser.id
-              )
-              .eq(
-                "seen",
-                false
-              );
-
-
-            /*
-             * The UPDATE event will be sent
-             * through Realtime.
-             */
-
-          }
-
-        }
-      )
-
-
-      /* ====================================================
-         MESSAGE UPDATED
-         Used ONLY for Sent → Seen
-         ==================================================== */
-
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "messages"
-        },
-        function(payload) {
-
-          const message =
-            payload.new;
-
-
-          if (!message) {
-            return;
-          }
-
-
-          /*
-           * We only care when seen became true.
-           */
-
-          if (
-            message.seen !== true
-          ) {
-
-            return;
-          }
-
-
-          /*
-           * This UPDATE matters to the sender.
-           *
-           * If I sent the message and the other
-           * person opened it, I should see Seen.
-           */
-
-          if (
-            String(message.sender_id) !==
-            String(messagesPageUser.id)
-          ) {
-
-            return;
-          }
-
-
-          console.log(
-            "👀 Realtime Seen UPDATE:",
-            message.id
-          );
-
-
-          messagesPageUpdateSeen(
-            message.id
-          );
-
-        }
-      )
-
-
-      /* ====================================================
-         SUBSCRIBE
-         ==================================================== */
-
-      .subscribe(
-        function(status) {
-
-          console.log(
-            "Messages realtime status:",
-            status
-          );
-
-        }
-      );
-
-}
-
-
-/* ----------------------------------------------------------
-   FORMAT TIME
-   ---------------------------------------------------------- */
-
-function messagesPageFormatTime(
+function formatMessageTime(
   timestamp
 ) {
 
@@ -2392,11 +2357,12 @@ function messagesPageFormatTime(
 }
 
 
-/* ----------------------------------------------------------
-   SCROLL
-   ---------------------------------------------------------- */
 
-function messagesPageScrollBottom() {
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+function scrollMessageChat() {
 
   const chat =
     document.getElementById(
@@ -2404,9 +2370,7 @@ function messagesPageScrollBottom() {
     );
 
 
-  if (!chat) {
-    return;
-  }
+  if (!chat) return;
 
 
   requestAnimationFrame(
@@ -2421,11 +2385,12 @@ function messagesPageScrollBottom() {
 }
 
 
-/* ----------------------------------------------------------
-   ESCAPE HTML
-   ---------------------------------------------------------- */
 
-function messagesPageEscape(
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeMessageHtml(
   value
 ) {
 
@@ -2446,16 +2411,17 @@ function messagesPageEscape(
 }
 
 
-/* ==========================================================
-   PAGE START
-   ========================================================== */
+
+/* =========================================================
+   PAGE INITIALIZATION
+   ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   async function() {
 
     console.log(
-      "Messages page loaded."
+      "💬 YouRemo Messages page starting..."
     );
 
 
@@ -2477,37 +2443,25 @@ document.addEventListener(
       );
 
 
-    /* ------------------------------------------------------
-       SEARCH
-       ------------------------------------------------------ */
-
     if (searchInput) {
 
       searchInput.addEventListener(
         "input",
-        messagesPageFilterFriends
+        filterMessageFriends
       );
 
     }
 
-
-    /* ------------------------------------------------------
-       SEND BUTTON
-       ------------------------------------------------------ */
 
     if (sendButton) {
 
       sendButton.addEventListener(
         "click",
-        messagesPageSendMessage
+        sendMessage
       );
 
     }
 
-
-    /* ------------------------------------------------------
-       ENTER TO SEND
-       ------------------------------------------------------ */
 
     if (messageInput) {
 
@@ -2522,7 +2476,7 @@ document.addEventListener(
 
             event.preventDefault();
 
-            messagesPageSendMessage();
+            sendMessage();
 
           }
 
@@ -2532,44 +2486,45 @@ document.addEventListener(
     }
 
 
-    /* ------------------------------------------------------
-       GET USER
-       ------------------------------------------------------ */
+    /*
+     * Get current user.
+     */
 
-    messagesPageUser =
-      await messagesPageGetUser();
+    currentMessageUser =
+      await getMessageUser();
 
 
-    if (!messagesPageUser) {
+    if (!currentMessageUser) {
 
-      await messagesPageLoadFriends();
+      await loadMessageFriends();
 
       return;
+
     }
 
 
-    /* ------------------------------------------------------
-       LOAD FRIENDS
-       ------------------------------------------------------ */
+    /*
+     * Start ONE realtime channel.
+     */
 
-    await messagesPageLoadFriends();
-
-
-    /* ------------------------------------------------------
-       START REALTIME
-       ------------------------------------------------------ */
-
-    messagesPageStartRealtime();
+    startCleanMessageRealtime();
 
 
-    console.log(
-      "✅ Messages page initialized."
-    );
+    /*
+     * Load friends.
+     *
+     * IMPORTANT:
+     * This does NOT mark any message as seen.
+     */
+
+    await loadMessageFriends();
 
   }
 );
 
 </script>
 
+
 </body>
+
 </html>
