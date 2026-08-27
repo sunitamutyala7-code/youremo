@@ -12,9 +12,7 @@
 
 <body>
 
-  <!-- =====================================================
-       NAVBAR
-       ===================================================== -->
+  <!-- NAVBAR -->
 
   <header class="navbar">
 
@@ -25,13 +23,11 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="friends.html">Friends</a>
-      <a href="requests.html" class="active">Requests</a>
+      <a href="requests.html">Requests</a>
       <a href="profile.html">Profile</a>
       <a href="myfriends.html">My Friends</a>
       <a href="about.html">About</a>
     </nav>
-
-    <!-- ACCOUNT BUTTON -->
 
     <div
       id="accountButton"
@@ -41,9 +37,7 @@
       <div
         id="navAvatar"
         class="nav-avatar">
-
         ?
-
       </div>
 
       <span id="loginButton">
@@ -51,9 +45,6 @@
       </span>
 
     </div>
-
-
-    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -76,34 +67,19 @@
   </header>
 
 
-  <!-- =====================================================
-       MAIN
-       ===================================================== -->
+  <!-- MAIN -->
 
   <main>
 
     <section class="requests-section page-section">
 
-      <!-- PAGE HEADER -->
+      <h1>
+        Friend Requests
+      </h1>
 
-      <div class="page-header">
-
-        <span class="page-icon">
-          🤝
-        </span>
-
-        <h1>
-          Friend Requests
-        </h1>
-
-        <p>
-          See who wants to connect with you.
-        </p>
-
-      </div>
-
-
-      <!-- REQUEST COUNT -->
+      <p class="section-text">
+        See who wants to connect with you.
+      </p>
 
       <div class="request-header">
 
@@ -114,15 +90,10 @@
         <span
           id="requestBadge"
           class="request-badge">
-
           0
-
         </span>
 
       </div>
-
-
-      <!-- FRIEND REQUESTS -->
 
       <div
         id="friendRequests"
@@ -130,16 +101,14 @@
 
         <div class="empty-state">
 
-          <div>
-            🔄
-          </div>
+          <div>⏳</div>
 
           <h2>
-            Loading Requests...
+            Loading requests...
           </h2>
 
           <p>
-            Please wait while we load your friend requests.
+            Please wait.
           </p>
 
         </div>
@@ -151,9 +120,7 @@
   </main>
 
 
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
+  <!-- FOOTER -->
 
   <footer>
 
@@ -164,16 +131,11 @@
   </footer>
 
 
-  <!-- =====================================================
-       SUPABASE
-       ===================================================== -->
+  <!-- SUPABASE -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-  <!-- =====================================================
-       YOUR JAVASCRIPT
-       ===================================================== -->
+  <!-- YOUR JAVASCRIPT -->
 
   <script src="script.js"></script>
 
