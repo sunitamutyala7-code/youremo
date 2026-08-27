@@ -1250,121 +1250,221 @@
      LOAD CONVERSATION
      ===================================================== */
 
-  async function loadConversation(
-    friendId
-  ) {
+  async function loadConversation(friendId) {
 
-    const chat =
-      document.getElementById(
-        "chatMessages"
-      );
+  const chat = document.getElementById("chatMessages");
 
-    if (!chat) return;
+  if (!chat) return;
 
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
 
-    const user =
-      currentMessageUser ||
-      await getMessageUser();
+  if (!user) return;
 
+  currentMessageUser = user;
 
-    if (!user) return;
+  chat.innerHTML = `
+    <div class="loading-conversations">
+      Loading messages...
+    </div>
+  `;
 
+  try {
 
-    currentMessageUser =
-      user;
+    /* =====================================================
+       LOAD MESSAGES
+       ===================================================== */
 
-
-    chat.innerHTML = `
-      <div class="loading-conversations">
-        Loading messages...
-      </div>
-    `;
-
-
-    try {
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from("messages")
-          .select("*")
-          .or(
-            `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
-          )
-          .order(
-            "created_at",
-            {
-              ascending: true
-            }
-          );
-
-
-      if (error) {
-
-        console.error(
-          "Message loading error:",
-          error
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .select("*")
+        .or(
+          `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
         );
 
-        chat.innerHTML = `
-          <div class="empty-state">
 
-            <div>⚠️</div>
-
-            <h2>
-              Unable to load messages
-            </h2>
-
-            <p>
-              ${escapeHtml(error.message)}
-            </p>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      if (!data || !data.length) {
-
-        chat.innerHTML = `
-          <div class="empty-state">
-
-            <div>👋</div>
-
-            <h2>
-              Start chatting
-            </h2>
-
-            <p>
-              Send your first message to this friend.
-            </p>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      renderMessages(
-        data,
-        user.id
-      );
-
-    } catch (error) {
+    if (error) {
 
       console.error(
-        "Load conversation error:",
+        "Message loading error:",
         error
       );
+
+      chat.innerHTML = `
+        <div class="empty-state">
+
+          <div>⚠️</div>
+
+          <h2>
+            Unable to load messages
+          </h2>
+
+          <p>
+            ${escapeHtml(error.message)}
+          </p>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    /* =====================================================
+       MARK RECEIVED MESSAGES AS SEEN
+       ===================================================== */
+
+    const unreadMessages =
+      (data || []).filter(message => {
+
+        return (
+          String(message.receiver_id) === String(user.id) &&
+          (
+            message.seen !== true &&
+            message.is_seen !== true
+          )
+        );
+
+      });
+
+
+    if (unreadMessages.length > 0) {
+
+      console.log(
+        "Marking messages as seen:",
+        unreadMessages.length
+      );
+
+
+      /*
+       * Mark each received message as seen.
+       */
+
+      for (const message of unreadMessages) {
+
+        const {
+          error: seenError
+        } =
+          await supabaseClient
+            .from("messages")
+            .update({
+              seen: true
+            })
+            .eq(
+              "id",
+              message.id
+            );
+
+
+        if (seenError) {
+
+          console.error(
+            "Could not mark message as seen:",
+            seenError
+          );
+
+        }
+
+      }
 
     }
 
+
+    /* =====================================================
+       RELOAD MESSAGES AFTER SEEN UPDATE
+       ===================================================== */
+
+    const {
+      data: updatedMessages,
+      error: reloadError
+    } =
+      await supabaseClient
+        .from("messages")
+        .select("*")
+        .or(
+          `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
+
+
+    if (reloadError) {
+
+      console.error(
+        "Reload messages error:",
+        reloadError
+      );
+
+      return;
+
+    }
+
+
+    /* =====================================================
+       NO MESSAGES
+       ===================================================== */
+
+    if (
+      !updatedMessages ||
+      updatedMessages.length === 0
+    ) {
+
+      chat.innerHTML = `
+        <div class="empty-state">
+
+          <div>👋</div>
+
+          <h2>
+            Start chatting
+          </h2>
+
+          <p>
+            Send your first message to this friend.
+          </p>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /* =====================================================
+       DISPLAY MESSAGES
+       ===================================================== */
+
+    renderMessages(
+      updatedMessages,
+      user.id
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Load conversation error:",
+      error
+    );
+
   }
+
+}
 
 
   /* =====================================================
