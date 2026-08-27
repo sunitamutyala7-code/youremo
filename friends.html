@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +25,7 @@
 
     <nav>
       <a href="index.html">Home</a>
-      <a href="friends.html">Friends</a>
+      <a href="friends.html" class="active">Friends</a>
       <a href="requests.html">Requests</a>
       <a href="profile.html">Profile</a>
       <a href="myfriends.html">My Friends</a>
@@ -75,18 +76,30 @@
 
   <main>
 
-    <section class="friends-section page-section">
+    <section class="friends-page">
 
-      <h1>
-        Find Your Friends
-      </h1>
+      <!-- PAGE HEADER -->
 
-      <p class="section-text">
-        Search for people and start connecting.
-      </p>
+      <div class="page-header">
+
+        <div>
+
+          <h1>
+            Find Friends
+          </h1>
+
+          <p>
+            Search for people and start connecting.
+          </p>
+
+        </div>
+
+      </div>
 
 
-      <!-- SEARCH -->
+      <!-- =================================================
+           SEARCH
+           ================================================= -->
 
       <div class="search-box">
 
@@ -94,17 +107,23 @@
           type="text"
           id="friendSearch"
           placeholder="Search by name or username..."
-          autocomplete="off">
+          autocomplete="off"
+          onkeyup="searchFriends()">
 
         <button
+          type="button"
           onclick="searchFriends()">
+
           Search
+
         </button>
 
       </div>
 
 
-      <!-- SEARCH RESULTS -->
+      <!-- =================================================
+           SEARCH RESULTS
+           ================================================= -->
 
       <div
         id="friendResults"
@@ -112,7 +131,9 @@
 
         <div class="empty-state">
 
-          <div>👥</div>
+          <div>
+            🔎
+          </div>
 
           <h2>
             Find Friends
@@ -151,7 +172,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- =====================================================
-       YOUR JAVASCRIPT
+       YOUREMO JAVASCRIPT
        ===================================================== -->
 
   <script src="script.js"></script>
@@ -159,3 +180,4 @@
 </body>
 
 </html>
+```
