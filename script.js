@@ -3766,7 +3766,309 @@ function editProfile() {
 
 }
 
+/* =========================================================
+   45. REAL-TIME MESSAGING
+   ========================================================= */
 
+let messageRealtimeChannel = null;
+
+
+/* ---------------------------------------------------------
+   START REAL-TIME MESSAGE LISTENER
+   --------------------------------------------------------- */
+
+function startMessageRealtime() {
+
+  if (!currentUser) {
+    console.log("Realtime chat: user not logged in.");
+    return;
+  }
+
+  /* Remove previous listener if one exists */
+
+  if (messageRealtimeChannel) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel = null;
+
+  }
+
+
+  console.log(
+    "Starting real-time messaging for:",
+    currentUser.id
+  );
+
+
+  messageRealtimeChannel =
+    supabaseClient
+      .channel(
+        "messages-realtime-" +
+        currentUser.id
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        },
+        function (payload) {
+
+          console.log(
+            "New real-time message:",
+            payload.new
+          );
+
+          handleRealtimeMessage(
+            payload.new
+          );
+
+        }
+      )
+      .subscribe(
+        function (status) {
+
+          console.log(
+            "Message realtime status:",
+            status
+          );
+
+        }
+      );
+
+}
+
+
+/* ---------------------------------------------------------
+   HANDLE REAL-TIME MESSAGE
+   --------------------------------------------------------- */
+
+function handleRealtimeMessage(
+  message
+) {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  /*
+   * Ignore messages that are not related
+   * to the current logged-in user.
+   */
+
+  const belongsToCurrentUser =
+    message.sender_id === currentUser.id ||
+    message.receiver_id === currentUser.id;
+
+
+  if (!belongsToCurrentUser) {
+    return;
+  }
+
+
+  /*
+   * If no friend is currently selected,
+   * don't add the message to the chat.
+   */
+
+  if (!selectedMessageFriend) {
+    return;
+  }
+
+
+  /*
+   * Check whether this message belongs
+   * to the currently open conversation.
+   */
+
+  const friendId =
+    selectedMessageFriend.id;
+
+
+  const belongsToOpenConversation =
+    (
+      message.sender_id === currentUser.id &&
+      message.receiver_id === friendId
+    )
+    ||
+    (
+      message.sender_id === friendId &&
+      message.receiver_id === currentUser.id
+    );
+
+
+  if (!belongsToOpenConversation) {
+
+    console.log(
+      "New message belongs to another conversation."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Add the message directly to the screen.
+   */
+
+  appendRealtimeMessage(
+    message
+  );
+
+}
+
+
+/* ---------------------------------------------------------
+   APPEND MESSAGE TO CHAT
+   --------------------------------------------------------- */
+
+function appendRealtimeMessage(
+  message
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) {
+    return;
+  }
+
+
+  /*
+   * Remove empty / loading message
+   * when the first real message arrives.
+   */
+
+  const emptyState =
+    chat.querySelector(
+      ".empty-state"
+    );
+
+
+  if (emptyState) {
+
+    chat.innerHTML = "";
+
+  }
+
+
+  /*
+   * Prevent duplicate messages.
+   */
+
+  if (
+    message.id &&
+    chat.querySelector(
+      '[data-message-id="' +
+      CSS.escape(
+        String(message.id)
+      ) +
+      '"]'
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const mine =
+    message.sender_id ===
+    currentUser.id;
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "message-row " +
+    (
+      mine
+        ? "mine"
+        : "theirs"
+    );
+
+
+  if (message.id) {
+
+    row.setAttribute(
+      "data-message-id",
+      String(message.id)
+    );
+
+  }
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+
+  bubble.className =
+    "message-bubble";
+
+
+  bubble.textContent =
+    message.message || "";
+
+
+  row.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    row
+  );
+
+
+  /*
+   * Scroll to newest message.
+   */
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+/* ---------------------------------------------------------
+   STOP REAL-TIME LISTENER
+   --------------------------------------------------------- */
+
+function stopMessageRealtime() {
+
+  if (
+    messageRealtimeChannel
+  ) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel =
+      null;
+
+    console.log(
+      "Message realtime stopped."
+    );
+
+  }
+
+}
 /* =========================================================
    46. EXPORT FUNCTIONS
    ========================================================= */
