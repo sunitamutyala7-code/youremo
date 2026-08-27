@@ -3788,11 +3788,9 @@ let messageRealtimeChannel = null;
 function startMessageRealtime() {
 
   if (!currentUser) {
-    console.log("Realtime chat: user not logged in.");
+    console.log("Realtime: no logged-in user.");
     return;
   }
-
-  /* Remove previous listener if one exists */
 
   if (messageRealtimeChannel) {
 
@@ -3804,18 +3802,18 @@ function startMessageRealtime() {
 
   }
 
-
   console.log(
-    "Starting real-time messaging for:",
-    currentUser.id
+    "Starting message realtime..."
   );
 
 
   messageRealtimeChannel =
     supabaseClient
       .channel(
-        "messages-realtime-" +
-        currentUser.id
+        "messages-channel-" +
+        currentUser.id +
+        "-" +
+        Date.now()
       )
       .on(
         "postgres_changes",
@@ -3827,7 +3825,7 @@ function startMessageRealtime() {
         function (payload) {
 
           console.log(
-            "New real-time message:",
+            "🔥 REALTIME MESSAGE RECEIVED:",
             payload.new
           );
 
@@ -3838,18 +3836,26 @@ function startMessageRealtime() {
         }
       )
       .subscribe(
-        function (status) {
+        function (status, error) {
 
           console.log(
-            "Message realtime status:",
+            "Realtime status:",
             status
           );
+
+          if (error) {
+
+            console.error(
+              "Realtime subscription error:",
+              error
+            );
+
+          }
 
         }
       );
 
 }
-
 
 /* ---------------------------------------------------------
    HANDLE REAL-TIME MESSAGE
