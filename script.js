@@ -276,33 +276,26 @@ if (navAvatar) {
 
   if (navAvatar) {
 
-    if (profile?.avatar_url) {
+  navAvatar.style.backgroundImage = "none";
+  navAvatar.textContent = "";
 
-      navAvatar.textContent = "";
+  if (profile?.avatar_url) {
 
-      navAvatar.style.backgroundImage =
-        `url("${profile.avatar_url}")`;
+    navAvatar.style.backgroundImage =
+      `url("${profile.avatar_url}")`;
 
-      navAvatar.style.backgroundSize =
-        "cover";
+    navAvatar.style.backgroundSize = "cover";
+    navAvatar.style.backgroundPosition = "center";
+    navAvatar.style.backgroundRepeat = "no-repeat";
 
-      navAvatar.style.backgroundPosition =
-        "center";
+  } else {
 
-      navAvatar.style.backgroundRepeat =
-        "no-repeat";
-
-    } else {
-
-      navAvatar.style.backgroundImage =
-        "none";
-
-      navAvatar.textContent =
-        getInitials(displayName);
-
-    }
+    navAvatar.textContent =
+      getInitials(displayName);
 
   }
+
+}
 
 }
 
