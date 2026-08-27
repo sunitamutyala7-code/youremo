@@ -1645,95 +1645,76 @@
        RENDER MESSAGES
        ===================================================== */
 
-    function renderMessages(
-      messages,
-      userId
-    ) {
+    function renderMessages(messages, userId) {
 
-      const chat =
-        document.getElementById(
-          "chatMessages"
-        );
+  const chat = document.getElementById("chatMessages");
 
-      if (!chat) return;
+  if (!chat) return;
 
+  chat.innerHTML = messages.map(message => {
 
-      chat.innerHTML =
-        messages.map(message => {
+    const mine =
+      String(message.sender_id) === String(userId);
 
-          const mine =
-            String(message.sender_id) ===
-            String(userId);
+    const time =
+      formatMessageTime(message.created_at);
 
+    const seen =
+      mine &&
+      (
+        message.seen === true ||
+        message.is_seen === true
+      );
 
-          const time =
-            formatMessageTime(
-              message.created_at
-            );
+    return `
+      <div
+        class="message-row ${mine ? "mine" : "theirs"}"
+        data-message-id="${escapeHtml(message.id || "")}"
+      >
 
+        <div class="message-content">
 
-          const seen =
-            mine &&
-            (
-              message.seen === true ||
-              message.is_seen === true
-            );
+          <div class="message-bubble">
+            ${escapeHtml(message.message || "")}
+          </div>
 
+          <div class="message-meta">
 
-          return `
+            <span>
+              ${time}
+            </span>
 
-            <div
-              class="message-row ${
-                mine
-                  ? "mine"
-                  : "theirs"
-              }">
-
-              <div class="message-content">
-
-                <div class="message-bubble">
-
-                  ${escapeHtml(
-                    message.message || ""
-                  )}
-
-                </div>
-
-                <div class="message-meta">
-
-                  <span>
-                    ${time}
-                  </span>
-
+            ${
+              mine
+                ? `
                   ${
-                    mine && seen
-
-                      ?
-
-                      `<span class="message-seen">
-                        ✓✓ Seen
-                      </span>`
-
-                      :
-
-                      ""
+                    seen
+                      ? `
+                        <span class="message-seen">
+                          ✓✓ Seen
+                        </span>
+                      `
+                      : `
+                        <span class="message-sent">
+                          ✓ Sent
+                        </span>
+                      `
                   }
+                `
+                : ""
+            }
 
-                </div>
+          </div>
 
-              </div>
+        </div>
 
-            </div>
+      </div>
+    `;
 
-          `;
+  }).join("");
 
-        }).join("");
-
-
-      scrollChatToBottom();
-
-    }
-
+  scrollChatToBottom();
+}
 
     /* =====================================================
        SEND MESSAGE
