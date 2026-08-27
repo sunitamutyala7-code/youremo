@@ -845,22 +845,40 @@
             message.sender_id === user.id;
 
 
-          return `
+          const messageTime =
+  message.created_at
+    ? new Date(
+        message.created_at
+      ).toLocaleTimeString(
+        "en-IN",
+        {
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      )
+    : "";
 
-            <div
-              class="message-row ${mine ? "mine" : "theirs"}">
+return `
 
-              <div class="message-bubble">
+  <div
+    class="message-row ${mine ? "mine" : "theirs"}"
+    data-message-id="${message.id}">
 
-                ${escapeMessage(
-                  message.message
-                )}
+    <div class="message-bubble">
 
-              </div>
+      ${escapeMessage(
+        message.message
+      )}
 
-            </div>
+      <div class="message-time">
+        ${messageTime}
+      </div>
 
-          `;
+    </div>
+
+  </div>
+
+`;
 
         }).join("");
 
