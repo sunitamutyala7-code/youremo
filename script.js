@@ -173,7 +173,6 @@ async function refreshAccountUI() {
     loginButton.textContent =
       "Login";
 
-    ```javascript
 if (navAvatar) {
 
   /* Remove any previous background */
