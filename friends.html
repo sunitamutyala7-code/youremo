@@ -5,14 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>YouRemo - Friends</title>
+  <title>YouRemo - Find Friends</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
 
   <header class="navbar">
 
@@ -21,35 +23,13 @@
     </div>
 
     <nav>
-
-      <a href="index.html">
-        Home
-      </a>
-
-      <a href="friends.html">
-        Friends
-      </a>
-
-      <a href="requests.html">
-        Requests
-      </a>
-
-      <a href="profile.html">
-        Profile
-      </a>
-
-      <a href="myfriends.html">
-        My Friends
-      </a>
-
-      <a href="about.html">
-        About
-      </a>
-
+      <a href="index.html">Home</a>
+      <a href="friends.html">Friends</a>
+      <a href="requests.html">Requests</a>
+      <a href="profile.html">Profile</a>
+      <a href="myfriends.html">My Friends</a>
+      <a href="about.html">About</a>
     </nav>
-
-
-    <!-- ACCOUNT -->
 
     <div
       id="accountButton"
@@ -59,9 +39,7 @@
       <div
         id="navAvatar"
         class="nav-avatar">
-
         ?
-
       </div>
 
       <span id="loginButton">
@@ -69,9 +47,6 @@
       </span>
 
     </div>
-
-
-    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -94,20 +69,20 @@
   </header>
 
 
-  <!-- MAIN -->
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
 
   <main>
 
-    <section
-      class="friends-section"
-      id="friends">
+    <section class="friends-section page-section">
 
       <h1>
-        Find Friends
+        Find Your Friends
       </h1>
 
       <p class="section-text">
-        Search for people on YouRemo and start connecting.
+        Search for people and start connecting.
       </p>
 
 
@@ -123,15 +98,13 @@
 
         <button
           onclick="searchFriends()">
-
           Search
-
         </button>
 
       </div>
 
 
-      <!-- RESULTS -->
+      <!-- SEARCH RESULTS -->
 
       <div
         id="friendResults"
@@ -139,9 +112,7 @@
 
         <div class="empty-state">
 
-          <div>
-            👥
-          </div>
+          <div>👥</div>
 
           <h2>
             Find Friends
@@ -160,7 +131,9 @@
   </main>
 
 
-  <!-- FOOTER -->
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
 
   <footer>
 
@@ -171,11 +144,15 @@
   </footer>
 
 
-  <!-- SUPABASE -->
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- YOUR JAVASCRIPT -->
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
 
   <script src="script.js"></script>
 
