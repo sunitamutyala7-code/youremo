@@ -189,7 +189,7 @@ if (navAvatar) {
     navAvatar.textContent = "";
 
     navAvatar.style.backgroundImage =
-      `url("${escapeHTML(profile.avatar_url)}")`;
+  `url("${profile.avatar_url}")`;
 
     navAvatar.style.backgroundSize = "cover";
     navAvatar.style.backgroundPosition = "center";
