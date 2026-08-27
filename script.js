@@ -3867,67 +3867,38 @@ function editProfile() {
 
 }
 /* =========================================================
-   46. EXPORT FUNCTIONS TO WINDOW
+   EXPORT FUNCTIONS TO WINDOW
    ========================================================= */
 
-window.handleAccountClick =
-  handleAccountClick;
+window.handleAccountClick = handleAccountClick;
+window.openAuth = openAuth;
+window.closeAuth = closeAuth;
 
-window.openAuth =
-  openAuth;
+window.showLogin = showLogin;
+window.showSignup = showSignup;
 
-window.closeAuth =
-  closeAuth;
+window.signUp = signUp;
+window.login = login;
+window.logout = logout;
 
-window.showLogin =
-  showLogin;
+window.findFriends = findFriends;
+window.learnMore = learnMore;
 
-window.showSignup =
-  showSignup;
+window.searchFriends = searchFriends;
+window.sendFriendRequest = sendFriendRequest;
 
-window.signUp =
-  signUp;
+window.acceptFriendRequest = acceptFriendRequest;
+window.declineFriendRequest = declineFriendRequest;
 
-window.login =
-  login;
+window.openEditProfile = openEditProfile;
+window.closeEditProfile = closeEditProfile;
+window.saveEditProfile = saveEditProfile;
 
-window.logout =
-  logout;
-
-window.findFriends =
-  findFriends;
-
-window.learnMore =
-  learnMore;
-
-window.searchFriends =
-  searchFriends;
-
-window.sendFriendRequest =
-  sendFriendRequest;
-
-window.acceptFriendRequest =
-  acceptFriendRequest;
-
-window.declineFriendRequest =
-  declineFriendRequest;
-
-window.openEditProfile =
-  openEditProfile;
-
-window.closeEditProfile =
-  closeEditProfile;
-
-window.saveEditProfile =
-  saveEditProfile;
-
-window.goToMyProfile =
-  goToMyProfile;
-
-window.editProfile =
-  editProfile;
+window.goToMyProfile = goToMyProfile;
+window.editProfile = editProfile;
 
 
 /* =========================================================
    END OF YOUREMO SCRIPT
    ========================================================= */
+
