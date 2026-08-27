@@ -12,6 +12,10 @@
 
 <body>
 
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
   <header class="navbar">
 
     <div class="logo">
@@ -27,13 +31,20 @@
       <a href="about.html">About</a>
     </nav>
 
+
+    <!-- ACCOUNT -->
+
     <div
       id="accountButton"
       class="account-button"
       onclick="handleAccountClick()">
 
-      <div id="navAvatar" class="nav-avatar">
+      <div
+        id="navAvatar"
+        class="nav-avatar">
+
         ?
+
       </div>
 
       <span id="loginButton">
@@ -41,6 +52,9 @@
       </span>
 
     </div>
+
+
+    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -63,9 +77,17 @@
   </header>
 
 
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
   <main>
 
-    <section class="friends-list-section">
+    <section
+      class="friends-list-section page-section">
+
+
+      <!-- PAGE TITLE -->
 
       <h1>
         My Friends
@@ -76,16 +98,26 @@
       </p>
 
 
-      <div class="friend-count-box">
+      <!-- FRIEND COUNT -->
 
-        <span>👥</span>
+      <div class="friends-page-header">
 
-        <strong id="friendCount">
+        <h2>
+          Your Connections
+        </h2>
+
+        <span
+          id="friendCount"
+          class="friend-count">
+
           0 Friends
-        </strong>
+
+        </span>
 
       </div>
 
+
+      <!-- FRIEND LIST -->
 
       <div
         id="myFriendsList"
@@ -93,10 +125,16 @@
 
         <div class="empty-state">
 
-          <div>⏳</div>
+          <div>
+            ⏳
+          </div>
+
+          <h2>
+            Loading friends...
+          </h2>
 
           <p>
-            Loading friends...
+            Please wait.
           </p>
 
         </div>
@@ -104,13 +142,12 @@
       </div>
 
 
-      <!-- ONLY ONE BUTTON -->
+      <!-- FIND MORE FRIENDS -->
 
-      <div class="my-friends-action">
+      <div class="page-action">
 
         <button
           class="primary-btn"
-          type="button"
           onclick="window.location.href='friends.html'">
 
           Find More Friends
@@ -124,7 +161,29 @@
   </main>
 
 
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer>
+
+    <p>
+      © 2026 YouRemo. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       YOUR JAVASCRIPT
+       ===================================================== -->
 
   <script src="script.js"></script>
 
