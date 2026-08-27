@@ -3815,6 +3815,12 @@ function startMessageRealtime() {
         "-" +
         Date.now()
       )
+
+
+      /* =====================================================
+         NEW MESSAGE
+         ===================================================== */
+
       .on(
         "postgres_changes",
         {
@@ -3835,6 +3841,68 @@ function startMessageRealtime() {
 
         }
       )
+
+
+      /* =====================================================
+         MESSAGE UPDATED
+         Used for Seen status
+         ===================================================== */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages"
+        },
+        function (payload) {
+
+          console.log(
+            "👀 MESSAGE UPDATED:",
+            payload.new
+          );
+
+
+          /*
+           * Check if the message was marked as seen.
+           */
+
+          if (
+            payload.new.seen === true
+          ) {
+
+            console.log(
+              "✅ MESSAGE IS NOW SEEN:",
+              payload.new.id
+            );
+
+
+            /*
+             * Tell messages.html to update
+             * the visible message.
+             */
+
+            if (
+              typeof updateMessageSeen ===
+              "function"
+            ) {
+
+              updateMessageSeen(
+                payload.new.id
+              );
+
+            }
+
+          }
+
+        }
+      )
+
+
+      /* =====================================================
+         SUBSCRIBE
+         ===================================================== */
+
       .subscribe(
         function (status, error) {
 
