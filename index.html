@@ -12,97 +12,116 @@
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- =====================================================
+     NAVBAR
+     ===================================================== -->
 
-  <header class="navbar">
+<header class="navbar">
 
-    <div class="logo">
-      YouRemo
-    </div>
+  <!-- LOGO -->
+  <div class="logo">
+    YouRemo
+  </div>
 
-    <nav>
+  <!-- MAIN NAVIGATION -->
   <nav class="main-nav">
 
-  <nav class="main-nav">
+    <!-- HOME -->
+    <a href="index.html" title="Home" class="nav-link active">
+      <span class="nav-icon">⌂</span>
+      <span class="nav-label">Home</span>
+    </a>
 
-  <a href="index.html" title="Home">
-    <span class="nav-icon">⌂</span>
-  </a>
+    <!-- FIND FRIENDS -->
+    <a href="friends.html" title="Friends" class="nav-link">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Friends</span>
+    </a>
 
-  <a href="friends.html" title="Friends">
-    <span class="nav-icon">♧</span>
-  </a>
+    <!-- FRIEND REQUESTS -->
+    <a href="requests.html" title="Requests" class="nav-link">
+      <span class="nav-icon">🤝</span>
+      <span class="nav-label">Requests</span>
+    </a>
 
-  <a href="requests.html" title="Requests">
-    <span class="nav-icon">♢</span>
-  </a>
+    <!-- MY FRIENDS -->
+    <a href="myfriends.html" title="My Friends" class="nav-link">
+      <span class="nav-icon">🧑‍🤝‍🧑</span>
+      <span class="nav-label">My Friends</span>
+    </a>
 
-  <a href="myfriends.html" title="My Friends">
-    <span class="nav-icon">♧</span>
-  </a>
+    <!-- MESSAGES -->
+    <a href="messages.html" title="Messages" class="nav-link">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Messages</span>
+    </a>
 
-  <a href="messages.html" title="Messages">
-    <span class="nav-icon">◌</span>
-  </a>
+    <!-- NOTIFICATIONS -->
+    <a href="notifications.html" title="Notifications" class="nav-link">
+      <span class="nav-icon">🔔</span>
+      <span class="nav-label">Notifications</span>
+    </a>
 
-  <a href="notifications.html" title="Notifications">
-    <span class="nav-icon">♧</span>
-  </a>
+    <!-- PROFILE -->
+    <a href="profile.html" title="Profile" class="nav-link">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </a>
 
-  <a href="profile.html" title="Profile">
-    <span class="nav-icon">●</span>
-  </a>
+    <!-- SETTINGS -->
+    <a href="settings.html" title="Settings" class="nav-link">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Settings</span>
+    </a>
 
-  <a href="settings.html" title="Settings">
-    <span class="nav-icon">⚙</span>
-  </a>
+    <!-- ABOUT -->
+    <a href="about.html" title="About" class="nav-link">
+      <span class="nav-icon">ⓘ</span>
+      <span class="nav-label">About</span>
+    </a>
 
-  <a href="about.html" title="About">
-    <span class="nav-icon">ⓘ</span>
-  </a>
+  </nav>
 
-</nav>
 
-</nav>
-</nav>
+  <!-- ACCOUNT BUTTON -->
+  <div
+    id="accountButton"
+    class="account-button"
+    onclick="handleAccountClick()">
 
     <div
-      id="accountButton"
-      class="account-button"
-      onclick="handleAccountClick()">
-
-      <div
-        id="navAvatar"
-        class="nav-avatar">
-        ?
-      </div>
-
-      <span id="loginButton">
-        Login
-      </span>
-
+      id="navAvatar"
+      class="nav-avatar">
+      ?
     </div>
 
-    <div
-      id="accountMenu"
-      class="account-menu">
+    <span id="loginButton">
+      Login
+    </span>
 
-      <button onclick="goToMyProfile()">
-        My Profile
-      </button>
+  </div>
 
-      <button onclick="openEditProfile()">
-        Edit Profile
-      </button>
 
-      <button onclick="logout()">
-        Logout
-      </button>
+  <!-- ACCOUNT MENU -->
+  <div
+    id="accountMenu"
+    class="account-menu">
 
-    </div>
+    <button onclick="goToMyProfile()">
+      My Profile
+    </button>
 
-  </header>
+    <button onclick="openEditProfile()">
+      Edit Profile
+    </button>
 
+    <button onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+</header>
 
   <!-- MAIN -->
 
