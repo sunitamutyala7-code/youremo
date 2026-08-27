@@ -1827,3 +1827,39 @@ footer {
   border-radius: 50%;
   display: block;
 }
+/* =====================================================
+   PROFESSIONAL NAVIGATION
+   ===================================================== */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.main-nav a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.main-nav a:hover {
+  background: rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.nav-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.main-nav a:hover .nav-icon {
+  transform: scale(1.08);
+}
