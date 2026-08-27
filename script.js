@@ -1,18 +1,6 @@
 /* =========================================================
    YOUREMO - COMPLETE SCRIPT.JS
-   Works with:
-   - index.html
-   - friends.html
-   - profile.html
-   - Supabase Auth
-   - Profiles
-   - Friend Search
-   - Friend Requests
-   - My Friends
-   - Profile Editing
-   - Avatar Upload
    ========================================================= */
-
 
 /* =========================================================
    1. SUPABASE CONNECTION
@@ -32,7 +20,7 @@ const supabaseClient =
 
 
 /* =========================================================
-   2. GLOBAL CURRENT USER
+   2. GLOBAL USER
    ========================================================= */
 
 let currentUser = null;
@@ -42,40 +30,51 @@ let currentUser = null;
    3. PAGE START
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async function () {
 
-  console.log("YouRemo script loaded");
+    console.log("YouRemo script loaded");
 
-  await loadCurrentUser();
+    await loadCurrentUser();
 
-  setupAvatarUpload();
+    setupAvatarUpload();
 
-  setupProfilePage();
+    setupProfilePage();
 
-  setupSearchEnterKey();
+    setupSearchEnterKey();
 
-});
+  }
+);
 
 
 /* =========================================================
-   4. GET CURRENT USER
+   4. LOAD CURRENT USER
    ========================================================= */
 
 async function loadCurrentUser() {
 
   try {
 
-    const {
-      data,
-      error
-    } = await supabaseClient.auth.getUser();
+    const result =
+      await supabaseClient.auth.getUser();
 
-    if (error) {
-      console.error("Get user error:", error);
+    if (result.error) {
+
+      console.error(
+        "Get user error:",
+        result.error
+      );
+
+      currentUser = null;
+
+      await refreshAccountUI();
+
       return;
     }
 
-    currentUser = data.user || null;
+    currentUser =
+      result.data.user || null;
 
     console.log(
       "Current user:",
@@ -111,7 +110,7 @@ async function loadCurrentUser() {
    ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  async (event, session) => {
+  function (event, session) {
 
     console.log(
       "Auth event:",
@@ -119,15 +118,12 @@ supabaseClient.auth.onAuthStateChange(
     );
 
     currentUser =
-      session?.user || null;
-
-    /*
-      Give Supabase a moment to finish
-      updating the session before refreshing UI.
-    */
+      session && session.user
+        ? session.user
+        : null;
 
     setTimeout(
-      async () => {
+      async function () {
 
         await refreshAccountUI();
 
@@ -156,64 +152,44 @@ supabaseClient.auth.onAuthStateChange(
 async function refreshAccountUI() {
 
   const loginButton =
-    document.getElementById("loginButton");
+    document.getElementById(
+      "loginButton"
+    );
 
   const navAvatar =
-    document.getElementById("navAvatar");
+    document.getElementById(
+      "navAvatar"
+    );
 
   const accountMenu =
-    document.getElementById("accountMenu");
+    document.getElementById(
+      "accountMenu"
+    );
+
 
   if (!loginButton) {
     return;
   }
+
+
+  /* -------------------------------------------------------
+     LOGGED OUT
+     ------------------------------------------------------- */
 
   if (!currentUser) {
 
     loginButton.textContent =
       "Login";
 
-if (navAvatar) {
+    if (navAvatar) {
 
-  /* Remove any previous background */
+      navAvatar.style.backgroundImage =
+        "none";
 
-  navAvatar.style.backgroundImage = "none";
+      navAvatar.textContent =
+        "👤";
 
-
-  /* =====================================================
-     SHOW PROFILE PHOTO
-     ===================================================== */
-
-  if (profile?.avatar_url) {
-
-    navAvatar.textContent = "";
-
-    navAvatar.style.backgroundImage =
-  `url("${profile.avatar_url}")`;
-
-    navAvatar.style.backgroundSize = "cover";
-    navAvatar.style.backgroundPosition = "center";
-    navAvatar.style.backgroundRepeat = "no-repeat";
-
-  }
-
-
-  /* =====================================================
-     NO PHOTO → SHOW INITIALS
-     ===================================================== */
-
-  else {
-
-    navAvatar.style.backgroundImage = "none";
-
-    navAvatar.textContent =
-      getInitials(displayName);
-
-  }
-
-}
-```
-
+    }
 
     if (accountMenu) {
 
@@ -223,34 +199,36 @@ if (navAvatar) {
     }
 
     return;
-
   }
 
 
   /* -------------------------------------------------------
-     USER IS LOGGED IN
+     LOGGED IN
      ------------------------------------------------------- */
 
   let profile = null;
 
+
   try {
 
-    const {
-      data,
-      error
-    } = await supabaseClient
-      .from("profiles")
-      .select(
-        "id, username, full_name, avatar_url"
-      )
-      .eq(
-        "id",
-        currentUser.id
-      )
-      .maybeSingle();
+    const result =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
 
-    if (!error) {
-      profile = data;
+
+    if (!result.error) {
+
+      profile =
+        result.data;
+
     }
 
   } catch (error) {
@@ -264,38 +242,58 @@ if (navAvatar) {
 
 
   const displayName =
-    profile?.full_name ||
-    profile?.username ||
-    currentUser.email?.split("@")[0] ||
-    "Account";
+    profile && profile.full_name
+      ? profile.full_name
+      : profile && profile.username
+        ? profile.username
+        : currentUser.email
+          ? currentUser.email.split("@")[0]
+          : "Account";
 
 
   loginButton.textContent =
     displayName;
 
 
+  /* -------------------------------------------------------
+     NAVIGATION AVATAR
+     ------------------------------------------------------- */
+
   if (navAvatar) {
 
-  navAvatar.style.backgroundImage = "none";
-  navAvatar.textContent = "";
-
-  if (profile?.avatar_url) {
-
     navAvatar.style.backgroundImage =
-      `url("${profile.avatar_url}")`;
-
-    navAvatar.style.backgroundSize = "cover";
-    navAvatar.style.backgroundPosition = "center";
-    navAvatar.style.backgroundRepeat = "no-repeat";
-
-  } else {
+      "none";
 
     navAvatar.textContent =
-      getInitials(displayName);
+      "";
+
+    if (
+      profile &&
+      profile.avatar_url
+    ) {
+
+      navAvatar.style.backgroundImage =
+        "url('" +
+        profile.avatar_url +
+        "')";
+
+      navAvatar.style.backgroundSize =
+        "cover";
+
+      navAvatar.style.backgroundPosition =
+        "center";
+
+      navAvatar.style.backgroundRepeat =
+        "no-repeat";
+
+    } else {
+
+      navAvatar.textContent =
+        getInitials(displayName);
+
+    }
 
   }
-
-}
 
 }
 
@@ -314,10 +312,12 @@ function handleAccountClick() {
 
   }
 
+
   const menu =
     document.getElementById(
       "accountMenu"
     );
+
 
   if (!menu) {
     return;
@@ -325,7 +325,8 @@ function handleAccountClick() {
 
 
   if (
-    menu.style.display === "block"
+    menu.style.display ===
+    "block"
   ) {
 
     menu.style.display =
@@ -342,7 +343,7 @@ function handleAccountClick() {
 
 
 /* =========================================================
-   8. OPEN LOGIN / SIGNUP MODAL
+   8. OPEN AUTH
    ========================================================= */
 
 function openAuth() {
@@ -352,12 +353,17 @@ function openAuth() {
       "authModal"
     );
 
+
   if (!modal) {
     return;
   }
 
+
   modal.style.display =
     "flex";
+
+
+  showLogin();
 
 }
 
@@ -373,6 +379,7 @@ function closeAuth() {
       "authModal"
     );
 
+
   if (modal) {
 
     modal.style.display =
@@ -384,7 +391,7 @@ function closeAuth() {
 
 
 /* =========================================================
-   10. SHOW LOGIN MODE
+   10. SHOW LOGIN
    ========================================================= */
 
 function showLogin() {
@@ -414,12 +421,14 @@ function showLogin() {
       ".auth-submit"
     );
 
+
   if (title) {
 
     title.textContent =
       "Welcome Back";
 
   }
+
 
   if (subtitle) {
 
@@ -428,6 +437,7 @@ function showLogin() {
 
   }
 
+
   if (name) {
 
     name.style.display =
@@ -435,12 +445,14 @@ function showLogin() {
 
   }
 
+
   if (username) {
 
     username.style.display =
       "none";
 
   }
+
 
   if (button) {
 
@@ -456,7 +468,7 @@ function showLogin() {
 
 
 /* =========================================================
-   11. SHOW SIGNUP MODE
+   11. SHOW SIGNUP
    ========================================================= */
 
 function showSignup() {
@@ -486,12 +498,14 @@ function showSignup() {
       ".auth-submit"
     );
 
+
   if (title) {
 
     title.textContent =
       "Welcome to YouRemo";
 
   }
+
 
   if (subtitle) {
 
@@ -500,6 +514,7 @@ function showSignup() {
 
   }
 
+
   if (name) {
 
     name.style.display =
@@ -507,12 +522,14 @@ function showSignup() {
 
   }
 
+
   if (username) {
 
     username.style.display =
       "block";
 
   }
+
 
   if (button) {
 
@@ -533,25 +550,46 @@ function showSignup() {
 
 async function signUp() {
 
-  const name =
+  const nameElement =
     document.getElementById(
       "authName"
-    )?.value.trim();
+    );
 
-  const username =
+  const usernameElement =
     document.getElementById(
       "authUsername"
-    )?.value.trim();
+    );
 
-  const email =
+  const emailElement =
     document.getElementById(
       "authEmail"
-    )?.value.trim();
+    );
 
-  const password =
+  const passwordElement =
     document.getElementById(
       "authPassword"
-    )?.value;
+    );
+
+
+  const name =
+    nameElement
+      ? nameElement.value.trim()
+      : "";
+
+  const username =
+    usernameElement
+      ? usernameElement.value.trim()
+      : "";
+
+  const email =
+    emailElement
+      ? emailElement.value.trim()
+      : "";
+
+  const password =
+    passwordElement
+      ? passwordElement.value
+      : "";
 
 
   if (!name) {
@@ -587,7 +625,10 @@ async function signUp() {
   }
 
 
-  if (!password || password.length < 6) {
+  if (
+    !password ||
+    password.length < 6
+  ) {
 
     alert(
       "Password must be at least 6 characters."
@@ -600,37 +641,22 @@ async function signUp() {
 
   try {
 
-    /*
-      First check whether username
-      already exists.
-    */
+    /* Check username */
 
-    const {
-      data: existingUsername,
-      error: usernameError
-    } = await supabaseClient
-      .from("profiles")
-      .select("id")
-      .eq(
-        "username",
-        username
-      )
-      .maybeSingle();
+    const usernameCheck =
+      await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq(
+          "username",
+          username
+        )
+        .maybeSingle();
 
 
     if (
-      usernameError &&
-      usernameError.code !== "PGRST116"
+      usernameCheck.data
     ) {
-
-      console.error(
-        usernameError
-      );
-
-    }
-
-
-    if (existingUsername) {
 
       alert(
         "That username is already taken."
@@ -641,38 +667,36 @@ async function signUp() {
     }
 
 
-    /* -----------------------------------------------------
-       CREATE AUTH ACCOUNT
-       ----------------------------------------------------- */
+    /* Create account */
 
-    const {
-      data,
-      error
-    } = await supabaseClient.auth.signUp({
+    const signupResult =
+      await supabaseClient.auth.signUp({
 
-      email: email,
+        email: email,
 
-      password: password,
+        password: password,
 
-      options: {
+        options: {
 
-        data: {
+          data: {
 
-          full_name: name,
+            full_name:
+              name,
 
-          username: username
+            username:
+              username
+
+          }
 
         }
 
-      }
-
-    });
+      });
 
 
-    if (error) {
+    if (signupResult.error) {
 
       alert(
-        error.message
+        signupResult.error.message
       );
 
       return;
@@ -680,7 +704,10 @@ async function signUp() {
     }
 
 
-    if (!data.user) {
+    if (
+      !signupResult.data ||
+      !signupResult.data.user
+    ) {
 
       alert(
         "Account could not be created."
@@ -691,30 +718,30 @@ async function signUp() {
     }
 
 
-    /*
-      Create profile row.
-    */
+    /* Create profile */
 
-    const {
-      error: profileError
-    } = await supabaseClient
-      .from("profiles")
-      .upsert({
+    const profileResult =
+      await supabaseClient
+        .from("profiles")
+        .upsert({
 
-        id: data.user.id,
+          id:
+            signupResult.data.user.id,
 
-        full_name: name,
+          full_name:
+            name,
 
-        username: username
+          username:
+            username
 
-      });
+        });
 
 
-    if (profileError) {
+    if (profileResult.error) {
 
       console.error(
         "Profile creation error:",
-        profileError
+        profileResult.error
       );
 
     }
@@ -727,16 +754,9 @@ async function signUp() {
 
     closeAuth();
 
-
-    /*
-      Clear form.
-    */
-
     clearAuthForm();
 
-
     await loadCurrentUser();
-
 
   } catch (error) {
 
@@ -760,15 +780,26 @@ async function signUp() {
 
 async function login() {
 
-  const email =
+  const emailElement =
     document.getElementById(
       "authEmail"
-    )?.value.trim();
+    );
 
-  const password =
+  const passwordElement =
     document.getElementById(
       "authPassword"
-    )?.value;
+    );
+
+
+  const email =
+    emailElement
+      ? emailElement.value.trim()
+      : "";
+
+  const password =
+    passwordElement
+      ? passwordElement.value
+      : "";
 
 
   if (!email || !password) {
@@ -784,23 +815,23 @@ async function login() {
 
   try {
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.signInWithPassword({
+    const result =
+      await supabaseClient.auth
+        .signInWithPassword({
 
-        email: email,
+          email:
+            email,
 
-        password: password
+          password:
+            password
 
-      });
+        });
 
 
-    if (error) {
+    if (result.error) {
 
       alert(
-        error.message
+        result.error.message
       );
 
       return;
@@ -809,7 +840,7 @@ async function login() {
 
 
     currentUser =
-      data.user;
+      result.data.user;
 
 
     alert(
@@ -819,9 +850,7 @@ async function login() {
 
     closeAuth();
 
-
     clearAuthForm();
-
 
     await refreshAccountUI();
 
@@ -830,7 +859,6 @@ async function login() {
     await loadFriendRequests();
 
     await loadMyFriends();
-
 
   } catch (error) {
 
@@ -856,16 +884,15 @@ async function logout() {
 
   try {
 
-    const {
-      error
-    } =
-      await supabaseClient.auth.signOut();
+    const result =
+      await supabaseClient.auth
+        .signOut();
 
 
-    if (error) {
+    if (result.error) {
 
       alert(
-        error.message
+        result.error.message
       );
 
       return;
@@ -873,13 +900,15 @@ async function logout() {
     }
 
 
-    currentUser = null;
+    currentUser =
+      null;
 
 
     const menu =
       document.getElementById(
         "accountMenu"
       );
+
 
     if (menu) {
 
@@ -892,13 +921,7 @@ async function logout() {
     await refreshAccountUI();
 
 
-    /*
-      Reload the current page so all
-      friend/profile information resets.
-    */
-
     window.location.reload();
-
 
   } catch (error) {
 
@@ -932,10 +955,13 @@ function clearAuthForm() {
 
 
   fields.forEach(
-    id => {
+    function (id) {
 
       const element =
-        document.getElementById(id);
+        document.getElementById(
+          id
+        );
+
 
       if (element) {
 
@@ -951,7 +977,7 @@ function clearAuthForm() {
 
 
 /* =========================================================
-   16. FIND FRIENDS BUTTON
+   16. FIND FRIENDS
    ========================================================= */
 
 function findFriends() {
@@ -961,37 +987,41 @@ function findFriends() {
       "friends"
     );
 
+
   if (section) {
 
     section.scrollIntoView({
 
-      behavior: "smooth"
+      behavior:
+        "smooth"
 
     });
+
 
     const input =
       document.getElementById(
         "friendSearch"
       );
 
+
     if (input) {
 
       setTimeout(
-        () => input.focus(),
+        function () {
+
+          input.focus();
+
+        },
         400
       );
 
     }
 
+
     return;
 
   }
 
-
-  /*
-    If we're on another page,
-    open friends.html.
-  */
 
   window.location.href =
     "friends.html";
@@ -1010,11 +1040,13 @@ function learnMore() {
       "about"
     );
 
+
   if (about) {
 
     about.scrollIntoView({
 
-      behavior: "smooth"
+      behavior:
+        "smooth"
 
     });
 
@@ -1024,196 +1056,175 @@ function learnMore() {
 
 
 /* =========================================================
-   SEARCH FRIENDS - FIXED
+   18. SEARCH FRIENDS
    ========================================================= */
 
 async function searchFriends() {
 
   const input =
-    document.getElementById("friendSearch");
+    document.getElementById(
+      "friendSearch"
+    );
 
   const results =
-    document.getElementById("friendResults");
+    document.getElementById(
+      "friendResults"
+    );
+
 
   if (!input || !results) {
     return;
   }
 
+
   const searchTerm =
     input.value.trim();
 
+
   if (!searchTerm) {
 
-    results.innerHTML = `
-      <div class="empty-state">
-        <div>👥</div>
-
-        <h2>Find Friends</h2>
-
-        <p>
-          Enter a name or username to find people on YouRemo.
-        </p>
-      </div>
-    `;
+    results.innerHTML =
+      '<div class="empty-state">' +
+      '<div>👥</div>' +
+      '<h2>Find Friends</h2>' +
+      '<p>Enter a name or username to find people on YouRemo.</p>' +
+      '</div>';
 
     return;
+
   }
 
-  results.innerHTML = `
-    <div class="empty-state">
-      <div>🔎</div>
 
-      <p>
-        Searching...
-      </p>
-    </div>
-  `;
+  results.innerHTML =
+    '<div class="empty-state">' +
+    '<div>🔎</div>' +
+    '<p>Searching...</p>' +
+    '</div>';
+
 
   try {
 
-    /*
-      Search by name first.
-    */
-
-    const {
-      data: nameResults,
-      error: nameError
-    } = await supabaseClient
-      .from("profiles")
-      .select(
-        "id, username, full_name, avatar_url"
-      )
-      .ilike(
-        "full_name",
-        `%${searchTerm}%`
-      )
-      .limit(30);
+    const nameResult =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .ilike(
+          "full_name",
+          "%" + searchTerm + "%"
+        )
+        .limit(30);
 
 
-    /*
-      Search by username.
-    */
-
-    const {
-      data: usernameResults,
-      error: usernameError
-    } = await supabaseClient
-      .from("profiles")
-      .select(
-        "id, username, full_name, avatar_url"
-      )
-      .ilike(
-        "username",
-        `%${searchTerm}%`
-      )
-      .limit(30);
+    const usernameResult =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .ilike(
+          "username",
+          "%" + searchTerm + "%"
+        )
+        .limit(30);
 
 
-    if (nameError) {
+    if (nameResult.error) {
 
       console.error(
         "Name search error:",
-        nameError
+        nameResult.error
       );
 
     }
 
 
-    if (usernameError) {
+    if (usernameResult.error) {
 
       console.error(
         "Username search error:",
-        usernameError
+        usernameResult.error
       );
 
     }
 
 
-    /*
-      Combine both searches.
-    */
-
     const combined = [
-      ...(nameResults || []),
-      ...(usernameResults || [])
+
+      ...(nameResult.data || []),
+
+      ...(usernameResult.data || [])
+
     ];
 
-
-    /*
-      Remove duplicate users.
-    */
 
     const peopleMap =
       new Map();
 
-    combined.forEach(person => {
 
-      peopleMap.set(
-        person.id,
-        person
-      );
+    combined.forEach(
+      function (person) {
 
-    });
+        peopleMap.set(
+          person.id,
+          person
+        );
+
+      }
+    );
 
 
     let people =
-      [...peopleMap.values()];
+      Array.from(
+        peopleMap.values()
+      );
 
-
-    /*
-      Don't show yourself.
-    */
 
     if (currentUser) {
 
       people =
         people.filter(
-          person =>
-            person.id !== currentUser.id
+          function (person) {
+
+            return (
+              person.id !==
+              currentUser.id
+            );
+
+          }
         );
 
     }
 
 
-    /*
-      No results.
-    */
-
     if (!people.length) {
 
-      results.innerHTML = `
-        <div class="empty-state">
-
-          <div>😕</div>
-
-          <h2>No people found</h2>
-
-          <p>
-            Try another name or username.
-          </p>
-
-        </div>
-      `;
+      results.innerHTML =
+        '<div class="empty-state">' +
+        '<div>😕</div>' +
+        '<h2>No people found</h2>' +
+        '<p>Try another name or username.</p>' +
+        '</div>';
 
       return;
+
     }
 
 
-    /*
-      Display results.
-    */
-
     results.innerHTML =
       people
-        .map(person =>
-          createFriendResultCard(person)
+        .map(
+          function (person) {
+
+            return createFriendResultCard(
+              person
+            );
+
+          }
         )
         .join("");
 
-
-    /*
-      Update Add Friend buttons.
-    */
 
     if (currentUser) {
 
@@ -1223,7 +1234,6 @@ async function searchFriends() {
 
     }
 
-
   } catch (error) {
 
     console.error(
@@ -1231,19 +1241,13 @@ async function searchFriends() {
       error
     );
 
-    results.innerHTML = `
-      <div class="empty-state">
 
-        <div>⚠️</div>
-
-        <h2>Search Error</h2>
-
-        <p>
-          Something went wrong while searching.
-        </p>
-
-      </div>
-    `;
+    results.innerHTML =
+      '<div class="empty-state">' +
+      '<div>⚠️</div>' +
+      '<h2>Search Error</h2>' +
+      '<p>Something went wrong while searching.</p>' +
+      '</div>';
 
   }
 
@@ -1251,88 +1255,107 @@ async function searchFriends() {
 
 
 /* =========================================================
-   CREATE REQUEST CARD - FIXED AVATAR
+   19. CREATE FRIEND RESULT CARD
    ========================================================= */
 
-function createRequestCard(request, sender) {
+function createFriendResultCard(
+  person
+) {
 
   const name =
-    sender?.full_name ||
-    sender?.username ||
+    person.full_name ||
+    person.username ||
     "YouRemo User";
 
+
   const username =
-    sender?.username
-      ? `@${sender.username}`
+    person.username
+      ? "@" + person.username
       : "";
+
 
   let avatarHTML = "";
 
-  if (sender?.avatar_url) {
 
-    avatarHTML = `
-      <div class="friend-avatar">
-        <img
-          src="${escapeHTML(sender.avatar_url)}"
-          alt="${escapeHTML(name)}"
-          class="friend-avatar-img"
-          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
-        >
-      </div>
-    `;
+  if (person.avatar_url) {
+
+    avatarHTML =
+      '<div class="friend-avatar">' +
+
+      '<img ' +
+      'src="' +
+      escapeHTML(
+        person.avatar_url
+      ) +
+      '" ' +
+      'alt="' +
+      escapeHTML(name) +
+      '" ' +
+      'class="friend-avatar-img" ' +
+      'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
+      escapeJS(
+        getInitials(name)
+      ) +
+      '\'"' +
+      '>' +
+
+      '</div>';
 
   } else {
 
-    avatarHTML = `
-      <div class="friend-avatar">
-        ${escapeHTML(getInitials(name))}
-      </div>
-    `;
+    avatarHTML =
+      '<div class="friend-avatar">' +
+      escapeHTML(
+        getInitials(name)
+      ) +
+      '</div>';
 
   }
 
-  return `
-    <div
-      class="friend-card"
-      data-request-id="${escapeHTML(request.id)}">
 
-      ${avatarHTML}
+  return (
 
-      <div class="friend-info">
+    '<div class="friend-card" data-user-id="' +
+    escapeHTML(person.id) +
+    '">' +
 
-        <h3>
-          ${escapeHTML(name)}
-        </h3>
+    avatarHTML +
 
-        <p>
-          ${escapeHTML(username)}
-        </p>
+    '<div class="friend-info">' +
 
-      </div>
+    '<h3>' +
+    escapeHTML(name) +
+    '</h3>' +
 
-      <div class="friend-card-actions">
+    '<p>' +
+    escapeHTML(username) +
+    '</p>' +
 
-        <button
-          class="primary-btn"
-          onclick="acceptFriendRequest('${escapeJS(request.id)}')">
+    '</div>' +
 
-          Accept
+    '<div class="friend-card-actions">' +
 
-        </button>
+    '<button ' +
+    'class="primary-btn friend-request-btn" ' +
+    'data-user-id="' +
+    escapeHTML(person.id) +
+    '" ' +
+    'onclick="sendFriendRequest(\'' +
+    escapeJS(person.id) +
+    '\')">' +
 
-        <button
-          class="secondary-btn"
-          onclick="declineFriendRequest('${escapeJS(request.id)}')">
+    'Add Friend' +
 
-          Decline
+    '</button>' +
 
-        </button>
+    '</div>' +
 
-      </div>
+    '</div>'
 
-    </div>
-  `;
+  );
+
 }
+
 
 /* =========================================================
    20. UPDATE SEARCH BUTTONS
@@ -1349,7 +1372,11 @@ async function updateSearchButtons(
 
   const ids =
     people.map(
-      person => person.id
+      function (person) {
+
+        return person.id;
+
+      }
     );
 
 
@@ -1358,14 +1385,7 @@ async function updateSearchButtons(
   }
 
 
-  /*
-    Check outgoing requests.
-  */
-
-  const {
-    data: sentRequests,
-    error: sentError
-  } =
+  const sentResult =
     await supabaseClient
       .from("friend_requests")
       .select(
@@ -1381,24 +1401,7 @@ async function updateSearchButtons(
       );
 
 
-  if (sentError) {
-
-    console.error(
-      "Sent request lookup:",
-      sentError
-    );
-
-  }
-
-
-  /*
-    Check incoming requests.
-  */
-
-  const {
-    data: receivedRequests,
-    error: receivedError
-  } =
+  const receivedResult =
     await supabaseClient
       .from("friend_requests")
       .select(
@@ -1414,108 +1417,126 @@ async function updateSearchButtons(
       );
 
 
-  if (receivedError) {
-
-    console.error(
-      "Received request lookup:",
-      receivedError
-    );
-
-  }
-
-
-  /*
-    Check friendships.
-  */
-
-  const {
-    data: friendships,
-    error: friendshipError
-  } =
+  const friendshipResult =
     await supabaseClient
       .from("friendships")
       .select(
         "user_id, friend_id"
       )
       .or(
-        `user_id.eq.${currentUser.id},friend_id.eq.${currentUser.id}`
+        "user_id.eq." +
+        currentUser.id +
+        ",friend_id.eq." +
+        currentUser.id
       );
 
 
-  if (friendshipError) {
+  if (sentResult.error) {
+
+    console.error(
+      "Sent request lookup:",
+      sentResult.error
+    );
+
+  }
+
+
+  if (receivedResult.error) {
+
+    console.error(
+      "Received request lookup:",
+      receivedResult.error
+    );
+
+  }
+
+
+  if (friendshipResult.error) {
 
     console.error(
       "Friendship lookup:",
-      friendshipError
+      friendshipResult.error
     );
 
   }
 
 
   const sentMap =
-    new Map(
-      (sentRequests || [])
-        .map(
-          request => [
-            request.receiver_id,
-            request.status
-          ]
-        )
-    );
+    new Map();
+
+
+  (sentResult.data || []).forEach(
+    function (request) {
+
+      sentMap.set(
+        request.receiver_id,
+        request.status
+      );
+
+    }
+  );
 
 
   const receivedMap =
-    new Map(
-      (receivedRequests || [])
-        .map(
-          request => [
-            request.sender_id,
-            request.status
-          ]
-        )
-    );
+    new Map();
+
+
+  (receivedResult.data || []).forEach(
+    function (request) {
+
+      receivedMap.set(
+        request.sender_id,
+        request.status
+      );
+
+    }
+  );
 
 
   const friendIds =
     new Set();
 
 
-  (friendships || [])
-    .forEach(
-      friendship => {
+  (
+    friendshipResult.data || []
+  ).forEach(
+    function (friendship) {
 
-        if (
-          friendship.user_id ===
-          currentUser.id
-        ) {
+      if (
+        friendship.user_id ===
+        currentUser.id
+      ) {
 
-          friendIds.add(
-            friendship.friend_id
-          );
-
-        }
-
-        if (
-          friendship.friend_id ===
-          currentUser.id
-        ) {
-
-          friendIds.add(
-            friendship.user_id
-          );
-
-        }
+        friendIds.add(
+          friendship.friend_id
+        );
 
       }
-    );
+
+
+      if (
+        friendship.friend_id ===
+        currentUser.id
+      ) {
+
+        friendIds.add(
+          friendship.user_id
+        );
+
+      }
+
+    }
+  );
 
 
   people.forEach(
-    person => {
+    function (person) {
 
       const button =
         document.querySelector(
-          `.friend-request-btn[data-user-id="${CSS.escape(person.id)}"]`
+          '.friend-request-btn[data-user-id="' +
+          CSS.escape(person.id) +
+          '"]'
         );
 
 
@@ -1567,16 +1588,25 @@ async function updateSearchButtons(
         button.textContent =
           "Respond to Request";
 
-        button.onclick =
-          () => {
+        button.disabled =
+          false;
 
-            document
-              .getElementById(
+        button.onclick =
+          function () {
+
+            const requests =
+              document.getElementById(
                 "requests"
-              )
-              ?.scrollIntoView({
-                behavior: "smooth"
+              );
+
+            if (requests) {
+
+              requests.scrollIntoView({
+                behavior:
+                  "smooth"
               });
+
+            }
 
           };
 
@@ -1630,23 +1660,25 @@ async function sendFriendRequest(
 
   try {
 
-    /*
-      Check whether already friends.
-    */
-
-    const {
-      data: existingFriend
-    } =
+    const friendshipResult =
       await supabaseClient
         .from("friendships")
         .select("id")
         .or(
-          `and(user_id.eq.${currentUser.id},friend_id.eq.${receiverId}),and(user_id.eq.${receiverId},friend_id.eq.${currentUser.id})`
+          "and(user_id.eq." +
+          currentUser.id +
+          ",friend_id.eq." +
+          receiverId +
+          "),and(user_id.eq." +
+          receiverId +
+          ",friend_id.eq." +
+          currentUser.id +
+          ")"
         )
         .maybeSingle();
 
 
-    if (existingFriend) {
+    if (friendshipResult.data) {
 
       alert(
         "You are already friends."
@@ -1657,34 +1689,34 @@ async function sendFriendRequest(
     }
 
 
-    /*
-      Check existing request.
-    */
-
-    const {
-      data: existingRequest
-    } =
+    const requestResult =
       await supabaseClient
         .from("friend_requests")
         .select(
           "id, sender_id, receiver_id, status"
         )
         .or(
-          `and(sender_id.eq.${currentUser.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${currentUser.id})`
+          "and(sender_id.eq." +
+          currentUser.id +
+          ",receiver_id.eq." +
+          receiverId +
+          "),and(sender_id.eq." +
+          receiverId +
+          ",receiver_id.eq." +
+          currentUser.id +
+          ")"
         )
-        .in(
+        .eq(
           "status",
-          [
-            "pending"
-          ]
+          "pending"
         )
         .maybeSingle();
 
 
-    if (existingRequest) {
+    if (requestResult.data) {
 
       if (
-        existingRequest.sender_id ===
+        requestResult.data.sender_id ===
         currentUser.id
       ) {
 
@@ -1705,13 +1737,7 @@ async function sendFriendRequest(
     }
 
 
-    /*
-      Send request.
-    */
-
-    const {
-      error
-    } =
+    const insertResult =
       await supabaseClient
         .from("friend_requests")
         .insert({
@@ -1728,15 +1754,15 @@ async function sendFriendRequest(
         });
 
 
-    if (error) {
+    if (insertResult.error) {
 
       console.error(
         "Send request error:",
-        error
+        insertResult.error
       );
 
       alert(
-        error.message
+        insertResult.error.message
       );
 
       return;
@@ -1744,13 +1770,11 @@ async function sendFriendRequest(
     }
 
 
-    /*
-      Change button.
-    */
-
     const button =
       document.querySelector(
-        `.friend-request-btn[data-user-id="${CSS.escape(receiverId)}"]`
+        '.friend-request-btn[data-user-id="' +
+        CSS.escape(receiverId) +
+        '"]'
       );
 
 
@@ -1768,7 +1792,6 @@ async function sendFriendRequest(
     alert(
       "Friend request sent!"
     );
-
 
   } catch (error) {
 
@@ -1803,11 +1826,6 @@ async function loadFriendRequests() {
     );
 
 
-  /*
-    These elements don't exist on friends.html.
-    That's okay.
-  */
-
   if (!container) {
     return;
   }
@@ -1815,21 +1833,12 @@ async function loadFriendRequests() {
 
   if (!currentUser) {
 
-    container.innerHTML = `
-
-      <div class="empty-state">
-
-        <div>🔐</div>
-
-        <h2>Login Required</h2>
-
-        <p>
-          Please login to see your friend requests.
-        </p>
-
-      </div>
-
-    `;
+    container.innerHTML =
+      '<div class="empty-state">' +
+      '<div>🔐</div>' +
+      '<h2>Login Required</h2>' +
+      '<p>Please login to see your friend requests.</p>' +
+      '</div>';
 
 
     if (badge) {
@@ -1846,10 +1855,7 @@ async function loadFriendRequests() {
 
   try {
 
-    const {
-      data,
-      error
-    } =
+    const result =
       await supabaseClient
         .from("friend_requests")
         .select(
@@ -1865,11 +1871,11 @@ async function loadFriendRequests() {
         );
 
 
-    if (error) {
+    if (result.error) {
 
       console.error(
         "Friend request loading error:",
-        error
+        result.error
       );
 
       return;
@@ -1878,55 +1884,42 @@ async function loadFriendRequests() {
 
 
     const requests =
-      data || [];
+      result.data || [];
 
 
     if (badge) {
 
       badge.textContent =
-        requests.length;
+        String(requests.length);
 
     }
 
 
     if (!requests.length) {
 
-      container.innerHTML = `
-
-        <div class="empty-state">
-
-          <div>📭</div>
-
-          <h2>No Friend Requests</h2>
-
-          <p>
-            You don't have any pending requests.
-          </p>
-
-        </div>
-
-      `;
+      container.innerHTML =
+        '<div class="empty-state">' +
+        '<div>📭</div>' +
+        '<h2>No Friend Requests</h2>' +
+        '<p>You don\'t have any pending requests.</p>' +
+        '</div>';
 
       return;
 
     }
 
 
-    /*
-      Get sender profiles.
-    */
-
     const senderIds =
       requests.map(
-        request =>
-          request.sender_id
+        function (request) {
+
+          return request.sender_id;
+
+        }
       );
 
 
-    const {
-      data: profiles,
-      error: profileError
-    } =
+    const profilesResult =
       await supabaseClient
         .from("profiles")
         .select(
@@ -1938,47 +1931,49 @@ async function loadFriendRequests() {
         );
 
 
-    if (profileError) {
+    if (profilesResult.error) {
 
       console.error(
-        profileError
+        "Profile error:",
+        profilesResult.error
       );
 
     }
 
 
     const profileMap =
-      new Map(
-        (profiles || [])
-          .map(
-            profile => [
-              profile.id,
-              profile
-            ]
-          )
-      );
+      new Map();
+
+
+    (
+      profilesResult.data || []
+    ).forEach(
+      function (profile) {
+
+        profileMap.set(
+          profile.id,
+          profile
+        );
+
+      }
+    );
 
 
     container.innerHTML =
       requests
         .map(
-          request => {
-
-            const sender =
-              profileMap.get(
-                request.sender_id
-              );
-
+          function (request) {
 
             return createRequestCard(
               request,
-              sender
+              profileMap.get(
+                request.sender_id
+              )
             );
 
           }
         )
         .join("");
-
 
   } catch (error) {
 
@@ -1996,77 +1991,109 @@ async function loadFriendRequests() {
    23. CREATE REQUEST CARD
    ========================================================= */
 
-function createRequestCard(request, sender) {
+function createRequestCard(
+  request,
+  sender
+) {
 
   const name =
-    sender?.full_name ||
-    sender?.username ||
-    "YouRemo User";
+    sender && sender.full_name
+      ? sender.full_name
+      : sender && sender.username
+        ? sender.username
+        : "YouRemo User";
+
 
   const username =
-    sender?.username
-      ? `@${sender.username}`
+    sender && sender.username
+      ? "@" + sender.username
       : "";
 
-  const avatarHTML = sender?.avatar_url
-    ? `
-      <div class="friend-avatar">
 
-        <img
-          src="${escapeHTML(sender.avatar_url)}"
-          alt="${escapeHTML(name)}"
-          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
-        >
+  let avatarHTML = "";
 
-      </div>
-    `
-    : `
-      <div class="friend-avatar">
-        ${escapeHTML(getInitials(name))}
-      </div>
-    `;
 
-  return `
-    <div
-      class="friend-card"
-      data-request-id="${escapeHTML(request.id)}">
+  if (
+    sender &&
+    sender.avatar_url
+  ) {
 
-      ${avatarHTML}
+    avatarHTML =
+      '<div class="friend-avatar">' +
 
-      <div class="friend-info">
+      '<img ' +
+      'src="' +
+      escapeHTML(
+        sender.avatar_url
+      ) +
+      '" ' +
+      'alt="' +
+      escapeHTML(name) +
+      '" ' +
+      'class="friend-avatar-img" ' +
+      'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
+      escapeJS(
+        getInitials(name)
+      ) +
+      '\'"' +
+      '>' +
 
-        <h3>
-          ${escapeHTML(name)}
-        </h3>
+      '</div>';
 
-        <p>
-          ${escapeHTML(username)}
-        </p>
+  } else {
 
-      </div>
+    avatarHTML =
+      '<div class="friend-avatar">' +
+      escapeHTML(
+        getInitials(name)
+      ) +
+      '</div>';
 
-      <div class="friend-card-actions">
+  }
 
-        <button
-          class="primary-btn"
-          onclick="acceptFriendRequest('${escapeJS(request.id)}')">
 
-          Accept
+  return (
 
-        </button>
+    '<div class="friend-card" data-request-id="' +
+    escapeHTML(request.id) +
+    '">' +
 
-        <button
-          class="secondary-btn"
-          onclick="declineFriendRequest('${escapeJS(request.id)}')">
+    avatarHTML +
 
-          Decline
+    '<div class="friend-info">' +
 
-        </button>
+    '<h3>' +
+    escapeHTML(name) +
+    '</h3>' +
 
-      </div>
+    '<p>' +
+    escapeHTML(username) +
+    '</p>' +
 
-    </div>
-  `;
+    '</div>' +
+
+    '<div class="friend-card-actions">' +
+
+    '<button class="primary-btn" ' +
+    'onclick="acceptFriendRequest(\'' +
+    escapeJS(request.id) +
+    '\')">' +
+    'Accept' +
+    '</button>' +
+
+    '<button class="secondary-btn" ' +
+    'onclick="declineFriendRequest(\'' +
+    escapeJS(request.id) +
+    '\')">' +
+    'Decline' +
+    '</button>' +
+
+    '</div>' +
+
+    '</div>'
+
+  );
+
 }
 
 
@@ -2085,14 +2112,7 @@ async function acceptFriendRequest(
 
   try {
 
-    /*
-      Get request.
-    */
-
-    const {
-      data: request,
-      error: requestError
-    } =
+    const requestResult =
       await supabaseClient
         .from("friend_requests")
         .select(
@@ -2110,8 +2130,8 @@ async function acceptFriendRequest(
 
 
     if (
-      requestError ||
-      !request
+      requestResult.error ||
+      !requestResult.data
     ) {
 
       alert(
@@ -2121,6 +2141,10 @@ async function acceptFriendRequest(
       return;
 
     }
+
+
+    const request =
+      requestResult.data;
 
 
     if (
@@ -2137,16 +2161,7 @@ async function acceptFriendRequest(
     }
 
 
-    /*
-      Create friendship in both directions.
-
-      This makes it easy to query friends
-      regardless of which user sent the request.
-    */
-
-    const {
-      error: friendshipError
-    } =
+    const friendshipResult =
       await supabaseClient
         .from("friendships")
         .insert([
@@ -2172,26 +2187,29 @@ async function acceptFriendRequest(
         ]);
 
 
-    if (friendshipError) {
+    if (
+      friendshipResult.error
+    ) {
 
-      console.error(
-        "Friendship creation error:",
-        friendshipError
-      );
+      const message =
+        friendshipResult.error.message
+          ? friendshipResult.error.message.toLowerCase()
+          : "";
 
-      /*
-        If duplicate rows already exist,
-        don't immediately fail the whole operation.
-      */
 
       if (
-        !friendshipError.message
-          ?.toLowerCase()
-          .includes("duplicate")
+        !message.includes(
+          "duplicate"
+        )
       ) {
 
+        console.error(
+          "Friendship creation error:",
+          friendshipResult.error
+        );
+
         alert(
-          friendshipError.message
+          friendshipResult.error.message
         );
 
         return;
@@ -2201,13 +2219,7 @@ async function acceptFriendRequest(
     }
 
 
-    /*
-      Mark request accepted.
-    */
-
-    const {
-      error: updateError
-    } =
+    const updateResult =
       await supabaseClient
         .from("friend_requests")
         .update({
@@ -2222,15 +2234,15 @@ async function acceptFriendRequest(
         );
 
 
-    if (updateError) {
+    if (updateResult.error) {
 
       console.error(
         "Request update error:",
-        updateError
+        updateResult.error
       );
 
       alert(
-        updateError.message
+        updateResult.error.message
       );
 
       return;
@@ -2246,7 +2258,6 @@ async function acceptFriendRequest(
     await loadFriendRequests();
 
     await loadMyFriends();
-
 
   } catch (error) {
 
@@ -2279,9 +2290,7 @@ async function declineFriendRequest(
 
   try {
 
-    const {
-      error
-    } =
+    const result =
       await supabaseClient
         .from("friend_requests")
         .update({
@@ -2300,15 +2309,15 @@ async function declineFriendRequest(
         );
 
 
-    if (error) {
+    if (result.error) {
 
       console.error(
         "Decline request error:",
-        error
+        result.error
       );
 
       alert(
-        error.message
+        result.error.message
       );
 
       return;
@@ -2317,7 +2326,6 @@ async function declineFriendRequest(
 
 
     await loadFriendRequests();
-
 
   } catch (error) {
 
@@ -2355,21 +2363,12 @@ async function loadMyFriends() {
 
   if (!currentUser) {
 
-    container.innerHTML = `
-
-      <div class="empty-state">
-
-        <div>🔐</div>
-
-        <h2>Login Required</h2>
-
-        <p>
-          Please login to see your friends.
-        </p>
-
-      </div>
-
-    `;
+    container.innerHTML =
+      '<div class="empty-state">' +
+      '<div>🔐</div>' +
+      '<h2>Login Required</h2>' +
+      '<p>Please login to see your friends.</p>' +
+      '</div>';
 
 
     if (countElement) {
@@ -2386,60 +2385,43 @@ async function loadMyFriends() {
 
   try {
 
-    /*
-      Get friendship rows where
-      current user is involved.
-    */
-
-    const {
-      data,
-      error
-    } =
+    const result =
       await supabaseClient
         .from("friendships")
         .select(
           "id, user_id, friend_id"
         )
         .or(
-          `user_id.eq.${currentUser.id},friend_id.eq.${currentUser.id}`
+          "user_id.eq." +
+          currentUser.id +
+          ",friend_id.eq." +
+          currentUser.id
         );
 
 
-    if (error) {
+    if (result.error) {
 
       console.error(
         "My friends error:",
-        error
+        result.error
       );
 
-      container.innerHTML = `
-
-        <div class="empty-state">
-
-          <div>⚠️</div>
-
-          <p>
-            Unable to load friends.
-          </p>
-
-        </div>
-
-      `;
+      container.innerHTML =
+        '<div class="empty-state">' +
+        '<div>⚠️</div>' +
+        '<p>Unable to load friends.</p>' +
+        '</div>';
 
       return;
 
     }
 
 
-    /*
-      Extract friend IDs.
-    */
-
     const friendIds = [];
 
 
-    (data || []).forEach(
-      friendship => {
+    (result.data || []).forEach(
+      function (friendship) {
 
         if (
           friendship.user_id ===
@@ -2462,61 +2444,41 @@ async function loadMyFriends() {
     );
 
 
-    /*
-      Remove duplicates.
-    */
-
     const uniqueFriendIds =
-      [...new Set(friendIds)];
+      Array.from(
+        new Set(friendIds)
+      );
 
 
     if (countElement) {
 
       countElement.textContent =
-        `${uniqueFriendIds.length} ${
+        uniqueFriendIds.length +
+        " " +
+        (
           uniqueFriendIds.length === 1
             ? "Friend"
             : "Friends"
-        }`;
+        );
 
     }
 
 
-    /*
-      No friends.
-    */
-
     if (!uniqueFriendIds.length) {
 
-      container.innerHTML = `
-
-        <div class="empty-state">
-
-          <div>👥</div>
-
-          <h2>No Friends Yet</h2>
-
-          <p>
-            Search for people and start connecting.
-          </p>
-
-        </div>
-
-      `;
+      container.innerHTML =
+        '<div class="empty-state">' +
+        '<div>👥</div>' +
+        '<h2>No Friends Yet</h2>' +
+        '<p>Search for people and start connecting.</p>' +
+        '</div>';
 
       return;
 
     }
 
 
-    /*
-      Load profiles.
-    */
-
-    const {
-      data: profiles,
-      error: profileError
-    } =
+    const profilesResult =
       await supabaseClient
         .from("profiles")
         .select(
@@ -2528,11 +2490,11 @@ async function loadMyFriends() {
         );
 
 
-    if (profileError) {
+    if (profilesResult.error) {
 
       console.error(
         "Friend profile error:",
-        profileError
+        profilesResult.error
       );
 
       return;
@@ -2541,15 +2503,19 @@ async function loadMyFriends() {
 
 
     container.innerHTML =
-      (profiles || [])
+      (
+        profilesResult.data || []
+      )
         .map(
-          profile =>
-            createMyFriendCard(
+          function (profile) {
+
+            return createMyFriendCard(
               profile
-            )
+            );
+
+          }
         )
         .join("");
-
 
   } catch (error) {
 
@@ -2564,66 +2530,88 @@ async function loadMyFriends() {
 
 
 /* =========================================================
-   CREATE MY FRIEND CARD - FIXED AVATAR
+   27. CREATE MY FRIEND CARD
    ========================================================= */
 
-function createMyFriendCard(friend) {
+function createMyFriendCard(
+  friend
+) {
 
   const name =
     friend.full_name ||
     friend.username ||
     "YouRemo User";
 
+
   const username =
     friend.username
-      ? `@${friend.username}`
+      ? "@" + friend.username
       : "";
+
 
   let avatarHTML = "";
 
+
   if (friend.avatar_url) {
 
-    avatarHTML = `
-      <div class="friend-avatar">
-        <img
-          src="${escapeHTML(friend.avatar_url)}"
-          alt="${escapeHTML(name)}"
-          class="friend-avatar-img"
-          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
-        >
-      </div>
-    `;
+    avatarHTML =
+      '<div class="friend-avatar">' +
+
+      '<img ' +
+      'src="' +
+      escapeHTML(
+        friend.avatar_url
+      ) +
+      '" ' +
+      'alt="' +
+      escapeHTML(name) +
+      '" ' +
+      'class="friend-avatar-img" ' +
+      'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
+      escapeJS(
+        getInitials(name)
+      ) +
+      '\'"' +
+      '>' +
+
+      '</div>';
 
   } else {
 
-    avatarHTML = `
-      <div class="friend-avatar">
-        ${escapeHTML(getInitials(name))}
-      </div>
-    `;
+    avatarHTML =
+      '<div class="friend-avatar">' +
+      escapeHTML(
+        getInitials(name)
+      ) +
+      '</div>';
 
   }
 
-  return `
-    <div class="friend-card">
 
-      ${avatarHTML}
+  return (
 
-      <div class="friend-info">
+    '<div class="friend-card">' +
 
-        <h3>
-          ${escapeHTML(name)}
-        </h3>
+    avatarHTML +
 
-        <p>
-          ${escapeHTML(username)}
-        </p>
+    '<div class="friend-info">' +
 
-      </div>
+    '<h3>' +
+    escapeHTML(name) +
+    '</h3>' +
 
-    </div>
-  `;
+    '<p>' +
+    escapeHTML(username) +
+    '</p>' +
+
+    '</div>' +
+
+    '</div>'
+
+  );
+
 }
+
 
 /* =========================================================
    28. LOAD PROFILE
@@ -2638,10 +2626,7 @@ async function loadProfile() {
 
   try {
 
-    const {
-      data: profile,
-      error
-    } =
+    const result =
       await supabaseClient
         .from("profiles")
         .select(
@@ -2654,11 +2639,11 @@ async function loadProfile() {
         .maybeSingle();
 
 
-    if (error) {
+    if (result.error) {
 
       console.error(
         "Profile load error:",
-        error
+        result.error
       );
 
       return;
@@ -2666,38 +2651,43 @@ async function loadProfile() {
     }
 
 
+    const profile =
+      result.data;
+
+
     const name =
-      profile?.full_name ||
-      currentUser.email?.split("@")[0] ||
-      "Your Name";
+      profile && profile.full_name
+        ? profile.full_name
+        : currentUser.email
+          ? currentUser.email.split("@")[0]
+          : "Your Name";
 
 
     const username =
-      profile?.username ||
-      "username";
+      profile && profile.username
+        ? profile.username
+        : "username";
 
 
-    /*
-      INDEX.HTML profile
-    */
+    /* INDEX PROFILE */
 
     setText(
       "myProfileName",
       name
     );
+
     setText(
-  "profileUsername",
-  `@${username}`
-);
+      "profileUsername",
+      "@" + username
+    );
+
     setText(
       "myProfileUsername",
-      `@${username}`
+      "@" + username
     );
 
 
-    /*
-      PROFILE.HTML
-    */
+    /* PROFILE PAGE */
 
     setText(
       "profileName",
@@ -2716,34 +2706,36 @@ async function loadProfile() {
 
     setText(
       "displayUsername",
-      `@${username}`
+      "@" + username
     );
 
     setText(
       "displayEmail",
-      currentUser.email || "Not available"
+      currentUser.email ||
+      "Not available"
     );
 
 
-    /*
-      Joined date
-    */
+    /* JOINED DATE */
 
-    const joinedDate =
-      currentUser.created_at;
-
-
-    if (joinedDate) {
+    if (currentUser.created_at) {
 
       const formatted =
         new Date(
-          joinedDate
+          currentUser.created_at
         ).toLocaleDateString(
           "en-IN",
           {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
+
+            day:
+              "numeric",
+
+            month:
+              "long",
+
+            year:
+              "numeric"
+
           }
         );
 
@@ -2756,108 +2748,41 @@ async function loadProfile() {
     }
 
 
-    /*
-      Avatars
-    */
-
-    ```javascript
-updateAvatarElement(
-  "myProfileAvatar",
-  profile?.avatar_url,
-  name
-);
-```
-
-Actually, **leave that line exactly as it is**. Your problem is inside `updateAvatarElement()`.
-
-Find:
-
-```javascript
-function updateAvatarElement(
-  id,
-  avatarUrl,
-  name
-)
-```
-
-Replace the entire function with:
-
-```javascript
-function updateAvatarElement(
-  id,
-  avatarUrl,
-  name
-) {
-
-  const element =
-    document.getElementById(id);
-
-  if (!element) {
-    return;
-  }
-
-
-  /* Always clear previous background */
-
-  element.style.backgroundImage = "none";
-
-
-  /* =====================================================
-     PHOTO EXISTS
-     ===================================================== */
-
-  if (avatarUrl) {
-
-    element.textContent = "";
-
-    element.style.backgroundImage =
-      `url("${escapeHTML(avatarUrl)}")`;
-
-    element.style.backgroundSize = "cover";
-    element.style.backgroundPosition = "center";
-    element.style.backgroundRepeat = "no-repeat";
-
-  }
-
-
-  /* =====================================================
-     NO PHOTO → SHOW INITIALS
-     ===================================================== */
-
-  else {
-
-    element.textContent =
-      getInitials(name);
-
-    element.style.backgroundImage = "none";
-
-  }
-
-}
-```
-
+    /* AVATARS */
 
     updateAvatarElement(
-      "profileAvatar",
-      profile?.avatar_url,
+      "myProfileAvatar",
+      profile &&
+      profile.avatar_url
+        ? profile.avatar_url
+        : "",
       name
     );
 
 
-    /*
-      Friend count on index.
-    */
+    updateAvatarElement(
+      "profileAvatar",
+      profile &&
+      profile.avatar_url
+        ? profile.avatar_url
+        : "",
+      name
+    );
 
-    const {
-      data: friendships
-    } =
+
+    /* FRIEND COUNT */
+
+    const friendshipsResult =
       await supabaseClient
         .from("friendships")
         .select(
           "user_id, friend_id"
         )
         .or(
-          `user_id.eq.${currentUser.id},friend_id.eq.${currentUser.id}`
+          "user_id.eq." +
+          currentUser.id +
+          ",friend_id.eq." +
+          currentUser.id
         );
 
 
@@ -2865,29 +2790,30 @@ function updateAvatarElement(
       new Set();
 
 
-    (friendships || [])
-      .forEach(
-        friendship => {
+    (
+      friendshipsResult.data || []
+    ).forEach(
+      function (friendship) {
 
-          if (
-            friendship.user_id ===
-            currentUser.id
-          ) {
+        if (
+          friendship.user_id ===
+          currentUser.id
+        ) {
 
-            friendIds.add(
-              friendship.friend_id
-            );
+          friendIds.add(
+            friendship.friend_id
+          );
 
-          } else {
+        } else {
 
-            friendIds.add(
-              friendship.user_id
-            );
-
-          }
+          friendIds.add(
+            friendship.user_id
+          );
 
         }
-      );
+
+      }
+    );
 
 
     setText(
@@ -2896,20 +2822,24 @@ function updateAvatarElement(
     );
 
 
-    /*
-      Edit profile fields
-    */
+    /* EDIT PROFILE */
 
     setValue(
       "editProfileName",
-      profile?.full_name || ""
+      profile &&
+      profile.full_name
+        ? profile.full_name
+        : ""
     );
+
 
     setValue(
       "editProfileUsername",
-      profile?.username || ""
+      profile &&
+      profile.username
+        ? profile.username
+        : ""
     );
-
 
   } catch (error) {
 
@@ -2945,11 +2875,6 @@ function openEditProfile() {
 
 
   if (!modal) {
-
-    /*
-      If we're on profile.html,
-      go to the homepage profile editor.
-    */
 
     window.location.href =
       "index.html#profile";
@@ -3007,16 +2932,27 @@ async function saveEditProfile() {
   }
 
 
-  const name =
+  const nameElement =
     document.getElementById(
       "editProfileName"
-    )?.value.trim();
+    );
+
+  const usernameElement =
+    document.getElementById(
+      "editProfileUsername"
+    );
+
+
+  const name =
+    nameElement
+      ? nameElement.value.trim()
+      : "";
 
 
   const username =
-    document.getElementById(
-      "editProfileUsername"
-    )?.value.trim();
+    usernameElement
+      ? usernameElement.value.trim()
+      : "";
 
 
   if (!name) {
@@ -3043,13 +2979,7 @@ async function saveEditProfile() {
 
   try {
 
-    /*
-      Check username belongs to another user.
-    */
-
-    const {
-      data: existing
-    } =
+    const existingResult =
       await supabaseClient
         .from("profiles")
         .select("id")
@@ -3064,7 +2994,7 @@ async function saveEditProfile() {
         .maybeSingle();
 
 
-    if (existing) {
+    if (existingResult.data) {
 
       alert(
         "That username is already taken."
@@ -3075,9 +3005,7 @@ async function saveEditProfile() {
     }
 
 
-    const {
-      error
-    } =
+    const result =
       await supabaseClient
         .from("profiles")
         .upsert({
@@ -3094,15 +3022,15 @@ async function saveEditProfile() {
         });
 
 
-    if (error) {
+    if (result.error) {
 
       console.error(
         "Save profile error:",
-        error
+        result.error
       );
 
       alert(
-        error.message
+        result.error.message
       );
 
       return;
@@ -3117,11 +3045,9 @@ async function saveEditProfile() {
 
     closeEditProfile();
 
-
     await loadProfile();
 
     await refreshAccountUI();
-
 
   } catch (error) {
 
@@ -3140,18 +3066,10 @@ async function saveEditProfile() {
 
 
 /* =========================================================
-   32. PROFILE PAGE EDIT BUTTON
+   32. PROFILE PAGE
    ========================================================= */
 
 function setupProfilePage() {
-
-  /*
-    profile.html currently contains an inline
-    editProfile() function that shows an alert.
-
-    We replace it here after the page loads so
-    the Edit Profile button actually works.
-  */
 
   window.editProfile =
     function () {
@@ -3164,11 +3082,6 @@ function setupProfilePage() {
 
       }
 
-
-      /*
-        Send user to the profile editor
-        on index.html.
-      */
 
       window.location.href =
         "index.html#profile";
@@ -3197,10 +3110,11 @@ function setupAvatarUpload() {
 
   input.addEventListener(
     "change",
-    async event => {
+    async function (event) {
 
       const file =
-        event.target.files?.[0];
+        event.target.files &&
+        event.target.files[0];
 
 
       if (!file) {
@@ -3237,10 +3151,6 @@ async function uploadAvatar(
   }
 
 
-  /*
-    Only allow images.
-  */
-
   if (
     !file.type.startsWith(
       "image/"
@@ -3255,10 +3165,6 @@ async function uploadAvatar(
 
   }
 
-
-  /*
-    Limit file size to 5 MB.
-  */
 
   if (
     file.size >
@@ -3284,19 +3190,12 @@ async function uploadAvatar(
 
 
     const filePath =
-      `${currentUser.id}/avatar.${extension}`;
+      currentUser.id +
+      "/avatar." +
+      extension;
 
 
-    /*
-      Upload to Supabase Storage.
-
-      Bucket name:
-      avatars
-    */
-
-    const {
-      error: uploadError
-    } =
+    const uploadResult =
       await supabaseClient
         .storage
         .from("avatars")
@@ -3304,7 +3203,9 @@ async function uploadAvatar(
           filePath,
           file,
           {
-            upsert: true,
+
+            upsert:
+              true,
 
             cacheControl:
               "3600"
@@ -3313,16 +3214,16 @@ async function uploadAvatar(
         );
 
 
-    if (uploadError) {
+    if (uploadResult.error) {
 
       console.error(
         "Avatar upload error:",
-        uploadError
+        uploadResult.error
       );
 
       alert(
         "Photo upload failed: " +
-        uploadError.message
+        uploadResult.error.message
       );
 
       return;
@@ -3330,13 +3231,7 @@ async function uploadAvatar(
     }
 
 
-    /*
-      Get public URL.
-    */
-
-    const {
-      data
-    } =
+    const publicResult =
       supabaseClient
         .storage
         .from("avatars")
@@ -3346,7 +3241,10 @@ async function uploadAvatar(
 
 
     const avatarUrl =
-      data?.publicUrl;
+      publicResult.data &&
+      publicResult.data.publicUrl
+        ? publicResult.data.publicUrl
+        : "";
 
 
     if (!avatarUrl) {
@@ -3360,13 +3258,7 @@ async function uploadAvatar(
     }
 
 
-    /*
-      Save URL to profile.
-    */
-
-    const {
-      error: profileError
-    } =
+    const profileResult =
       await supabaseClient
         .from("profiles")
         .update({
@@ -3381,15 +3273,15 @@ async function uploadAvatar(
         );
 
 
-    if (profileError) {
+    if (profileResult.error) {
 
       console.error(
         "Avatar profile update:",
-        profileError
+        profileResult.error
       );
 
       alert(
-        profileError.message
+        profileResult.error.message
       );
 
       return;
@@ -3405,7 +3297,6 @@ async function uploadAvatar(
     await loadProfile();
 
     await refreshAccountUI();
-
 
   } catch (error) {
 
@@ -3424,7 +3315,7 @@ async function uploadAvatar(
 
 
 /* =========================================================
-   35. SEARCH WITH ENTER KEY
+   35. SEARCH ENTER KEY
    ========================================================= */
 
 function setupSearchEnterKey() {
@@ -3442,7 +3333,7 @@ function setupSearchEnterKey() {
 
   input.addEventListener(
     "keydown",
-    event => {
+    function (event) {
 
       if (
         event.key ===
@@ -3462,7 +3353,7 @@ function setupSearchEnterKey() {
 
 
 /* =========================================================
-   36. MY PROFILE NAVIGATION
+   36. GO TO MY PROFILE
    ========================================================= */
 
 function goToMyProfile() {
@@ -3475,10 +3366,6 @@ function goToMyProfile() {
 
   }
 
-
-  /*
-    Close menu.
-  */
 
   const menu =
     document.getElementById(
@@ -3494,11 +3381,6 @@ function goToMyProfile() {
   }
 
 
-  /*
-    If already on index.html,
-    scroll to profile.
-  */
-
   const profile =
     document.getElementById(
       "profile"
@@ -3509,7 +3391,8 @@ function goToMyProfile() {
 
     profile.scrollIntoView({
 
-      behavior: "smooth"
+      behavior:
+        "smooth"
 
     });
 
@@ -3517,10 +3400,6 @@ function goToMyProfile() {
 
   }
 
-
-  /*
-    Otherwise open index profile.
-  */
 
   window.location.href =
     "index.html#profile";
@@ -3534,7 +3413,7 @@ function goToMyProfile() {
 
 document.addEventListener(
   "click",
-  event => {
+  function (event) {
 
     const accountButton =
       document.getElementById(
@@ -3576,12 +3455,12 @@ document.addEventListener(
 
 
 /* =========================================================
-   38. CLOSE MODALS WHEN CLICKING OUTSIDE
+   38. CLOSE MODALS OUTSIDE
    ========================================================= */
 
 document.addEventListener(
   "click",
-  event => {
+  function (event) {
 
     const authModal =
       document.getElementById(
@@ -3620,7 +3499,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   39. HELPER - TEXT
+   39. SET TEXT
    ========================================================= */
 
 function setText(
@@ -3637,7 +3516,10 @@ function setText(
   if (element) {
 
     element.textContent =
-      value ?? "";
+      value === null ||
+      value === undefined
+        ? ""
+        : value;
 
   }
 
@@ -3645,7 +3527,7 @@ function setText(
 
 
 /* =========================================================
-   40. HELPER - INPUT VALUE
+   40. SET VALUE
    ========================================================= */
 
 function setValue(
@@ -3662,7 +3544,10 @@ function setValue(
   if (element) {
 
     element.value =
-      value ?? "";
+      value === null ||
+      value === undefined
+        ? ""
+        : value;
 
   }
 
@@ -3670,7 +3555,7 @@ function setValue(
 
 
 /* =========================================================
-   41. HELPER - INITIALS
+   41. GET INITIALS
    ========================================================= */
 
 function getInitials(
@@ -3691,22 +3576,30 @@ function getInitials(
   if (words.length === 1) {
 
     return words[0]
-      .substring(0, 2)
+      .substring(
+        0,
+        2
+      )
       .toUpperCase();
 
   }
 
 
   return (
+
     words[0][0] +
-    words[words.length - 1][0]
+
+    words[
+      words.length - 1
+    ][0]
+
   ).toUpperCase();
 
 }
 
 
 /* =========================================================
-   42. HELPER - AVATAR ELEMENT
+   42. UPDATE AVATAR ELEMENT
    ========================================================= */
 
 function updateAvatarElement(
@@ -3716,68 +3609,83 @@ function updateAvatarElement(
 ) {
 
   const element =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
+
 
   if (!element) {
     return;
   }
 
 
-  /* Remove old image */
+  element.style.backgroundImage =
+    "none";
 
-  element.style.backgroundImage = "none";
-  element.innerHTML = "";
+  element.innerHTML =
+    "";
 
-
-  /* Show profile photo */
 
   if (avatarUrl) {
 
     const img =
-      document.createElement("img");
+      document.createElement(
+        "img"
+      );
 
-    img.src = avatarUrl;
 
-    img.alt = name || "Profile photo";
+    img.src =
+      avatarUrl;
+
+
+    img.alt =
+      name ||
+      "Profile photo";
+
 
     img.className =
       "profile-avatar-img";
 
 
-    img.onerror = function () {
+    img.onerror =
+      function () {
 
-      this.remove();
+        this.remove();
 
-      element.textContent =
-        getInitials(name);
+        element.textContent =
+          getInitials(name);
 
-    };
+      };
 
 
-    element.appendChild(img);
+    element.appendChild(
+      img
+    );
+
 
     return;
 
   }
 
 
-  /* No photo = initials */
-
   element.textContent =
     getInitials(name);
 
 }
 
+
 /* =========================================================
-   43. HELPER - ESCAPE HTML
+   43. ESCAPE HTML
    ========================================================= */
 
 function escapeHTML(
   value
 ) {
 
-  if (value === null ||
-      value === undefined) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
 
     return "";
 
@@ -3810,7 +3718,7 @@ function escapeHTML(
 
 
 /* =========================================================
-   44. HELPER - ESCAPE JAVASCRIPT
+   44. ESCAPE JAVASCRIPT
    ========================================================= */
 
 function escapeJS(
@@ -3839,120 +3747,7 @@ function escapeJS(
 
 
 /* =========================================================
-   45. HELPER - SEARCH TEXT
-   ========================================================= */
-
-function escapeSearch(
-  value
-) {
-
-  /*
-    Escape characters that could interfere
-    with the Supabase PostgREST filter.
-  */
-
-  return String(value)
-    .replace(
-      /[%_]/g,
-      "\\$&"
-    )
-    .replace(
-      /,/g,
-      "\\,"
-    );
-
-}
-
-/* =========================================================
-   CREATE FRIEND RESULT CARD
-   ========================================================= */
-
-function createFriendResultCard(person) {
-
-  const name =
-    person.full_name ||
-    person.username ||
-    "YouRemo User";
-
-  const username =
-    person.username
-      ? `@${person.username}`
-      : "";
-
-  let avatarHTML = "";
-
-  /*
-    Show actual profile photo
-  */
-
-  if (person.avatar_url) {
-
-    avatarHTML = `
-      <div class="friend-avatar">
-
-        <img
-          src="${escapeHTML(person.avatar_url)}"
-          alt="${escapeHTML(name)}"
-          class="friend-avatar-img"
-          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
-        >
-
-      </div>
-    `;
-
-  } else {
-
-    /*
-      No photo = initials
-    */
-
-    avatarHTML = `
-      <div class="friend-avatar">
-        ${escapeHTML(getInitials(name))}
-      </div>
-    `;
-
-  }
-
-  return `
-    <div
-      class="friend-card"
-      data-user-id="${escapeHTML(person.id)}">
-
-      ${avatarHTML}
-
-      <div class="friend-info">
-
-        <h3>
-          ${escapeHTML(name)}
-        </h3>
-
-        <p>
-          ${escapeHTML(username)}
-        </p>
-
-      </div>
-
-      <div class="friend-card-actions">
-
-        <button
-          class="primary-btn friend-request-btn"
-          data-user-id="${escapeHTML(person.id)}"
-          onclick="sendFriendRequest('${escapeJS(person.id)}')">
-
-          Add Friend
-
-        </button>
-
-      </div>
-
-    </div>
-  `;
-}
-
-
-/* =========================================================
-   PROFILE PAGE EDIT FUNCTION
+   45. EDIT PROFILE
    ========================================================= */
 
 function editProfile() {
@@ -3965,47 +3760,75 @@ function editProfile() {
 
   }
 
-  /*
-    Open the profile editor on index.html
-  */
 
   window.location.href =
     "index.html#profile";
 
 }
-/* =========================================================
-   EXPORT FUNCTIONS TO WINDOW
-   ========================================================= */
-
-window.handleAccountClick = handleAccountClick;
-window.openAuth = openAuth;
-window.closeAuth = closeAuth;
-
-window.showLogin = showLogin;
-window.showSignup = showSignup;
-
-window.signUp = signUp;
-window.login = login;
-window.logout = logout;
-
-window.findFriends = findFriends;
-window.learnMore = learnMore;
-
-window.searchFriends = searchFriends;
-window.sendFriendRequest = sendFriendRequest;
-
-window.acceptFriendRequest = acceptFriendRequest;
-window.declineFriendRequest = declineFriendRequest;
-
-window.openEditProfile = openEditProfile;
-window.closeEditProfile = closeEditProfile;
-window.saveEditProfile = saveEditProfile;
-
-window.goToMyProfile = goToMyProfile;
-window.editProfile = editProfile;
 
 
 /* =========================================================
-   END OF YOUREMO SCRIPT
+   46. EXPORT FUNCTIONS
    ========================================================= */
 
+window.handleAccountClick =
+  handleAccountClick;
+
+window.openAuth =
+  openAuth;
+
+window.closeAuth =
+  closeAuth;
+
+window.showLogin =
+  showLogin;
+
+window.showSignup =
+  showSignup;
+
+window.signUp =
+  signUp;
+
+window.login =
+  login;
+
+window.logout =
+  logout;
+
+window.findFriends =
+  findFriends;
+
+window.learnMore =
+  learnMore;
+
+window.searchFriends =
+  searchFriends;
+
+window.sendFriendRequest =
+  sendFriendRequest;
+
+window.acceptFriendRequest =
+  acceptFriendRequest;
+
+window.declineFriendRequest =
+  declineFriendRequest;
+
+window.openEditProfile =
+  openEditProfile;
+
+window.closeEditProfile =
+  closeEditProfile;
+
+window.saveEditProfile =
+  saveEditProfile;
+
+window.goToMyProfile =
+  goToMyProfile;
+
+window.editProfile =
+  editProfile;
+
+
+/* =========================================================
+   END
+   ========================================================= */
