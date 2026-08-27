@@ -3621,45 +3621,57 @@ function updateAvatarElement(
 ) {
 
   const element =
-    document.getElementById(
-      id
-    );
-
+    document.getElementById(id);
 
   if (!element) {
     return;
   }
 
 
+  /* Remove old image */
+
+  element.style.backgroundImage = "none";
+  element.innerHTML = "";
+
+
+  /* Show profile photo */
+
   if (avatarUrl) {
 
-    element.textContent =
-      "";
+    const img =
+      document.createElement("img");
 
-    element.style.backgroundImage =
-      `url("${avatarUrl}")`;
+    img.src = avatarUrl;
 
-    element.style.backgroundSize =
-      "cover";
+    img.alt = name || "Profile photo";
 
-    element.style.backgroundPosition =
-      "center";
+    img.className =
+      "profile-avatar-img";
 
-    element.style.backgroundRepeat =
-      "no-repeat";
 
-  } else {
+    img.onerror = function () {
 
-    element.style.backgroundImage =
-      "none";
+      this.remove();
 
-    element.textContent =
-      getInitials(name);
+      element.textContent =
+        getInitials(name);
+
+    };
+
+
+    element.appendChild(img);
+
+    return;
 
   }
 
-}
 
+  /* No photo = initials */
+
+  element.textContent =
+    getInitials(name);
+
+}
 
 /* =========================================================
    43. HELPER - ESCAPE HTML
