@@ -2386,3 +2386,14 @@ footer {
   }
 
 }
+/* =========================================================
+   MESSAGE TIME
+   ========================================================= */
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.65;
+  margin-top: 5px;
+  text-align: right;
+  line-height: 1;
+}
