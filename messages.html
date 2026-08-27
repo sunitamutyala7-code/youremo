@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+
     .messages-page {
       max-width: 1200px;
       margin: 0 auto;
@@ -282,16 +283,18 @@
       justify-content: flex-end;
     }
 
-    .message-sent {
+    .message-sent,
+    .message-seen {
       font-size: 10px;
-      color: #4f46e5;
       font-weight: 600;
     }
 
-    .message-seen {
-      font-size: 10px;
+    .message-sent {
       color: #4f46e5;
-      font-weight: 600;
+    }
+
+    .message-seen {
+      color: #4f46e5;
     }
 
     .message-input-area {
@@ -405,11 +408,15 @@
       .message-bubble {
         font-size: 13px;
       }
+
     }
+
   </style>
 </head>
 
+
 <body>
+
 
 <header class="navbar">
 
@@ -433,6 +440,7 @@
 
   </nav>
 
+
   <div
     id="accountButton"
     class="account-button"
@@ -449,6 +457,7 @@
     </span>
 
   </div>
+
 
   <div
     id="accountMenu"
@@ -471,7 +480,9 @@
 </header>
 
 
+
 <main class="messages-page">
+
 
   <div class="messages-header">
 
@@ -486,9 +497,12 @@
   </div>
 
 
+
   <div class="messages-layout">
 
+
     <aside class="conversation-list">
+
 
       <div class="conversation-search">
 
@@ -500,6 +514,7 @@
 
       </div>
 
+
       <div id="conversationList">
 
         <div class="loading-conversations">
@@ -508,10 +523,13 @@
 
       </div>
 
+
     </aside>
 
 
+
     <section class="chat-area">
+
 
       <div
         id="chatHeader"
@@ -522,6 +540,7 @@
         </div>
 
       </div>
+
 
 
       <div
@@ -545,6 +564,7 @@
       </div>
 
 
+
       <div
         id="messageInputArea"
         class="message-input-area"
@@ -559,10 +579,13 @@
         <button
           id="sendMessageButton"
           type="button">
+
           Send
+
         </button>
 
       </div>
+
 
     </section>
 
@@ -571,319 +594,127 @@
 </main>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="script.js"></script>
 
 
+
 <script>
 
-  /* =====================================================
-     PAGE VARIABLES
-     ===================================================== */
 
-  let messageFriends = [];
+/* =========================================================
+   PAGE VARIABLES
+   ========================================================= */
 
-  let selectedMessageFriend = null;
+let messageFriends = [];
 
-  let currentMessageUser = null;
+let selectedMessageFriend = null;
 
-  let messageSending = false;
+let currentMessageUser = null;
+
+let messageSending = false;
+
+let messageRealtimeChannel = null;
+
+let seenCheckTimer = null;
 
 
-  /* =====================================================
-     GET USER
-     ===================================================== */
+/* =========================================================
+   GET CURRENT USER
+   ========================================================= */
 
-  async function getMessageUser() {
+async function getMessageUser() {
 
-    try {
+  try {
 
-      const {
-        data,
-        error
-      } = await supabaseClient.auth.getUser();
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getUser();
 
-      if (error) {
 
-        console.error(
-          "User error:",
-          error
-        );
-
-        return null;
-      }
-
-      return data.user || null;
-
-    } catch (error) {
+    if (error) {
 
       console.error(
-        "Get user error:",
+        "User error:",
         error
       );
 
       return null;
-    }
-  }
-
-
-  /* =====================================================
-     LOAD FRIENDS
-     ===================================================== */
-
-  async function loadMessageFriends() {
-
-    const container =
-      document.getElementById(
-        "conversationList"
-      );
-
-    if (!container) return;
-
-
-    container.innerHTML = `
-      <div class="loading-conversations">
-        Loading friends...
-      </div>
-    `;
-
-
-    try {
-
-      const user =
-        await getMessageUser();
-
-      currentMessageUser =
-        user;
-
-
-      if (!user) {
-
-        container.innerHTML = `
-          <div class="empty-conversation">
-
-            <div class="conversation-icon">
-              🔐
-            </div>
-
-            <div>
-
-              <strong>
-                Login required
-              </strong>
-
-              <p>
-                Login to see your friends.
-              </p>
-
-            </div>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from("friendships")
-          .select("*")
-          .or(
-            `user_id.eq.${user.id},friend_id.eq.${user.id}`
-          );
-
-
-      if (error) {
-
-        console.error(
-          "Friendship error:",
-          error
-        );
-
-        container.innerHTML = `
-          <div class="empty-conversation">
-
-            <div class="conversation-icon">
-              ⚠️
-            </div>
-
-            <div>
-
-              <strong>
-                Could not load friends
-              </strong>
-
-              <p>
-                ${escapeHtml(error.message)}
-              </p>
-
-            </div>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      const friendIds =
-        (data || [])
-          .map(friendship => {
-
-            return friendship.user_id === user.id
-              ? friendship.friend_id
-              : friendship.user_id;
-
-          })
-          .filter(Boolean);
-
-
-      const uniqueFriendIds =
-        [...new Set(friendIds)];
-
-
-      if (!uniqueFriendIds.length) {
-
-        messageFriends = [];
-
-        renderMessageFriends();
-
-        return;
-      }
-
-
-      const {
-        data: profiles,
-        error: profileError
-      } =
-        await supabaseClient
-          .from("profiles")
-          .select("*")
-          .in(
-            "id",
-            uniqueFriendIds
-          );
-
-
-      if (profileError) {
-
-        console.error(
-          "Profile error:",
-          profileError
-        );
-
-        container.innerHTML = `
-          <div class="empty-conversation">
-
-            <div class="conversation-icon">
-              ⚠️
-            </div>
-
-            <div>
-
-              <strong>
-                Could not load profiles
-              </strong>
-
-              <p>
-                ${escapeHtml(profileError.message)}
-              </p>
-
-            </div>
-
-          </div>
-        `;
-
-        return;
-      }
-
-
-      messageFriends =
-        profiles || [];
-
-      renderMessageFriends();
-
-    } catch (error) {
-
-      console.error(
-        "Load friends error:",
-        error
-      );
 
     }
+
+
+    return data.user || null;
+
+
+  } catch (error) {
+
+    console.error(
+      "Get user error:",
+      error
+    );
+
+    return null;
+
   }
 
-
-  /* =====================================================
-     RENDER FRIENDS
-     ===================================================== */
-
-  function renderMessageFriends(
-    searchText = ""
-  ) {
-
-    const container =
-      document.getElementById(
-        "conversationList"
-      );
-
-    if (!container) return;
+}
 
 
-    const search =
-      String(searchText)
-        .toLowerCase()
-        .trim();
+
+/* =========================================================
+   LOAD FRIENDS
+   ========================================================= */
+
+async function loadMessageFriends() {
+
+  const container =
+    document.getElementById(
+      "conversationList"
+    );
 
 
-    const filtered =
-      messageFriends.filter(friend => {
-
-        const name =
-          String(
-            friend.full_name ||
-            friend.name ||
-            friend.username ||
-            ""
-          ).toLowerCase();
+  if (!container) return;
 
 
-        const username =
-          String(
-            friend.username || ""
-          ).toLowerCase();
+  container.innerHTML = `
+    <div class="loading-conversations">
+      Loading friends...
+    </div>
+  `;
 
 
-        return (
-          name.includes(search) ||
-          username.includes(search)
-        );
+  try {
 
-      });
+    const user =
+      await getMessageUser();
 
 
-    if (!filtered.length) {
+    currentMessageUser =
+      user;
+
+
+    if (!user) {
 
       container.innerHTML = `
         <div class="empty-conversation">
 
           <div class="conversation-icon">
-            🔎
+            🔐
           </div>
 
           <div>
 
             <strong>
-              No friends found
+              Login required
             </strong>
 
             <p>
-              Try another search.
+              Login to see your friends.
             </p>
 
           </div>
@@ -892,192 +723,264 @@
       `;
 
       return;
+
     }
 
 
-    container.innerHTML =
-      filtered.map(friend => {
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("friendships")
+        .select("*")
+        .or(
+          `user_id.eq.${user.id},friend_id.eq.${user.id}`
+        );
 
-        const name =
+
+    if (error) {
+
+      console.error(
+        "Friendship error:",
+        error
+      );
+
+      container.innerHTML = `
+        <div class="empty-conversation">
+
+          <div class="conversation-icon">
+            ⚠️
+          </div>
+
+          <div>
+
+            <strong>
+              Could not load friends
+            </strong>
+
+            <p>
+              ${escapeHtml(error.message)}
+            </p>
+
+          </div>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    const friendIds =
+      (data || [])
+        .map(friendship => {
+
+          return friendship.user_id === user.id
+            ? friendship.friend_id
+            : friendship.user_id;
+
+        })
+        .filter(Boolean);
+
+
+    const uniqueFriendIds =
+      [...new Set(friendIds)];
+
+
+    if (!uniqueFriendIds.length) {
+
+      messageFriends = [];
+
+      renderMessageFriends();
+
+      return;
+
+    }
+
+
+    const {
+      data: profiles,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .in(
+          "id",
+          uniqueFriendIds
+        );
+
+
+    if (profileError) {
+
+      console.error(
+        "Profile error:",
+        profileError
+      );
+
+      container.innerHTML = `
+        <div class="empty-conversation">
+
+          <div class="conversation-icon">
+            ⚠️
+          </div>
+
+          <div>
+
+            <strong>
+              Could not load profiles
+            </strong>
+
+            <p>
+              ${escapeHtml(profileError.message)}
+            </p>
+
+          </div>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    messageFriends =
+      profiles || [];
+
+
+    renderMessageFriends();
+
+
+  } catch (error) {
+
+    console.error(
+      "Load friends error:",
+      error
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   RENDER FRIENDS
+   ========================================================= */
+
+function renderMessageFriends(
+  searchText = ""
+) {
+
+  const container =
+    document.getElementById(
+      "conversationList"
+    );
+
+
+  if (!container) return;
+
+
+  const search =
+    String(searchText)
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    messageFriends.filter(friend => {
+
+      const name =
+        String(
           friend.full_name ||
           friend.name ||
           friend.username ||
-          "Friend";
+          ""
+        ).toLowerCase();
 
 
-        const initial =
-          name
-            .charAt(0)
-            .toUpperCase();
+      const username =
+        String(
+          friend.username || ""
+        ).toLowerCase();
 
 
-        const avatar =
-          friend.avatar_url ||
-          friend.profile_photo ||
-          friend.photo_url ||
-          "";
+      return (
+        name.includes(search) ||
+        username.includes(search)
+      );
+
+    });
 
 
-        const selected =
-          selectedMessageFriend &&
-          String(selectedMessageFriend.id) ===
-          String(friend.id)
-            ? "selected"
-            : "";
+  if (!filtered.length) {
 
+    container.innerHTML = `
+      <div class="empty-conversation">
 
-        return `
-          <div
-            class="conversation ${selected}"
-            data-friend-id="${escapeHtml(friend.id)}">
+        <div class="conversation-icon">
+          🔎
+        </div>
 
-            <div class="conversation-avatar">
+        <div>
 
-              ${
-                avatar
+          <strong>
+            No friends found
+          </strong>
 
-                  ? `
-                    <img
-                      src="${escapeHtml(avatar)}"
-                      alt="${escapeHtml(name)}">
-                  `
+          <p>
+            Try another search.
+          </p>
 
-                  : escapeHtml(initial)
-              }
+        </div>
 
-            </div>
+      </div>
+    `;
 
-
-            <div class="conversation-info">
-
-              <strong>
-                ${escapeHtml(name)}
-              </strong>
-
-              <p>
-                ${
-                  friend.username
-                    ? "@" +
-                      escapeHtml(friend.username)
-                    : "Start a conversation"
-                }
-              </p>
-
-            </div>
-
-          </div>
-        `;
-
-      }).join("");
-
-
-    container
-      .querySelectorAll(".conversation")
-      .forEach(element => {
-
-        element.addEventListener(
-          "click",
-          () => {
-
-            openConversation(
-              element.dataset.friendId
-            );
-
-          }
-        );
-
-      });
+    return;
 
   }
 
 
-  /* =====================================================
-     SEARCH
-     ===================================================== */
+  container.innerHTML =
+    filtered.map(friend => {
 
-  function filterMessageFriends() {
-
-    const input =
-      document.getElementById(
-        "messageFriendSearch"
-      );
-
-    if (!input) return;
-
-    renderMessageFriends(
-      input.value
-    );
-  }
+      const name =
+        friend.full_name ||
+        friend.name ||
+        friend.username ||
+        "Friend";
 
 
-  /* =====================================================
-     OPEN CONVERSATION
-     ===================================================== */
-
-  async function openConversation(
-    friendId
-  ) {
-
-    const friend =
-      messageFriends.find(
-        person =>
-          String(person.id) ===
-          String(friendId)
-      );
+      const initial =
+        name
+          .charAt(0)
+          .toUpperCase();
 
 
-    if (!friend) {
-
-      console.error(
-        "Friend not found:",
-        friendId
-      );
-
-      return;
-    }
+      const avatar =
+        friend.avatar_url ||
+        friend.profile_photo ||
+        friend.photo_url ||
+        "";
 
 
-    selectedMessageFriend =
-      friend;
+      const selected =
+        selectedMessageFriend &&
+        String(selectedMessageFriend.id) ===
+        String(friend.id)
+          ? "selected"
+          : "";
 
 
-    renderMessageFriends(
-      document.getElementById(
-        "messageFriendSearch"
-      )?.value || ""
-    );
+      return `
 
-
-    const name =
-      friend.full_name ||
-      friend.name ||
-      friend.username ||
-      "Friend";
-
-
-    const avatar =
-      friend.avatar_url ||
-      friend.profile_photo ||
-      friend.photo_url ||
-      "";
-
-
-    const header =
-      document.getElementById(
-        "chatHeader"
-      );
-
-
-    const inputArea =
-      document.getElementById(
-        "messageInputArea"
-      );
-
-
-    if (header) {
-
-      header.innerHTML = `
-        <div class="chat-user">
+        <div
+          class="conversation ${selected}"
+          data-friend-id="${escapeHtml(friend.id)}">
 
           <div class="conversation-avatar">
 
@@ -1090,179 +993,362 @@
                     alt="${escapeHtml(name)}">
                 `
 
-                : escapeHtml(
-                    name
-                      .charAt(0)
-                      .toUpperCase()
-                  )
+                : escapeHtml(initial)
             }
 
           </div>
 
-          <div>
+
+          <div class="conversation-info">
 
             <strong>
               ${escapeHtml(name)}
             </strong>
 
             <p>
+
               ${
                 friend.username
                   ? "@" +
-                    escapeHtml(
-                      friend.username
-                    )
-                  : ""
+                    escapeHtml(friend.username)
+                  : "Start a conversation"
               }
+
             </p>
 
           </div>
 
         </div>
+
       `;
 
-    }
+    }).join("");
 
 
-    if (inputArea) {
+  container
+    .querySelectorAll(".conversation")
+    .forEach(element => {
 
-      inputArea.style.display =
-        "flex";
-    }
+      element.addEventListener(
+        "click",
+        () => {
 
-
-    await loadConversation(
-      friend.id
-    );
-startSeenChecker();
-
-    /* ===============================================
-       IMPORTANT:
-       MARK RECEIVED MESSAGES AS SEEN
-       =============================================== */
-
-    await markMessagesAsSeen(
-      friend.id
-    );
-
-
-    /* Reload after marking seen so
-       ✓✓ Seen appears immediately */
-
-    await loadConversation(
-      friend.id
-    );
-
-
-    setTimeout(() => {
-
-      const input =
-        document.getElementById(
-          "messageInput"
-        );
-
-      if (input) {
-
-        input.focus();
-      }
-
-    }, 100);
-
-  }
-
-
-  /* =====================================================
-     MARK MESSAGES AS SEEN
-     ===================================================== */
-
-  async function markMessagesAsSeen(
-    friendId
-  ) {
-
-    const user =
-      currentMessageUser ||
-      await getMessageUser();
-
-
-    if (!user) return;
-
-
-    try {
-
-      /*
-       * We update only messages:
-       *
-       * sender = friend
-       * receiver = me
-       * seen = false
-       */
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("messages")
-          .update({
-            seen: true
-          })
-          .eq(
-            "sender_id",
-            friendId
-          )
-          .eq(
-            "receiver_id",
-            user.id
-          )
-          .eq(
-            "seen",
-            false
+          openConversation(
+            element.dataset.friendId
           );
 
-
-      if (error) {
-
-        console.error(
-          "Mark seen error:",
-          error
-        );
-
-      } else {
-
-        console.log(
-          "Messages marked as seen."
-        );
-
-      }
-
-    } catch (error) {
-
-      console.error(
-        "Mark seen exception:",
-        error
+        }
       );
 
-    }
+    });
+
+}
+
+
+
+/* =========================================================
+   SEARCH FRIENDS
+   ========================================================= */
+
+function filterMessageFriends() {
+
+  const input =
+    document.getElementById(
+      "messageFriendSearch"
+    );
+
+
+  if (!input) return;
+
+
+  renderMessageFriends(
+    input.value
+  );
+
+}
+
+
+
+/* =========================================================
+   OPEN CONVERSATION
+   ========================================================= */
+
+async function openConversation(
+  friendId
+) {
+
+  const friend =
+    messageFriends.find(
+      person =>
+        String(person.id) ===
+        String(friendId)
+    );
+
+
+  if (!friend) {
+
+    console.error(
+      "Friend not found:",
+      friendId
+    );
+
+    return;
 
   }
 
 
-  /* =====================================================
-     LOAD CONVERSATION
-     ===================================================== */
+  selectedMessageFriend =
+    friend;
 
-  async function loadConversation(friendId) {
 
-  const chat = document.getElementById("chatMessages");
+  renderMessageFriends(
+    document.getElementById(
+      "messageFriendSearch"
+    )?.value || ""
+  );
 
-  if (!chat) return;
+
+  const name =
+    friend.full_name ||
+    friend.name ||
+    friend.username ||
+    "Friend";
+
+
+  const avatar =
+    friend.avatar_url ||
+    friend.profile_photo ||
+    friend.photo_url ||
+    "";
+
+
+  const header =
+    document.getElementById(
+      "chatHeader"
+    );
+
+
+  const inputArea =
+    document.getElementById(
+      "messageInputArea"
+    );
+
+
+  if (header) {
+
+    header.innerHTML = `
+
+      <div class="chat-user">
+
+        <div class="conversation-avatar">
+
+          ${
+            avatar
+
+              ? `
+                <img
+                  src="${escapeHtml(avatar)}"
+                  alt="${escapeHtml(name)}">
+              `
+
+              : escapeHtml(
+                  name
+                    .charAt(0)
+                    .toUpperCase()
+                )
+          }
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            ${escapeHtml(name)}
+          </strong>
+
+          <p>
+
+            ${
+              friend.username
+                ? "@" +
+                  escapeHtml(
+                    friend.username
+                  )
+                : ""
+            }
+
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (inputArea) {
+
+    inputArea.style.display =
+      "flex";
+
+  }
+
+
+  await loadConversation(
+    friend.id
+  );
+
+
+  /*
+   * Mark received messages as seen.
+   */
+
+  await markMessagesAsSeen(
+    friend.id
+  );
+
+
+  /*
+   * Reload once so the local user's
+   * screen immediately knows they are seen.
+   */
+
+  await loadConversation(
+    friend.id
+  );
+
+
+  /*
+   * Start the backup Seen checker.
+   */
+
+  startSeenChecker();
+
+
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
+
+
+  if (input) {
+
+    setTimeout(
+      () => input.focus(),
+      100
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   MARK RECEIVED MESSAGES AS SEEN
+   ========================================================= */
+
+async function markMessagesAsSeen(
+  friendId
+) {
 
   const user =
     currentMessageUser ||
     await getMessageUser();
 
+
   if (!user) return;
 
-  currentMessageUser = user;
+
+  currentMessageUser =
+    user;
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .update({
+          seen: true
+        })
+        .eq(
+          "sender_id",
+          friendId
+        )
+        .eq(
+          "receiver_id",
+          user.id
+        )
+        .eq(
+          "seen",
+          false
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Mark seen error:",
+        error
+      );
+
+      return;
+
+    }
+
+
+    console.log(
+      "👀 Received messages marked as seen."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Mark seen exception:",
+      error
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   LOAD CONVERSATION
+   ========================================================= */
+
+async function loadConversation(
+  friendId
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
+
+
+  if (!user) return;
+
+
+  currentMessageUser =
+    user;
+
 
   chat.innerHTML = `
     <div class="loading-conversations">
@@ -1270,11 +1356,8 @@ startSeenChecker();
     </div>
   `;
 
-  try {
 
-    /* =====================================================
-       LOAD MESSAGES
-       ===================================================== */
+  try {
 
     const {
       data,
@@ -1318,110 +1401,13 @@ startSeenChecker();
       `;
 
       return;
-    }
-
-
-    /* =====================================================
-       MARK RECEIVED MESSAGES AS SEEN
-       ===================================================== */
-
-    const unreadMessages =
-      (data || []).filter(message => {
-
-        return (
-          String(message.receiver_id) === String(user.id) &&
-          (
-            message.seen !== true &&
-            message.is_seen !== true
-          )
-        );
-
-      });
-
-
-    if (unreadMessages.length > 0) {
-
-      console.log(
-        "Marking messages as seen:",
-        unreadMessages.length
-      );
-
-
-      /*
-       * Mark each received message as seen.
-       */
-
-      for (const message of unreadMessages) {
-
-        const {
-          error: seenError
-        } =
-          await supabaseClient
-            .from("messages")
-            .update({
-              seen: true
-            })
-            .eq(
-              "id",
-              message.id
-            );
-
-
-        if (seenError) {
-
-          console.error(
-            "Could not mark message as seen:",
-            seenError
-          );
-
-        }
-
-      }
 
     }
 
-
-    /* =====================================================
-       RELOAD MESSAGES AFTER SEEN UPDATE
-       ===================================================== */
-
-    const {
-      data: updatedMessages,
-      error: reloadError
-    } =
-      await supabaseClient
-        .from("messages")
-        .select("*")
-        .or(
-          `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
-        )
-        .order(
-          "created_at",
-          {
-            ascending: true
-          }
-        );
-
-
-    if (reloadError) {
-
-      console.error(
-        "Reload messages error:",
-        reloadError
-      );
-
-      return;
-
-    }
-
-
-    /* =====================================================
-       NO MESSAGES
-       ===================================================== */
 
     if (
-      !updatedMessages ||
-      updatedMessages.length === 0
+      !data ||
+      data.length === 0
     ) {
 
       chat.innerHTML = `
@@ -1445,12 +1431,8 @@ startSeenChecker();
     }
 
 
-    /* =====================================================
-       DISPLAY MESSAGES
-       ===================================================== */
-
     renderMessages(
-      updatedMessages,
+      data,
       user.id
     );
 
@@ -1467,772 +1449,1128 @@ startSeenChecker();
 }
 
 
-  /* =====================================================
-     RENDER MESSAGES
-     ===================================================== */
 
-  function renderMessages(
-    messages,
-    userId
-  ) {
+/* =========================================================
+   RENDER MESSAGES
+   ========================================================= */
 
-    const chat =
-      document.getElementById(
-        "chatMessages"
-      );
+function renderMessages(
+  messages,
+  userId
+) {
 
-    if (!chat) return;
-
-
-    chat.innerHTML =
-      messages.map(message => {
-
-        const mine =
-          String(message.sender_id) ===
-          String(userId);
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
 
 
-        const time =
-          formatMessageTime(
-            message.created_at
-          );
+  if (!chat) return;
 
 
-        const seen =
-          mine &&
-          (
-            message.seen === true ||
-            message.is_seen === true
-          );
+  chat.innerHTML =
+    messages.map(message => {
+
+      const mine =
+        String(message.sender_id) ===
+        String(userId);
 
 
-        return `
-          <div
-            class="message-row ${mine ? "mine" : "theirs"}"
-            data-message-id="${escapeHtml(message.id || "")}">
+      const seen =
+        mine &&
+        message.seen === true;
 
-            <div class="message-content">
 
-              <div class="message-bubble">
-                ${escapeHtml(
-                  message.message || ""
-                )}
-              </div>
+      const time =
+        formatMessageTime(
+          message.created_at
+        );
 
-              <div class="message-meta">
 
-                <span>
-                  ${time}
-                </span>
+      return `
 
-                ${
-                  mine
+        <div
+          class="message-row ${mine ? "mine" : "theirs"}"
+          data-message-id="${escapeHtml(message.id || "")}">
 
-                    ? seen
+          <div class="message-content">
 
-                      ? `
-                        <span class="message-seen">
-                          ✓✓ Seen
-                        </span>
-                      `
+            <div class="message-bubble">
+              ${escapeHtml(
+                message.message || ""
+              )}
+            </div>
 
-                      : `
-                        <span class="message-sent">
-                          ✓ Sent
-                        </span>
-                      `
 
-                    : ""
-                }
+            <div class="message-meta">
 
-              </div>
+              <span>
+                ${time}
+              </span>
+
+
+              ${
+                mine
+
+                  ? seen
+
+                    ? `
+                      <span class="message-seen">
+                        ✓✓ Seen
+                      </span>
+                    `
+
+                    : `
+                      <span class="message-sent">
+                        ✓ Sent
+                      </span>
+                    `
+
+                  : ""
+              }
 
             </div>
 
           </div>
-        `;
 
-      }).join("");
+        </div>
+
+      `;
+
+    }).join("");
 
 
-    scrollChatToBottom();
+  scrollChatToBottom();
+
+}
+
+
+
+/* =========================================================
+   SEND MESSAGE
+   ========================================================= */
+
+async function sendMessage() {
+
+  if (messageSending) return;
+
+
+  if (!selectedMessageFriend) {
+
+    console.log(
+      "No friend selected."
+    );
+
+    return;
 
   }
 
 
-  /* =====================================================
-     SEND MESSAGE
-     ===================================================== */
-
-  async function sendMessage() {
-
-    if (messageSending) return;
-
-    if (!selectedMessageFriend) return;
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
 
 
-    const input =
-      document.getElementById(
-        "messageInput"
+  const button =
+    document.getElementById(
+      "sendMessageButton"
+    );
+
+
+  if (!input) return;
+
+
+  const text =
+    input.value.trim();
+
+
+  if (!text) return;
+
+
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
+
+
+  if (!user) {
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  currentMessageUser =
+    user;
+
+
+  messageSending =
+    true;
+
+
+  input.disabled =
+    true;
+
+
+  if (button) {
+
+    button.disabled =
+      true;
+
+    button.textContent =
+      "Sending...";
+
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .insert({
+
+          sender_id:
+            user.id,
+
+          receiver_id:
+            selectedMessageFriend.id,
+
+          message:
+            text,
+
+          seen:
+            false
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+      console.error(
+        "Send message error:",
+        error
       );
-
-
-    const button =
-      document.getElementById(
-        "sendMessageButton"
-      );
-
-
-    if (!input) return;
-
-
-    const text =
-      input.value.trim();
-
-
-    if (!text) return;
-
-
-    const user =
-      currentMessageUser ||
-      await getMessageUser();
-
-
-    if (!user) {
 
       alert(
-        "Please login first."
+        error.message
       );
 
       return;
+
     }
 
 
-    currentMessageUser =
-      user;
+    input.value = "";
 
+
+    if (data) {
+
+      addMessageIfMissing(
+        data,
+        user.id
+      );
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Send message exception:",
+      error
+    );
+
+
+  } finally {
 
     messageSending =
-      true;
+      false;
 
 
     input.disabled =
-      true;
+      false;
 
 
     if (button) {
 
       button.disabled =
-        true;
+        false;
 
       button.textContent =
-        "Sending...";
+        "Send";
+
     }
 
 
-    try {
+    input.focus();
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from("messages")
-          .insert({
+  }
 
-            sender_id:
-              user.id,
-
-            receiver_id:
-              selectedMessageFriend.id,
-
-            message:
-              text,
-
-            seen:
-              false
-
-          })
-          .select()
-          .single();
+}
 
 
-      if (error) {
 
-        console.error(
-          "Send message error:",
-          error
-        );
+/* =========================================================
+   ADD REALTIME MESSAGE WITHOUT DUPLICATE
+   ========================================================= */
 
-        alert(
-          error.message
-        );
+function addMessageIfMissing(
+  message,
+  userId
+) {
 
-        return;
-      }
-
-
-      input.value = "";
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
 
 
-      if (data) {
+  if (!chat) return;
 
-        addMessageIfMissing(
-          data,
-          user.id
-        );
 
-      }
+  if (!selectedMessageFriend) return;
 
-    } catch (error) {
 
-      console.error(
-        "Send message exception:",
-        error
+  /*
+   * Make sure this message belongs
+   * to the currently open conversation.
+   */
+
+  const belongsToConversation =
+    (
+      String(message.sender_id) ===
+      String(userId) &&
+      String(message.receiver_id) ===
+      String(selectedMessageFriend.id)
+    )
+    ||
+    (
+      String(message.sender_id) ===
+      String(selectedMessageFriend.id) &&
+      String(message.receiver_id) ===
+      String(userId)
+    );
+
+
+  if (!belongsToConversation) {
+    return;
+  }
+
+
+  /*
+   * Prevent duplicate messages.
+   */
+
+  if (message.id) {
+
+    const existing =
+      chat.querySelector(
+        `[data-message-id="${message.id}"]`
       );
 
-    } finally {
 
-      messageSending =
-        false;
-
-      input.disabled =
-        false;
-
-
-      if (button) {
-
-        button.disabled =
-          false;
-
-        button.textContent =
-          "Send";
-      }
-
-
-      input.focus();
-
+    if (existing) {
+      return;
     }
 
   }
 
 
-  /* =====================================================
-     ADD NEW MESSAGE
-     ===================================================== */
+  /*
+   * Remove empty screen.
+   */
 
-  function addMessageIfMissing(
-    message,
-    userId
-  ) {
-
-    const chat =
-      document.getElementById(
-        "chatMessages"
-      );
-
-    if (!chat) return;
+  const empty =
+    chat.querySelector(
+      ".empty-state"
+    );
 
 
-    if (message.id) {
+  if (empty) {
 
-      const existing =
-        chat.querySelector(
-          `[data-message-id="${message.id}"]`
-        );
+    chat.innerHTML = "";
 
-      if (existing) return;
-    }
+  }
 
 
-    const empty =
-      chat.querySelector(
-        ".empty-state"
-      );
+  const mine =
+    String(message.sender_id) ===
+    String(userId);
 
 
-    if (empty) {
-
-      chat.innerHTML = "";
-    }
-
-
-    const mine =
-      String(message.sender_id) ===
-      String(userId);
+  const row =
+    document.createElement(
+      "div"
+    );
 
 
-    const row =
-      document.createElement(
-        "div"
-      );
+  row.className =
+    `message-row ${
+      mine
+        ? "mine"
+        : "theirs"
+    }`;
 
 
-    row.className =
-      `message-row ${
-        mine
-          ? "mine"
-          : "theirs"
-      }`;
+  if (message.id) {
+
+    row.dataset.messageId =
+      message.id;
+
+  }
 
 
-    if (message.id) {
-
-      row.dataset.messageId =
-        message.id;
-    }
-
-
-    const content =
-      document.createElement(
-        "div"
-      );
+  const content =
+    document.createElement(
+      "div"
+    );
 
 
-    content.className =
-      "message-content";
+  content.className =
+    "message-content";
 
 
-    const bubble =
-      document.createElement(
-        "div"
-      );
+  const bubble =
+    document.createElement(
+      "div"
+    );
 
 
-    bubble.className =
-      "message-bubble";
+  bubble.className =
+    "message-bubble";
 
 
-    bubble.textContent =
-      message.message || "";
+  bubble.textContent =
+    message.message || "";
 
 
-    const meta =
-      document.createElement(
-        "div"
-      );
+  const meta =
+    document.createElement(
+      "div"
+    );
 
 
-    meta.className =
-      "message-meta";
+  meta.className =
+    "message-meta";
 
 
-    const time =
+  const time =
+    document.createElement(
+      "span"
+    );
+
+
+  time.textContent =
+    formatMessageTime(
+      message.created_at
+    );
+
+
+  meta.appendChild(
+    time
+  );
+
+
+  if (mine) {
+
+    const status =
       document.createElement(
         "span"
       );
 
 
-    time.textContent =
-      formatMessageTime(
-        message.created_at
-      );
+    if (
+      message.seen === true
+    ) {
 
+      status.className =
+        "message-seen";
 
-    meta.appendChild(
-      time
-    );
+      status.textContent =
+        "✓✓ Seen";
 
+    } else {
 
-    if (mine) {
+      status.className =
+        "message-sent";
 
-      const status =
-        document.createElement(
-          "span"
-        );
-
-
-      if (
-        message.seen === true ||
-        message.is_seen === true
-      ) {
-
-        status.className =
-          "message-seen";
-
-        status.textContent =
-          "✓✓ Seen";
-
-      } else {
-
-        status.className =
-          "message-sent";
-
-        status.textContent =
-          "✓ Sent";
-      }
-
-
-      meta.appendChild(
-        status
-      );
+      status.textContent =
+        "✓ Sent";
 
     }
 
 
-    content.appendChild(
-      bubble
+    meta.appendChild(
+      status
     );
-
-    content.appendChild(
-      meta
-    );
-
-    row.appendChild(
-      content
-    );
-
-    chat.appendChild(
-      row
-    );
-
-
-    scrollChatToBottom();
 
   }
-function updateMessageSeen(messageId) {
 
-  const row = document.querySelector(
-    `[data-message-id="${messageId}"]`
+
+  content.appendChild(
+    bubble
   );
 
-  if (!row) return;
+  content.appendChild(
+    meta
+  );
 
-  const meta = row.querySelector(".message-meta");
+  row.appendChild(
+    content
+  );
 
-  if (!meta) return;
+  chat.appendChild(
+    row
+  );
 
-  const existingSent =
-    meta.querySelector(".message-sent");
 
-  const existingSeen =
-    meta.querySelector(".message-seen");
+  scrollChatToBottom();
 
-  if (existingSeen) return;
-
-  if (existingSent) {
-    existingSent.remove();
-  }
-
-  const seen = document.createElement("span");
-
-  seen.className = "message-seen";
-
-  seen.textContent = "✓✓ Seen";
-
-  meta.appendChild(seen);
 }
-async function checkSeenStatus() {
 
-  if (!currentMessageUser || !selectedMessageFriend) {
-    return;
-  }
 
-  try {
 
-    const userId =
-      currentMessageUser.id;
+/* =========================================================
+   UPDATE MESSAGE TO SEEN
+   ========================================================= */
 
-    const friendId =
-      function updateMessageSeen(messageId) {
+function updateMessageSeen(
+  messageId
+) {
 
-  const row = document.querySelector(
-    `[data-message-id="${messageId}"]`
-  );
+  if (!messageId) return;
+
+
+  const row =
+    document.querySelector(
+      `[data-message-id="${messageId}"]`
+    );
+
 
   if (!row) {
+
     console.log(
-      "Seen message row not found:",
+      "Seen update: message row not found:",
       messageId
     );
+
     return;
+
   }
 
+
   const meta =
-    row.querySelector(".message-meta");
+    row.querySelector(
+      ".message-meta"
+    );
+
 
   if (!meta) return;
 
 
-  /* Already showing Seen */
+  /*
+   * Already Seen.
+   */
 
   if (
-    meta.querySelector(".message-seen")
+    meta.querySelector(
+      ".message-seen"
+    )
   ) {
+
     return;
+
   }
 
 
-  /* Remove ✓ Sent */
+  /*
+   * Remove Sent.
+   */
 
   const sent =
-    meta.querySelector(".message-sent");
+    meta.querySelector(
+      ".message-sent"
+    );
+
 
   if (sent) {
+
     sent.remove();
+
   }
 
 
-  /* Add ✓✓ Seen */
+  /*
+   * Add Seen.
+   */
 
   const seen =
-    document.createElement("span");
+    document.createElement(
+      "span"
+    );
+
 
   seen.className =
     "message-seen";
 
+
   seen.textContent =
     "✓✓ Seen";
 
-  meta.appendChild(seen);
+
+  meta.appendChild(
+    seen
+  );
 
 
   console.log(
-    "✓✓ Seen displayed for:",
+    "✅ ✓✓ Seen displayed:",
     messageId
   );
 
 }
-  /* =====================================================
-     FORMAT TIME
-     ===================================================== */
-
-  function formatMessageTime(
-    timestamp
-  ) {
-
-    if (!timestamp) return "";
 
 
-    const date =
-      new Date(timestamp);
+
+/* =========================================================
+   REALTIME MESSAGES
+   ========================================================= */
+
+function startMessageRealtime() {
+
+  if (!currentMessageUser) {
+
+    console.log(
+      "Realtime: no logged-in user."
+    );
+
+    return;
+
+  }
 
 
-    if (
-      Number.isNaN(
-        date.getTime()
+  /*
+   * Remove previous channel.
+   */
+
+  if (messageRealtimeChannel) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel =
+      null;
+
+  }
+
+
+  console.log(
+    "🔥 Starting message realtime..."
+  );
+
+
+  messageRealtimeChannel =
+    supabaseClient
+      .channel(
+        "messages-page-" +
+        currentMessageUser.id +
+        "-" +
+        Date.now()
       )
-    ) {
 
-      return "";
+
+      /*
+       * NEW MESSAGE
+       */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          console.log(
+            "🔥 REALTIME INSERT:",
+            payload.new
+          );
+
+
+          if (
+            !currentMessageUser
+          ) {
+
+            return;
+
+          }
+
+
+          addMessageIfMissing(
+            payload.new,
+            currentMessageUser.id
+          );
+
+
+          /*
+           * If another user sends us
+           * a message while their chat
+           * is open, mark it seen.
+           */
+
+          if (
+            selectedMessageFriend &&
+            String(payload.new.sender_id) ===
+            String(selectedMessageFriend.id) &&
+            String(payload.new.receiver_id) ===
+            String(currentMessageUser.id)
+          ) {
+
+            markSingleMessageSeen(
+              payload.new.id
+            );
+
+          }
+
+        }
+      )
+
+
+      /*
+       * MESSAGE UPDATE
+       * This is the important part
+       * for Seen.
+       */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          console.log(
+            "👀 REALTIME UPDATE:",
+            payload.new
+          );
+
+
+          /*
+           * When seen changes to true,
+           * immediately update the screen.
+           */
+
+          if (
+            payload.new.seen === true
+          ) {
+
+            updateMessageSeen(
+              payload.new.id
+            );
+
+          }
+
+        }
+      )
+
+
+      /*
+       * SUBSCRIBE
+       */
+
+      .subscribe(
+        function(status) {
+
+          console.log(
+            "Realtime status:",
+            status
+          );
+
+
+          if (
+            status === "SUBSCRIBED"
+          ) {
+
+            console.log(
+              "✅ Message realtime connected."
+            );
+
+          }
+
+        }
+      );
+
+}
+
+
+
+/* =========================================================
+   MARK ONE MESSAGE AS SEEN
+   ========================================================= */
+
+async function markSingleMessageSeen(
+  messageId
+) {
+
+  if (!messageId) return;
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .update({
+          seen: true
+        })
+        .eq(
+          "id",
+          messageId
+        )
+        .eq(
+          "seen",
+          false
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Mark single message seen error:",
+        error
+      );
+
+      return;
+
     }
 
 
-    return date.toLocaleTimeString(
-      [],
-      {
-        hour: "numeric",
-        minute: "2-digit"
-      }
+    console.log(
+      "👀 Message marked seen:",
+      messageId
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Mark single seen exception:",
+      error
     );
 
   }
-let seenCheckTimer = null;
+
+}
+
+
+
+/* =========================================================
+   BACKUP SEEN CHECKER
+   ========================================================= */
 
 function startSeenChecker() {
 
   if (seenCheckTimer) {
-    clearInterval(seenCheckTimer);
+
+    clearInterval(
+      seenCheckTimer
+    );
+
   }
 
-  seenCheckTimer = setInterval(
-    async function () {
 
-      if (
-        !currentMessageUser ||
-        !selectedMessageFriend
-      ) {
-        return;
-      }
+  seenCheckTimer =
+    setInterval(
+      async function() {
 
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .from("messages")
-            .select("id, seen")
-            .eq(
-              "sender_id",
-              selectedMessageFriend.id
-            )
-            .eq(
-              "receiver_id",
-              currentMessageUser.id
-            )
-            .eq(
-              "seen",
-              true
-            );
-
-        if (error) {
-
-          console.error(
-            "Seen check error:",
-            error
-          );
+        if (
+          !currentMessageUser ||
+          !selectedMessageFriend
+        ) {
 
           return;
 
         }
 
-        if (!data) return;
+
+        try {
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient
+              .from("messages")
+              .select("id, seen")
+              .eq(
+                "sender_id",
+                selectedMessageFriend.id
+              )
+              .eq(
+                "receiver_id",
+                currentMessageUser.id
+              )
+              .eq(
+                "seen",
+                true
+              );
 
 
-        data.forEach(
-          function (message) {
+          if (error) {
 
-            updateMessageSeen(
-              message.id
+            console.error(
+              "Seen check error:",
+              error
             );
 
+            return;
+
           }
-        );
 
-      } catch (error) {
 
-        console.error(
-          "Seen checker error:",
-          error
-        );
+          if (!data) return;
 
-      }
 
-    },
-    2000
+          data.forEach(
+            function(message) {
+
+              updateMessageSeen(
+                message.id
+              );
+
+            }
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Seen checker error:",
+            error
+          );
+
+        }
+
+      },
+      2000
+    );
+
+}
+
+
+
+/* =========================================================
+   FORMAT MESSAGE TIME
+   ========================================================= */
+
+function formatMessageTime(
+  timestamp
+) {
+
+  if (!timestamp) {
+    return "";
+  }
+
+
+  const date =
+    new Date(timestamp);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return "";
+
+  }
+
+
+  return date.toLocaleTimeString(
+    [],
+    {
+      hour: "numeric",
+      minute: "2-digit"
+    }
   );
 
 }
 
-  /* =====================================================
-     SCROLL
-     ===================================================== */
-
-  function scrollChatToBottom() {
-
-    const chat =
-      document.getElementById(
-        "chatMessages"
-      );
-
-    if (!chat) return;
 
 
-    requestAnimationFrame(() => {
+/* =========================================================
+   SCROLL CHAT
+   ========================================================= */
+
+function scrollChatToBottom() {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  requestAnimationFrame(
+    () => {
 
       chat.scrollTop =
         chat.scrollHeight;
 
-    });
+    }
+  );
 
-  }
+}
 
 
-  /* =====================================================
-     ESCAPE HTML
-     ===================================================== */
 
-  function escapeHtml(
-    value
-  ) {
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
 
-    const div =
-      document.createElement(
-        "div"
+function escapeHtml(
+  value
+) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.textContent =
+    String(
+      value ?? ""
+    );
+
+
+  return div.innerHTML;
+
+}
+
+
+
+/* =========================================================
+   PAGE START
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+
+    const searchInput =
+      document.getElementById(
+        "messageFriendSearch"
       );
 
 
-    div.textContent =
-      String(value ?? "");
+    const sendButton =
+      document.getElementById(
+        "sendMessageButton"
+      );
 
 
-    return div.innerHTML;
-
-  }
-
-
-  /* =====================================================
-     PAGE START
-     ===================================================== */
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-      const searchInput =
-        document.getElementById(
-          "messageFriendSearch"
-        );
+    const messageInput =
+      document.getElementById(
+        "messageInput"
+      );
 
 
-      const sendButton =
-        document.getElementById(
-          "sendMessageButton"
-        );
+    if (searchInput) {
 
-
-      const messageInput =
-        document.getElementById(
-          "messageInput"
-        );
-
-
-      if (searchInput) {
-
-        searchInput.addEventListener(
-          "input",
-          filterMessageFriends
-        );
-
-      }
-
-
-      if (sendButton) {
-
-        sendButton.addEventListener(
-          "click",
-          sendMessage
-        );
-
-      }
-
-
-      if (messageInput) {
-
-        messageInput.addEventListener(
-          "keydown",
-          event => {
-
-            if (
-              event.key === "Enter" &&
-              !event.shiftKey
-            ) {
-
-              event.preventDefault();
-
-              sendMessage();
-
-            }
-
-          }
-        );
-
-      }
-
-
-      setTimeout(
-        () => {
-
-          loadMessageFriends();
-
-        },
-        500
+      searchInput.addEventListener(
+        "input",
+        filterMessageFriends
       );
 
     }
-  );
+
+
+    if (sendButton) {
+
+      sendButton.addEventListener(
+        "click",
+        sendMessage
+      );
+
+    }
+
+
+    if (messageInput) {
+
+      messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter" &&
+            !event.shiftKey
+          ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+     * Get logged-in user first.
+     */
+
+    currentMessageUser =
+      await getMessageUser();
+
+
+    if (
+      currentMessageUser
+    ) {
+
+      /*
+       * Start realtime BEFORE
+       * loading the friends/chat.
+       */
+
+      startMessageRealtime();
+
+    }
+
+
+    /*
+     * Load friends.
+     */
+
+    await loadMessageFriends();
+
+
+  }
+);
+
 
 </script>
 
