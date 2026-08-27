@@ -173,15 +173,48 @@ async function refreshAccountUI() {
     loginButton.textContent =
       "Login";
 
-    if (navAvatar) {
+    ```javascript
+if (navAvatar) {
 
-      navAvatar.textContent =
-        "?";
+  /* Remove any previous background */
 
-      navAvatar.style.backgroundImage =
-        "none";
+  navAvatar.style.backgroundImage = "none";
 
-    }
+
+  /* =====================================================
+     SHOW PROFILE PHOTO
+     ===================================================== */
+
+  if (profile?.avatar_url) {
+
+    navAvatar.textContent = "";
+
+    navAvatar.style.backgroundImage =
+      `url("${escapeHTML(profile.avatar_url)}")`;
+
+    navAvatar.style.backgroundSize = "cover";
+    navAvatar.style.backgroundPosition = "center";
+    navAvatar.style.backgroundRepeat = "no-repeat";
+
+  }
+
+
+  /* =====================================================
+     NO PHOTO → SHOW INITIALS
+     ===================================================== */
+
+  else {
+
+    navAvatar.style.backgroundImage = "none";
+
+    navAvatar.textContent =
+      getInitials(displayName);
+
+  }
+
+}
+```
+
 
     if (accountMenu) {
 
@@ -2735,11 +2768,81 @@ async function loadProfile() {
       Avatars
     */
 
-    updateAvatarElement(
-      "myProfileAvatar",
-      profile?.avatar_url,
-      name
-    );
+    ```javascript
+updateAvatarElement(
+  "myProfileAvatar",
+  profile?.avatar_url,
+  name
+);
+```
+
+Actually, **leave that line exactly as it is**. Your problem is inside `updateAvatarElement()`.
+
+Find:
+
+```javascript
+function updateAvatarElement(
+  id,
+  avatarUrl,
+  name
+)
+```
+
+Replace the entire function with:
+
+```javascript
+function updateAvatarElement(
+  id,
+  avatarUrl,
+  name
+) {
+
+  const element =
+    document.getElementById(id);
+
+  if (!element) {
+    return;
+  }
+
+
+  /* Always clear previous background */
+
+  element.style.backgroundImage = "none";
+
+
+  /* =====================================================
+     PHOTO EXISTS
+     ===================================================== */
+
+  if (avatarUrl) {
+
+    element.textContent = "";
+
+    element.style.backgroundImage =
+      `url("${escapeHTML(avatarUrl)}")`;
+
+    element.style.backgroundSize = "cover";
+    element.style.backgroundPosition = "center";
+    element.style.backgroundRepeat = "no-repeat";
+
+  }
+
+
+  /* =====================================================
+     NO PHOTO → SHOW INITIALS
+     ===================================================== */
+
+  else {
+
+    element.textContent =
+      getInitials(name);
+
+    element.style.backgroundImage = "none";
+
+  }
+
+}
+```
 
 
     updateAvatarElement(
