@@ -1372,30 +1372,42 @@
 
 
       chat.innerHTML =
-        data.map(message => {
+  data.map(message => {
 
-          const mine =
-            message.sender_id === user.id;
+    const mine =
+      message.sender_id === user.id;
 
+    const messageTime =
+      new Date(message.created_at).toLocaleTimeString(
+        [],
+        {
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      );
 
-          return `
+    return `
 
-            <div
-              class="message-row ${mine ? "mine" : "theirs"}">
+      <div
+        class="message-row ${mine ? "mine" : "theirs"}">
 
-              <div class="message-bubble">
+        <div class="message-bubble">
 
-                ${escapeMessage(
-                  message.message
-                )}
+          <div class="message-text">
+            ${escapeMessage(message.message)}
+          </div>
 
-              </div>
+          <div class="message-time">
+            ${messageTime}
+          </div>
 
-            </div>
+        </div>
 
-          `;
+      </div>
 
-        }).join("");
+    `;
+
+  }).join("");
 
 
       chat.scrollTop =
