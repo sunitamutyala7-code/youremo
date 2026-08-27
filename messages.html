@@ -1378,6 +1378,67 @@
       message.sender_id === user.id;
 
     const messageTime =
+      new Date(
+        message.created_at
+      ).toLocaleTimeString(
+        [],
+        {
+          hour: "numeric",
+          minute: "2-digit"
+        }
+      );
+
+    let status = "";
+
+    if (mine) {
+
+      status =
+        message.seen
+          ? "✓✓ Seen"
+          : "✓ Sent";
+
+    }
+
+    return `
+
+      <div
+        class="message-row ${mine ? "mine" : "theirs"}">
+
+        <div class="message-bubble">
+
+          <div class="message-text">
+            ${escapeMessage(message.message)}
+          </div>
+
+          <div class="message-meta">
+
+            <span class="message-time">
+              ${messageTime}
+            </span>
+
+            ${
+              mine
+                ? `
+                  <span class="message-status">
+                    ${status}
+                  </span>
+                `
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+    const mine =
+      message.sender_id === user.id;
+
+    const messageTime =
       new Date(message.created_at).toLocaleTimeString(
         [],
         {
@@ -1422,108 +1483,55 @@
 
     async function sendMessage() {
 
-      if (!selectedMessageFriend) {
+  if (!selectedMessageFriend) return;
 
-        return;
+  const input = document.getElementById("messageInput");
 
-      }
+  if (!input) return;
 
+  const text = input.value.trim();
 
-      const input =
-        document.getElementById(
-          "messageInput"
-        );
+  if (!text) return;
 
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
 
-      if (!input) return;
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
 
+  input.disabled = true;
 
-      const text =
-        input.value.trim();
+  const { error } = await supabaseClient
+    .from("messages")
+    .insert({
+      sender_id: user.id,
+      receiver_id: selectedMessageFriend.id,
+      message: text,
+      seen: false
+    });
 
+  input.disabled = false;
 
-      if (!text) return;
+  if (error) {
 
+    console.error("Send message error:", error);
 
-      const {
-        data: {
-          user
-        }
-      } =
-        await supabaseClient.auth.getUser();
+    alert(error.message);
 
+    return;
+  }
 
-      if (!user) {
+  input.value = "";
 
-        alert(
-          "Please login first."
-        );
+  await loadConversation(
+    selectedMessageFriend.id
+  );
 
-        return;
-
-      }
-
-
-      input.disabled = true;
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("messages")
-          .insert({
-
-            sender_id:
-              user.id,
-
-            receiver_id:
-              selectedMessageFriend.id,
-
-            message:
-              text
-
-          });
-
-
-      input.disabled = false;
-
-
-      if (error) {
-
-        console.error(
-          "Send message error:",
-          error
-        );
-
-        alert(
-          error.message
-        );
-
-        return;
-
-      }
-
-
-      input.value = "";
-
-
-      /*
-       * Realtime in script.js will receive
-       * the new message.
-       *
-       * We also refresh immediately so the
-       * sender sees it without waiting.
-       */
-
-      await loadConversation(
-        selectedMessageFriend.id
-      );
-
-
-      input.focus();
-
-    }
+  input.focus();
+}
 
 
     /* =====================================================
@@ -1618,3 +1626,35 @@
 </body>
 
 </html>
+/* =========================================================
+   MESSAGE STATUS
+   ========================================================= */
+
+.message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.message-time {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.65;
+}
+
+.message-status {
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.message-row.mine .message-status {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-row.theirs .message-status {
+  color: #777d8a;
+}
