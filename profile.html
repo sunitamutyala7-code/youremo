@@ -26,13 +26,10 @@
       <a href="index.html">Home</a>
       <a href="friends.html">Friends</a>
       <a href="requests.html">Requests</a>
-      <a href="profile.html" class="active">Profile</a>
+      <a href="profile.html">Profile</a>
       <a href="myfriends.html">My Friends</a>
       <a href="about.html">About</a>
     </nav>
-
-
-    <!-- ACCOUNT BUTTON -->
 
     <div
       id="accountButton"
@@ -42,9 +39,7 @@
       <div
         id="navAvatar"
         class="nav-avatar">
-
         ?
-
       </div>
 
       <span id="loginButton">
@@ -52,9 +47,6 @@
       </span>
 
     </div>
-
-
-    <!-- ACCOUNT MENU -->
 
     <div
       id="accountMenu"
@@ -78,41 +70,28 @@
 
 
   <!-- =====================================================
-       MAIN
+       PROFILE
        ===================================================== -->
 
   <main>
 
     <section class="profile-section page-section">
 
+      <h1>
+        My Profile
+      </h1>
 
-      <!-- PAGE HEADER -->
-
-      <div class="page-header">
-
-        <span class="page-icon">
-          👤
-        </span>
-
-        <h1>
-          My Profile
-        </h1>
-
-        <p>
-          Manage your YouRemo profile.
-        </p>
-
-      </div>
+      <p class="section-text">
+        Manage your YouRemo profile.
+      </p>
 
 
-      <!-- =================================================
-           PROFILE CARD
-           ================================================= -->
+      <!-- PROFILE CARD -->
 
-      <div class="my-profile-card profile-page-card">
+      <div class="my-profile-card">
 
 
-        <!-- PROFILE AVATAR -->
+        <!-- PROFILE PHOTO -->
 
         <div
           class="profile-avatar-large"
@@ -135,8 +114,8 @@
             @username
           </p>
 
-          <p id="profileEmail">
-            Email
+          <p id="displayEmail">
+            Not available
           </p>
 
 
@@ -153,29 +132,6 @@
               <span>
                 Friends
               </span>
-
-            </div>
-
-          </div>
-
-
-          <!-- JOINED DATE -->
-
-          <div class="profile-detail">
-
-            <span>
-              📅
-            </span>
-
-            <div>
-
-              <small>
-                Joined
-              </small>
-
-              <p id="joinedDate">
-                —
-              </p>
 
             </div>
 
@@ -220,13 +176,13 @@
            ACCOUNT INFORMATION
            ================================================= -->
 
-      <div class="profile-information-card">
+      <div class="profile-details">
 
         <h2>
           Account Information
         </h2>
 
-        <div class="profile-info-row">
+        <div class="profile-detail-row">
 
           <span>
             Name
@@ -239,7 +195,7 @@
         </div>
 
 
-        <div class="profile-info-row">
+        <div class="profile-detail-row">
 
           <span>
             Username
@@ -252,161 +208,88 @@
         </div>
 
 
-        <div class="profile-info-row">
+        <div class="profile-detail-row">
 
           <span>
             Email
           </span>
 
-          <strong id="displayEmail">
+          <strong id="profileEmail">
             Not available
+          </strong>
+
+        </div>
+
+
+        <div class="profile-detail-row">
+
+          <span>
+            Joined
+          </span>
+
+          <strong id="joinedDate">
+            —
           </strong>
 
         </div>
 
       </div>
 
-
     </section>
 
+
+    <!-- =====================================================
+         EDIT PROFILE MODAL
+         ===================================================== -->
+
+    <div
+      id="editProfileModal"
+      class="auth-modal">
+
+      <div class="auth-box">
+
+        <button
+          class="close-auth"
+          onclick="closeEditProfile()">
+
+          ×
+
+        </button>
+
+        <h2>
+          Edit Profile
+        </h2>
+
+        <p>
+          Update your YouRemo profile information.
+        </p>
+
+
+        <input
+          type="text"
+          id="editProfileName"
+          placeholder="Full name">
+
+
+        <input
+          type="text"
+          id="editProfileUsername"
+          placeholder="Username">
+
+
+        <button
+          class="auth-submit"
+          onclick="saveEditProfile()">
+
+          Save Changes
+
+        </button>
+
+      </div>
+
+    </div>
+
   </main>
-
-
-  <!-- =====================================================
-       EDIT PROFILE MODAL
-       ===================================================== -->
-
-  <div
-    id="editProfileModal"
-    class="auth-modal">
-
-
-    <div class="auth-box">
-
-
-      <button
-        class="close-auth"
-        onclick="closeEditProfile()">
-
-        ×
-
-      </button>
-
-
-      <h2>
-        Edit Profile
-      </h2>
-
-
-      <p>
-        Update your YouRemo profile information.
-      </p>
-
-
-      <input
-        type="text"
-        id="editProfileName"
-        placeholder="Full name">
-
-
-      <input
-        type="text"
-        id="editProfileUsername"
-        placeholder="Username">
-
-
-      <button
-        class="auth-submit"
-        onclick="saveEditProfile()">
-
-        Save Changes
-
-      </button>
-
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       AUTH MODAL
-       ===================================================== -->
-
-  <div
-    id="authModal"
-    class="auth-modal">
-
-
-    <div class="auth-box">
-
-
-      <button
-        class="close-auth"
-        onclick="closeAuth()">
-
-        ×
-
-      </button>
-
-
-      <h2 id="authTitle">
-        Welcome to YouRemo
-      </h2>
-
-
-      <p id="authSubtitle">
-        Create your account
-      </p>
-
-
-      <input
-        type="text"
-        id="authName"
-        placeholder="Full name">
-
-
-      <input
-        type="text"
-        id="authUsername"
-        placeholder="Username">
-
-
-      <input
-        type="email"
-        id="authEmail"
-        placeholder="Email address">
-
-
-      <input
-        type="password"
-        id="authPassword"
-        placeholder="Password">
-
-
-      <button
-        class="auth-submit"
-        onclick="signUp()">
-
-        Create Account
-
-      </button>
-
-
-      <p class="auth-switch">
-
-        Already have an account?
-
-        <span onclick="showLogin()">
-          Login
-        </span>
-
-      </p>
-
-
-    </div>
-
-  </div>
 
 
   <!-- =====================================================
