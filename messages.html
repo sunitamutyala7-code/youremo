@@ -1028,20 +1028,109 @@ input.focus();
 
 
     /* =====================================================
-       START
-       ===================================================== */
+   REALTIME MESSAGES
+   ===================================================== */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
+let messageRealtimeChannel = null;
 
-        loadMessageFriends();
+function startMessageRealtime() {
 
-      }
-    );
+  if (messageRealtimeChannel) {
+    supabaseClient.removeChannel(messageRealtimeChannel);
+    messageRealtimeChannel = null;
+  }
 
-  </script>
+  messageRealtimeChannel =
+    supabaseClient
+      .channel("messages-realtime")
 
-</body>
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        },
 
-</html>
+        async (payload) => {
+
+          console.log(
+            "🔥 REALTIME MESSAGE RECEIVED:",
+            payload.new
+          );
+
+          const {
+            data: {
+              user
+            }
+          } =
+            await supabaseClient.auth.getUser();
+
+          if (!user) return;
+
+          const newMessage =
+            payload.new;
+
+          /*
+           * Only handle messages involving
+           * the logged-in user.
+           */
+
+          if (
+            newMessage.sender_id !== user.id &&
+            newMessage.receiver_id !== user.id
+          ) {
+            return;
+          }
+
+          /*
+           * If we are currently chatting with
+           * this person, reload the conversation.
+           */
+
+          if (
+            selectedMessageFriend &&
+            (
+              newMessage.sender_id ===
+                selectedMessageFriend.id ||
+
+              newMessage.receiver_id ===
+                selectedMessageFriend.id
+            )
+          ) {
+
+            await loadConversation(
+              selectedMessageFriend.id
+            );
+
+          }
+
+        }
+      )
+
+      .subscribe((status) => {
+
+        console.log(
+          "📡 Messages realtime status:",
+          status
+        );
+
+      });
+
+}
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+    await loadMessageFriends();
+
+    startMessageRealtime();
+
+  }
+);
