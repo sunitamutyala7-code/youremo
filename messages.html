@@ -1890,7 +1890,38 @@
     scrollChatToBottom();
 
   }
+function updateMessageSeen(messageId) {
 
+  const row = document.querySelector(
+    `[data-message-id="${messageId}"]`
+  );
+
+  if (!row) return;
+
+  const meta = row.querySelector(".message-meta");
+
+  if (!meta) return;
+
+  const existingSent =
+    meta.querySelector(".message-sent");
+
+  const existingSeen =
+    meta.querySelector(".message-seen");
+
+  if (existingSeen) return;
+
+  if (existingSent) {
+    existingSent.remove();
+  }
+
+  const seen = document.createElement("span");
+
+  seen.className = "message-seen";
+
+  seen.textContent = "✓✓ Seen";
+
+  meta.appendChild(seen);
+}
 
   /* =====================================================
      FORMAT TIME
