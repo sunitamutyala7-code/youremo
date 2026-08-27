@@ -839,56 +839,116 @@
 
 
       chat.innerHTML =
-        data.map(message => {
+  data.map(message => {
 
-          const mine =
-            message.sender_id === user.id;
+    const mine =
+      message.sender_id === user.id;
 
+    let seenText = "";
 
-          const messageTime =
-  message.created_at
-    ? new Date(
-        message.created_at
-      ).toLocaleTimeString(
-        "en-IN",
-        {
-          hour: "numeric",
-          minute: "2-digit"
-        }
-      )
-    : "";
+    if (mine) {
 
-return `
-
-  <div
-    class="message-row ${mine ? "mine" : "theirs"}"
-    data-message-id="${message.id}">
-
-    <div class="message-bubble">
-
-      ${escapeMessage(
-        message.message
-      )}
-
-      <div class="message-time">
-        ${messageTime}
-      </div>
-
-    </div>
-
-  </div>
-
-`;
-
-        }).join("");
-
-
-      chat.scrollTop =
-        chat.scrollHeight;
+      seenText =
+        message.seen
+          ? "✓✓ Seen"
+          : "✓ Sent";
 
     }
 
+    return `
 
+      <div
+        class="message-row ${mine ? "mine" : "theirs"}">
+
+        <div>
+
+          <div class="message-bubble">
+
+            ${escapeMessage(
+              message.message
+            )}
+
+          </div>
+
+          ${
+            mine
+              ? `
+                <div class="message-time">
+                  ${seenText}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+
+      chat.scrollTop =
+  chat.scrollHeight;
+
+
+/* Mark received messages as seen */
+
+await markMessagesAsSeen(
+  friendId,
+  user.id
+);
+
+}
+
+/* =====================================================
+   MARK MESSAGES AS SEEN
+   ===================================================== */
+
+async function markMessagesAsSeen(
+  friendId,
+  currentUserId
+) {
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("messages")
+      .update({
+        seen: true
+      })
+      .eq(
+        "sender_id",
+        friendId
+      )
+      .eq(
+        "receiver_id",
+        currentUserId
+      )
+      .eq(
+        "seen",
+        false
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Seen update error:",
+      error
+    );
+
+    return;
+
+  }
+
+  console.log(
+    "👀 Messages marked as seen"
+  );
+
+}
     /* =====================================================
        SEND MESSAGE
        ===================================================== */
@@ -1044,13 +1104,68 @@ function startMessageRealtime() {
     supabaseClient
       .channel("messages-realtime")
 
+    .on(
+  "postgres_changes",
+  {
+    event: "INSERT",
+    schema: "public",
+    table: "messages"
+  },
       .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages"
-        },
+  "postgres_changes",
+  {
+    event: "UPDATE",
+    schema: "public",
+    table: "messages"
+  },
+
+  async (payload) => {
+
+    console.log(
+      "👀 MESSAGE STATUS UPDATED:",
+      payload.new
+    );
+
+    const {
+      data: {
+        user
+      }
+    } =
+      await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const updatedMessage =
+      payload.new;
+
+
+    if (
+      updatedMessage.sender_id !== user.id &&
+      updatedMessage.receiver_id !== user.id
+    ) {
+      return;
+    }
+
+
+    if (
+      selectedMessageFriend &&
+      (
+        updatedMessage.sender_id ===
+          selectedMessageFriend.id ||
+
+        updatedMessage.receiver_id ===
+          selectedMessageFriend.id
+      )
+    ) {
+
+      await loadConversation(
+        selectedMessageFriend.id
+      );
+
+    }
+
+  }
+)
 
         async (payload) => {
 
