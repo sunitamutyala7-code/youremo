@@ -2566,3 +2566,22 @@ footer {
   }
 
 }
+/* =========================================================
+   MESSAGE TIME
+   ========================================================= */
+
+.message-time {
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.65;
+  text-align: right;
+}
+
+.message-row.mine .message-time {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.message-row.theirs .message-time {
+  color: #777d8a;
+}
