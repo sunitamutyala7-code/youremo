@@ -1,326 +1,800 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>YouRemo</title>
+  <title>YouRemo - Connect With Friends</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* =====================================================
+       YOUREMO HOME NAVIGATION
+       ICONS ONLY
+       ===================================================== */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      min-height: 72px;
+      padding: 0 28px;
+
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+
+      border-bottom: 1px solid #e8eaf0;
+    }
+
+    /* LOGO */
+
+    .logo {
+      flex-shrink: 0;
+
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+
+      background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      color: transparent;
+    }
+
+    /* NAVIGATION */
+
+    .main-nav {
+      flex: 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 6px;
+    }
+
+    /* ICON LINKS */
+
+    .main-nav a {
+      position: relative;
+
+      width: 44px;
+      height: 44px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-decoration: none;
+
+      border-radius: 12px;
+
+      color: #667085;
+      background: transparent;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    /* ICON */
+
+    .nav-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* HOVER */
+
+    .main-nav a:hover {
+      background: #eef2ff;
+      color: #4f46e5;
+
+      transform: translateY(-2px);
+    }
+
+    /* ACTIVE HOME */
+
+    .main-nav a.active {
+      background: #eef2ff;
+      color: #4f46e5;
+
+      box-shadow:
+        0 4px 14px rgba(79, 70, 229, 0.12);
+    }
+
+    /* TOOLTIP */
+
+    .main-nav a::after {
+      content: attr(title);
+
+      position: absolute;
+
+      top: calc(100% + 9px);
+      left: 50%;
+
+      transform: translateX(-50%) translateY(-4px);
+
+      padding: 6px 9px;
+
+      background: #20242d;
+      color: #ffffff;
+
+      border-radius: 7px;
+
+      font-size: 11px;
+      font-weight: 600;
+
+      white-space: nowrap;
+
+      opacity: 0;
+      visibility: hidden;
+
+      pointer-events: none;
+
+      transition: 0.2s ease;
+    }
+
+    .main-nav a:hover::after {
+      opacity: 1;
+      visibility: visible;
+
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* =====================================================
+       ACCOUNT
+       ===================================================== */
+
+    .account-button {
+      flex-shrink: 0;
+
+      min-height: 44px;
+
+      padding: 5px 12px 5px 6px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 9px;
+
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+
+      background: #ffffff;
+
+      color: #30343b;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .account-button:hover {
+      border-color: #c7c9f7;
+
+      box-shadow:
+        0 5px 18px rgba(50, 50, 93, 0.08);
+    }
+
+    .nav-avatar {
+      width: 34px;
+      height: 34px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      border-radius: 50%;
+
+      background: linear-gradient(
+        135deg,
+        #6366f1,
+        #8b5cf6
+      );
+
+      color: #ffffff;
+
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .nav-avatar img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+
+    /* ACCOUNT MENU */
+
+    .account-menu {
+      position: absolute;
+
+      right: 28px;
+      top: 65px;
+
+      width: 190px;
+
+      padding: 7px;
+
+      background: #ffffff;
+
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px rgba(20, 25, 45, 0.14);
+    }
+
+    .account-menu button {
+      width: 100%;
+
+      padding: 11px 12px;
+
+      border: 0;
+      border-radius: 9px;
+
+      background: transparent;
+
+      text-align: left;
+
+      color: #353942;
+
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .account-menu button:hover {
+      background: #f3f4ff;
+      color: #4f46e5;
+    }
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
+
+    @media (max-width: 800px) {
+
+      .navbar {
+        gap: 8px;
+        padding: 0 12px;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .main-nav {
+        gap: 2px;
+      }
+
+      .main-nav a {
+        width: 38px;
+        height: 38px;
+      }
+
+      .nav-icon {
+        font-size: 18px;
+      }
+
+      #loginButton {
+        display: none;
+      }
+
+      .account-button {
+        padding-right: 6px;
+      }
+
+      .account-menu {
+        right: 12px;
+      }
+    }
+
+    @media (max-width: 560px) {
+
+      .navbar {
+        min-height: 62px;
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .main-nav {
+        gap: 0;
+      }
+
+      .main-nav a {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-icon {
+        font-size: 17px;
+      }
+
+      .account-button {
+        min-height: 38px;
+      }
+
+      .nav-avatar {
+        width: 30px;
+        height: 30px;
+      }
+
+      .main-nav a::after {
+        display: none;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
   <header class="navbar">
 
-    <div class="logo">
-      YouRemo
-    </div>
+```
+<!-- LOGO -->
 
-    <!-- ICON ONLY NAVIGATION -->
-    <nav class="main-nav">
+<div class="logo">
+  YouRemo
+</div>
 
-      <a href="index.html" class="nav-link active" title="Home">
-        <span class="nav-icon">⌂</span>
-      </a>
 
-      <a href="friends.html" class="nav-link" title="Find Friends">
-        <span class="nav-icon">👥</span>
-      </a>
+<!-- ICON-ONLY NAVIGATION -->
 
-      <a href="requests.html" class="nav-link" title="Friend Requests">
-        <span class="nav-icon">🤝</span>
-      </a>
+<nav class="main-nav">
 
-      <a href="myfriends.html" class="nav-link" title="My Friends">
-        <span class="nav-icon">🧑‍🤝‍🧑</span>
-      </a>
+  <a
+    href="index.html"
+    title="Home"
+    class="nav-link active"
+  >
+    <span class="nav-icon">⌂</span>
+  </a>
 
-      <a href="messages.html" class="nav-link" title="Messages">
-        <span class="nav-icon">💬</span>
-      </a>
 
-      <a href="notifications.html" class="nav-link" title="Notifications">
-        <span class="nav-icon">🔔</span>
-      </a>
+  <a
+    href="friends.html"
+    title="Friends"
+    class="nav-link"
+  >
+    <span class="nav-icon">👥</span>
+  </a>
 
-      <a href="profile.html" class="nav-link" title="Profile">
-        <span class="nav-icon">👤</span>
-      </a>
 
-      <a href="settings.html" class="nav-link" title="Settings">
-        <span class="nav-icon">⚙️</span>
-      </a>
+  <a
+    href="requests.html"
+    title="Friend Requests"
+    class="nav-link"
+  >
+    <span class="nav-icon">🤝</span>
+  </a>
 
-      <a href="about.html" class="nav-link" title="About">
-        <span class="nav-icon">ⓘ</span>
-      </a>
 
-    </nav>
+  <a
+    href="myfriends.html"
+    title="My Friends"
+    class="nav-link"
+  >
+    <span class="nav-icon">🧑‍🤝‍🧑</span>
+  </a>
 
-    <!-- ACCOUNT -->
-    <div
-      id="accountButton"
-      class="account-button"
-      onclick="handleAccountClick()">
 
-      <div
-        id="navAvatar"
-        class="nav-avatar">
-        ?
-      </div>
+  <a
+    href="messages.html"
+    title="Messages"
+    class="nav-link"
+  >
+    <span class="nav-icon">💬</span>
+  </a>
 
-      <span id="loginButton">
-        Login
-      </span>
 
-    </div>
+  <a
+    href="notifications.html"
+    title="Notifications"
+    class="nav-link"
+  >
+    <span class="nav-icon">🔔</span>
+  </a>
 
-    <!-- ACCOUNT MENU -->
-    <div
-      id="accountMenu"
-      class="account-menu">
 
-      <button onclick="goToMyProfile()">
-        My Profile
-      </button>
+  <a
+    href="profile.html"
+    title="Profile"
+    class="nav-link"
+  >
+    <span class="nav-icon">👤</span>
+  </a>
 
-      <button onclick="openEditProfile()">
-        Edit Profile
-      </button>
 
-      <button onclick="logout()">
-        Logout
-      </button>
+  <a
+    href="settings.html"
+    title="Settings"
+    class="nav-link"
+  >
+    <span class="nav-icon">⚙️</span>
+  </a>
 
-    </div>
+
+  <a
+    href="about.html"
+    title="About"
+    class="nav-link"
+  >
+    <span class="nav-icon">ⓘ</span>
+  </a>
+
+</nav>
+
+
+<!-- ACCOUNT BUTTON -->
+
+<div
+  id="accountButton"
+  class="account-button"
+  onclick="handleAccountClick()"
+>
+
+  <div
+    id="navAvatar"
+    class="nav-avatar"
+  >
+    ?
+  </div>
+
+  <span id="loginButton">
+    Login
+  </span>
+
+</div>
+
+
+<!-- ACCOUNT MENU -->
+
+<div
+  id="accountMenu"
+  class="account-menu"
+  style="display: none;"
+>
+
+  <button onclick="goToMyProfile()">
+    My Profile
+  </button>
+
+  <button onclick="openEditProfile()">
+    Edit Profile
+  </button>
+
+  <button onclick="logout()">
+    Logout
+  </button>
+
+</div>
+```
 
   </header>
 
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
 
-  <!-- MAIN -->
   <main>
 
-    <!-- HERO -->
-    <section class="hero" id="home">
+```
+<!-- HERO -->
 
-      <div class="hero-content">
+<section
+  class="hero"
+  id="home"
+>
 
-        <h1>
-          Connect with the people<br>
-          who matter most.
-        </h1>
+  <div class="hero-content">
 
-        <p>
-          Find your friends, stay connected and build
-          meaningful connections with YouRemo.
-        </p>
+    <h1>
+      Connect with the people<br>
+      who matter most.
+    </h1>
 
-        <div class="hero-buttons">
-
-          <button
-            class="primary-btn"
-            onclick="window.location.href='friends.html'">
-            Find Friends
-          </button>
-
-          <button
-            class="secondary-btn"
-            onclick="window.location.href='about.html'">
-            Learn More
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- HERO CARD -->
-      <div class="hero-card">
-
-        <div class="card-icon">
-          👥
-        </div>
-
-        <h2>
-          Your people. Your connections.
-        </h2>
-
-        <p>
-          Discover friends and connect with them easily.
-        </p>
-
-      </div>
-
-    </section>
+    <p>
+      Find your friends, stay connected and build
+      meaningful connections with YouRemo.
+    </p>
 
 
-    <!-- QUICK ACCESS -->
-    <section class="home-links">
+    <div class="hero-buttons">
 
-      <h2>
-        YouRemo
-      </h2>
-
-      <p class="section-text">
-        Everything you need to manage your connections.
-      </p>
-
-      <div class="features">
-
-        <!-- FIND FRIENDS -->
-        <div
-          class="feature"
-          onclick="window.location.href='friends.html'">
-
-          <span>🔎</span>
-
-          <h3>
-            Find Friends
-          </h3>
-
-          <p>
-            Search for people and connect with them.
-          </p>
-
-        </div>
+      <button
+        class="primary-btn"
+        onclick="window.location.href='friends.html'"
+      >
+        Find Friends
+      </button>
 
 
-        <!-- REQUESTS -->
-        <div
-          class="feature"
-          onclick="window.location.href='requests.html'">
-
-          <span>🤝</span>
-
-          <h3>
-            Friend Requests
-          </h3>
-
-          <p>
-            See and respond to your incoming requests.
-          </p>
-
-        </div>
-
-
-        <!-- PROFILE -->
-        <div
-          class="feature"
-          onclick="window.location.href='profile.html'">
-
-          <span>👤</span>
-
-          <h3>
-            My Profile
-          </h3>
-
-          <p>
-            View and manage your YouRemo profile.
-          </p>
-
-        </div>
-
-
-        <!-- MY FRIENDS -->
-        <div
-          class="feature"
-          onclick="window.location.href='myfriends.html'">
-
-          <span>👥</span>
-
-          <h3>
-            My Friends
-          </h3>
-
-          <p>
-            See everyone you're connected with.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- LOGIN / SIGNUP MODAL -->
-    <div
-      id="authModal"
-      class="auth-modal">
-
-      <div class="auth-box">
-
-        <button
-          type="button"
-          class="close-auth"
-          onclick="closeAuth()">
-          ×
-        </button>
-
-        <h2 id="authTitle">
-          Welcome to YouRemo
-        </h2>
-
-        <p id="authSubtitle">
-          Create your account
-        </p>
-
-        <input
-          type="text"
-          id="authName"
-          placeholder="Full name">
-
-        <input
-          type="text"
-          id="authUsername"
-          placeholder="Username">
-
-        <input
-          type="email"
-          id="authEmail"
-          placeholder="Email address">
-
-        <input
-          type="password"
-          id="authPassword"
-          placeholder="Password">
-
-        <button
-          type="button"
-          class="auth-submit"
-          onclick="signUp()">
-          Create Account
-        </button>
-
-        <p class="auth-switch">
-          Already have an account?
-          <span onclick="showLogin()">
-            Login
-          </span>
-        </p>
-
-      </div>
+      <button
+        class="secondary-btn"
+        onclick="window.location.href='about.html'"
+      >
+        Learn More
+      </button>
 
     </div>
 
-  </main>
+  </div>
 
 
-  <!-- FOOTER -->
-  <footer>
+  <!-- HERO CARD -->
+
+  <div class="hero-card">
+
+    <div class="card-icon">
+      👥
+    </div>
+
+    <h2>
+      Your people. Your connections.
+    </h2>
 
     <p>
-      © 2026 YouRemo. All rights reserved.
+      Discover friends and connect with them easily.
     </p>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUICK ACCESS
+     ===================================================== -->
+
+<section class="home-links">
+
+  <h2>
+    YouRemo
+  </h2>
+
+  <p class="section-text">
+    Everything you need to manage your connections.
+  </p>
+
+
+  <div class="features">
+
+
+    <!-- FIND FRIENDS -->
+
+    <div
+      class="feature"
+      onclick="window.location.href='friends.html'"
+    >
+
+      <span>
+        🔎
+      </span>
+
+      <h3>
+        Find Friends
+      </h3>
+
+      <p>
+        Search for people and connect with them.
+      </p>
+
+    </div>
+
+
+    <!-- REQUESTS -->
+
+    <div
+      class="feature"
+      onclick="window.location.href='requests.html'"
+    >
+
+      <span>
+        🤝
+      </span>
+
+      <h3>
+        Friend Requests
+      </h3>
+
+      <p>
+        See and respond to your incoming requests.
+      </p>
+
+    </div>
+
+
+    <!-- PROFILE -->
+
+    <div
+      class="feature"
+      onclick="window.location.href='profile.html'"
+    >
+
+      <span>
+        👤
+      </span>
+
+      <h3>
+        My Profile
+      </h3>
+
+      <p>
+        View and manage your YouRemo profile.
+      </p>
+
+    </div>
+
+
+    <!-- MY FRIENDS -->
+
+    <div
+      class="feature"
+      onclick="window.location.href='myfriends.html'"
+    >
+
+      <span>
+        👥
+      </span>
+
+      <h3>
+        My Friends
+      </h3>
+
+      <p>
+        See everyone you're connected with.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     LOGIN / SIGNUP MODAL
+     ===================================================== -->
+
+<div
+  id="authModal"
+  class="auth-modal"
+>
+
+  <div class="auth-box">
+
+
+    <button
+      type="button"
+      class="close-auth"
+      onclick="closeAuth()"
+    >
+      ×
+    </button>
+
+
+    <h2 id="authTitle">
+      Welcome to YouRemo
+    </h2>
+
+
+    <p id="authSubtitle">
+      Create your account
+    </p>
+
+
+    <input
+      type="text"
+      id="authName"
+      placeholder="Full name"
+    >
+
+
+    <input
+      type="text"
+      id="authUsername"
+      placeholder="Username"
+    >
+
+
+    <input
+      type="email"
+      id="authEmail"
+      placeholder="Email address"
+    >
+
+
+    <input
+      type="password"
+      id="authPassword"
+      placeholder="Password"
+    >
+
+
+    <button
+      type="button"
+      class="auth-submit"
+      onclick="signUp()"
+    >
+      Create Account
+    </button>
+
+
+    <p class="auth-switch">
+
+      Already have an account?
+
+      <span onclick="showLogin()">
+        Login
+      </span>
+
+    </p>
+
+  </div>
+
+</div>
+```
+
+  </main>
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer>
+
+```
+<p>
+  © 2026 YouRemo. All rights reserved.
+</p>
+```
 
   </footer>
 
+  <!-- =====================================================
+       SUPABASE
+       ===================================================== -->
 
-  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- YOUREMO SCRIPT -->
+  <!-- =====================================================
+       YOUREMO JAVASCRIPT
+       ===================================================== -->
+
   <script src="script.js"></script>
 
 </body>
