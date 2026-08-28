@@ -11,10 +11,8 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-
     /* =====================================================
-       YOUREMO HOME PAGE
-       MOBILE OPTIMIZED VERSION
+       MOBILE OPTIMIZATION FOR YOUREMO HOME PAGE
        ===================================================== */
 
     * {
@@ -22,708 +20,444 @@
     }
 
     html {
-      scroll-behavior: smooth;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     body {
+      width: 100%;
       margin: 0;
       overflow-x: hidden;
     }
 
-
     /* =====================================================
-       NAVIGATION
+       NAVBAR
        ===================================================== */
 
     .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-
       width: 100%;
-      min-height: 72px;
-
+      min-height: 70px;
       display: flex;
       align-items: center;
-
       gap: 18px;
-
-      padding: 0 28px;
-
-      background: rgba(255, 255, 255, 0.95);
-
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-
-      border-bottom: 1px solid #e8eaf0;
+      padding: 10px 22px;
+      position: relative;
+      z-index: 100;
     }
-
-
-    /* LOGO */
 
     .logo {
       flex-shrink: 0;
-
-      font-size: 25px;
-      font-weight: 800;
-
-      letter-spacing: -0.6px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #4f46e5,
-          #7c3aed
-        );
-
-      -webkit-background-clip: text;
-      background-clip: text;
-
-      color: transparent;
     }
-
-
-    /* =====================================================
-       MAIN NAVIGATION
-       ===================================================== */
 
     .main-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
       flex: 1;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      gap: 6px;
-
-      min-width: 0;
     }
 
-
-    /* ICON LINK */
-
-    .main-nav a {
-      position: relative;
-
-      width: 44px;
-      height: 44px;
-
-      flex-shrink: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
+    .nav-link {
       text-decoration: none;
-
-      border-radius: 12px;
-
-      color: #667085;
-
-      background: transparent;
-
-      transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      min-height: 42px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      transition: 0.2s ease;
     }
-
-
-    /* ICON */
 
     .nav-icon {
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
       font-size: 20px;
-
       line-height: 1;
     }
 
-
-    /* HOVER */
-
-    .main-nav a:hover {
-      background: #eef2ff;
-
-      color: #4f46e5;
-
-      transform: translateY(-2px);
+    .nav-label {
+      display: none;
     }
-
-
-    /* ACTIVE */
-
-    .main-nav a.active {
-      background: #eef2ff;
-
-      color: #4f46e5;
-
-      box-shadow:
-        0 4px 14px rgba(79, 70, 229, 0.12);
-    }
-
-
-    /* =====================================================
-       TOOLTIP
-       ===================================================== */
-
-    .main-nav a::after {
-      content: attr(title);
-
-      position: absolute;
-
-      top: calc(100% + 9px);
-
-      left: 50%;
-
-      transform:
-        translateX(-50%)
-        translateY(-4px);
-
-      padding: 6px 9px;
-
-      border-radius: 7px;
-
-      background: #20242d;
-
-      color: white;
-
-      font-size: 11px;
-
-      font-weight: 600;
-
-      white-space: nowrap;
-
-      opacity: 0;
-
-      visibility: hidden;
-
-      pointer-events: none;
-
-      transition: 0.2s ease;
-
-      z-index: 2000;
-    }
-
-
-    .main-nav a:hover::after {
-      opacity: 1;
-
-      visibility: visible;
-
-      transform:
-        translateX(-50%)
-        translateY(0);
-    }
-
-
-    /* =====================================================
-       ACCOUNT
-       ===================================================== */
 
     .account-button {
-      position: relative;
-
       flex-shrink: 0;
-
-      min-height: 44px;
-
-      padding: 5px 12px 5px 6px;
-
       display: flex;
-
       align-items: center;
-
-      gap: 9px;
-
-      border: 1px solid #e5e7eb;
-
-      border-radius: 12px;
-
-      background: #ffffff;
-
-      color: #30343b;
-
-      font-weight: 700;
-
-      cursor: pointer;
-
-      transition: 0.2s ease;
+      gap: 7px;
     }
-
-
-    .account-button:hover {
-      border-color: #c7c9f7;
-
-      box-shadow:
-        0 5px 18px rgba(50, 50, 93, 0.08);
-    }
-
-
-    /* AVATAR */
 
     .nav-avatar {
-      width: 34px;
-      height: 34px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      overflow: hidden;
-
-      border-radius: 50%;
-
-      background:
-        linear-gradient(
-          135deg,
-          #6366f1,
-          #8b5cf6
-        );
-
-      color: white;
-
-      font-size: 15px;
-
-      font-weight: 800;
+      flex-shrink: 0;
     }
-
-
-    .nav-avatar img {
-      width: 100%;
-      height: 100%;
-
-      object-fit: cover;
-
-      display: block;
-    }
-
 
     /* =====================================================
-       ACCOUNT MENU
-       ===================================================== */
-
-    .account-menu {
-      position: absolute;
-
-      right: 28px;
-
-      top: 65px;
-
-      width: 190px;
-
-      padding: 7px;
-
-      background: #ffffff;
-
-      border: 1px solid #e5e7eb;
-
-      border-radius: 14px;
-
-      box-shadow:
-        0 15px 40px rgba(20, 25, 45, 0.14);
-
-      z-index: 1500;
-    }
-
-
-    .account-menu button {
-      width: 100%;
-
-      padding: 11px 12px;
-
-      border: 0;
-
-      border-radius: 9px;
-
-      background: transparent;
-
-      color: #353942;
-
-      text-align: left;
-
-      font-weight: 600;
-
-      cursor: pointer;
-    }
-
-
-    .account-menu button:hover {
-      background: #f3f4ff;
-
-      color: #4f46e5;
-    }
-
-
-    /* =====================================================
-       HERO MOBILE SAFETY
+       HERO
        ===================================================== */
 
     .hero {
-      width: 100%;
-
-      overflow: hidden;
+      width: min(1180px, calc(100% - 40px));
+      margin: 30px auto 0;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
     }
 
-
     .hero-content {
+      flex: 1;
       min-width: 0;
     }
 
-
     .hero-content h1 {
-      word-wrap: break-word;
+      margin-top: 0;
     }
-
 
     .hero-content p {
       max-width: 650px;
     }
 
-
     .hero-buttons {
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 12px;
     }
 
+    .hero-card {
+      flex-shrink: 0;
+      width: 360px;
+    }
 
     /* =====================================================
-       QUICK ACCESS
+       FEATURES
        ===================================================== */
 
     .home-links {
-      width: 100%;
-
-      overflow: hidden;
+      width: min(1180px, calc(100% - 40px));
+      margin: 70px auto;
     }
-
 
     .features {
       display: grid;
-
-      grid-template-columns:
-        repeat(
-          4,
-          minmax(0, 1fr)
-        );
-
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
     }
 
-
     .feature {
-      min-width: 0;
-
       cursor: pointer;
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
     }
-
-
-    .feature:hover {
-      transform: translateY(-3px);
-    }
-
 
     /* =====================================================
-       MOBILE
+       AUTH MODAL
+       ===================================================== */
+
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .auth-box {
+      width: min(430px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    /* =====================================================
+       TABLET
        ===================================================== */
 
     @media (max-width: 900px) {
 
       .navbar {
-        gap: 10px;
-
-        padding:
-          0 14px;
+        padding: 9px 15px;
+        gap: 8px;
       }
-
-
-      .logo {
-        font-size: 21px;
-      }
-
-
-      .main-nav {
-        gap: 2px;
-      }
-
-
-      .main-nav a {
-        width: 40px;
-
-        height: 40px;
-      }
-
-
-      .nav-icon {
-        font-size: 18px;
-      }
-
-
-      #loginButton {
-        display: none;
-      }
-
-
-      .account-button {
-        padding:
-          4px 5px;
-      }
-
-
-      .account-menu {
-        right: 14px;
-      }
-
-
-      .features {
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0, 1fr)
-          );
-      }
-
-    }
-
-
-    /* =====================================================
-       SMALL TABLET / LARGE PHONE
-       ===================================================== */
-
-    @media (max-width: 700px) {
-
-      .navbar {
-        min-height: 64px;
-
-        padding:
-          0 10px;
-
-        gap: 5px;
-      }
-
-
-      .logo {
-        font-size: 20px;
-      }
-
 
       .main-nav {
         gap: 1px;
       }
 
-
-      .main-nav a {
-        width: 37px;
-
-        height: 37px;
-
-        border-radius: 10px;
-      }
-
-
-      .nav-icon {
-        font-size: 17px;
-      }
-
-
-      .account-button {
+      .nav-link {
+        min-width: 38px;
         min-height: 38px;
-
-        border-radius: 10px;
+        padding: 7px;
       }
-
-
-      .nav-avatar {
-        width: 29px;
-
-        height: 29px;
-
-        font-size: 13px;
-      }
-
-
-      .hero {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-
-      .hero-buttons {
-        flex-direction: column;
-
-        width: 100%;
-      }
-
-
-      .hero-buttons button {
-        width: 100%;
-      }
-
-
-      .home-links {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-
-      .features {
-        grid-template-columns: 1fr;
-
-        gap: 14px;
-      }
-
-    }
-
-
-    /* =====================================================
-       MOBILE PHONE
-       ===================================================== */
-
-    @media (max-width: 520px) {
-
-      .navbar {
-        min-height: 60px;
-
-        padding:
-          0 7px;
-
-        gap: 3px;
-      }
-
-
-      .logo {
-        font-size: 18px;
-
-        letter-spacing: -0.4px;
-      }
-
-
-      .main-nav {
-        gap: 0;
-
-        justify-content: flex-end;
-      }
-
-
-      .main-nav a {
-        width: 33px;
-
-        height: 36px;
-
-        border-radius: 9px;
-      }
-
 
       .nav-icon {
-        font-size: 16px;
+        font-size: 18px;
       }
-
-
-      /* Hide tooltip on touch devices */
-
-      .main-nav a::after {
-        display: none;
-      }
-
-
-      .account-button {
-        min-height: 36px;
-
-        border-radius: 9px;
-
-        border-color: #e5e7eb;
-      }
-
-
-      .nav-avatar {
-        width: 27px;
-
-        height: 27px;
-
-        font-size: 12px;
-      }
-
-
-      .account-menu {
-        top: 56px;
-
-        right: 7px;
-
-        width: 175px;
-      }
-
-
-      /* HERO */
 
       .hero {
-        padding-top: 35px;
-
-        padding-bottom: 35px;
+        width: min(100% - 30px, 700px);
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        min-height: auto;
+        padding: 50px 0;
       }
-
-
-      .hero-content h1 {
-        font-size:
-          clamp(
-            30px,
-            9vw,
-            40px
-          );
-
-        line-height: 1.08;
-
-        letter-spacing: -1px;
-      }
-
-
-      .hero-content p {
-        font-size: 14px;
-
-        line-height: 1.6;
-      }
-
-
-      /* HERO CARD */
 
       .hero-card {
         width: 100%;
-
-        max-width: 100%;
-
-        margin-top: 25px;
       }
 
+      .home-links {
+        width: min(100% - 30px, 700px);
+      }
 
-      /* QUICK ACCESS */
+      .features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
+
+    @media (max-width: 600px) {
+
+      body {
+        width: 100%;
+        min-width: 0;
+      }
+
+      /* ---------- MOBILE NAV ---------- */
+
+      .navbar {
+        min-height: 62px;
+        width: 100%;
+        padding: 7px 9px;
+        gap: 4px;
+        justify-content: space-between;
+      }
+
+      .logo {
+        font-size: 19px;
+        letter-spacing: -0.4px;
+      }
+
+      .main-nav {
+        flex: 1;
+        width: auto;
+        gap: 0;
+        justify-content: center;
+      }
+
+      .nav-link {
+        min-width: 34px;
+        width: 34px;
+        height: 40px;
+        min-height: 40px;
+        padding: 5px;
+        border-radius: 9px;
+      }
+
+      .nav-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .nav-label {
+        display: none !important;
+      }
+
+      .account-button {
+        min-height: 40px;
+        padding: 3px 6px 3px 3px;
+        gap: 0;
+      }
+
+      .nav-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+
+      #loginButton {
+        display: none;
+      }
+
+      /* ---------- ACCOUNT MENU ---------- */
+
+      .account-menu {
+        right: 5px;
+        top: calc(100% + 7px);
+        width: 180px;
+      }
+
+      /* ---------- HERO ---------- */
+
+      .hero {
+        width: calc(100% - 24px);
+        margin: 15px auto 0;
+        padding: 34px 0 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 25px;
+      }
+
+      .hero-content {
+        width: 100%;
+        text-align: center;
+      }
+
+      .hero-content h1 {
+        font-size: clamp(31px, 9vw, 42px);
+        line-height: 1.08;
+        letter-spacing: -1px;
+        margin-bottom: 15px;
+      }
+
+      .hero-content h1 br {
+        display: none;
+      }
+
+      .hero-content p {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      /* ---------- HERO BUTTONS ---------- */
+
+      .hero-buttons {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .hero-buttons button {
+        width: 100%;
+        min-height: 48px;
+      }
+
+      /* ---------- HERO CARD ---------- */
+
+      .hero-card {
+        width: 100%;
+        padding: 25px 20px;
+        text-align: center;
+        border-radius: 18px;
+      }
+
+      .card-icon {
+        font-size: 38px;
+      }
+
+      .hero-card h2 {
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .hero-card p {
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      /* ---------- QUICK ACCESS ---------- */
+
+      .home-links {
+        width: calc(100% - 24px);
+        margin: 30px auto 45px;
+        text-align: center;
+      }
 
       .home-links h2 {
-        font-size: 24px;
+        font-size: 25px;
       }
-
 
       .section-text {
         font-size: 13px;
+        line-height: 1.5;
       }
 
+      /* ---------- FEATURE CARDS ---------- */
+
+      .features {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 22px;
+      }
 
       .feature {
-        padding: 20px;
+        width: 100%;
+        min-height: 145px;
+        padding: 22px 18px;
+        border-radius: 16px;
+        text-align: center;
       }
 
-    }
+      .feature span {
+        display: block;
+        font-size: 30px;
+        margin-bottom: 8px;
+      }
 
+      .feature h3 {
+        font-size: 16px;
+        margin: 5px 0 6px;
+      }
+
+      .feature p {
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* ---------- AUTH MODAL ---------- */
+
+      .auth-modal {
+        padding: 12px;
+      }
+
+      .auth-box {
+        width: 100%;
+        max-width: 390px;
+        padding: 24px 18px;
+        border-radius: 18px;
+      }
+
+      .auth-box h2 {
+        font-size: 21px;
+      }
+
+      .auth-box input {
+        width: 100%;
+        min-height: 46px;
+        font-size: 14px;
+      }
+
+      .auth-submit {
+        width: 100%;
+        min-height: 46px;
+      }
+
+      /* ---------- FOOTER ---------- */
+
+      footer {
+        text-align: center;
+        padding: 20px 12px;
+      }
+
+      footer p {
+        font-size: 11px;
+        line-height: 1.5;
+      }
+    }
 
     /* =====================================================
        VERY SMALL PHONES
@@ -731,36 +465,42 @@
 
     @media (max-width: 380px) {
 
+      .navbar {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+
       .logo {
+        font-size: 17px;
+      }
+
+      .nav-link {
+        width: 30px;
+        min-width: 30px;
+        padding: 3px;
+      }
+
+      .nav-icon {
         font-size: 16px;
       }
 
-
-      .main-nav a {
-        width: 30px;
-
-        height: 34px;
+      .nav-avatar {
+        width: 29px;
+        height: 29px;
       }
 
-
-      .nav-icon {
-        font-size: 15px;
+      .hero {
+        width: calc(100% - 18px);
       }
-
-
-      .navbar {
-        padding:
-          0 5px;
-      }
-
 
       .hero-content h1 {
-        font-size: 29px;
+        font-size: 30px;
       }
 
+      .home-links {
+        width: calc(100% - 18px);
+      }
     }
-
-
   </style>
 
 </head>
@@ -774,137 +514,71 @@
   <header class="navbar">
 
 ```
-<!-- LOGO -->
-
 <div class="logo">
   YouRemo
 </div>
 
-
-<!-- ICON ONLY NAVIGATION -->
-
 <nav class="main-nav">
 
-
-  <!-- HOME -->
-
-  <a
-    href="index.html"
-    title="Home"
-    class="nav-link active"
-  >
+  <a href="index.html" title="Home" class="nav-link active">
     <span class="nav-icon">⌂</span>
+    <span class="nav-label">Home</span>
   </a>
 
-
-  <!-- FIND FRIENDS -->
-
-  <a
-    href="friends.html"
-    title="Friends"
-    class="nav-link"
-  >
+  <a href="friends.html" title="Friends" class="nav-link">
     <span class="nav-icon">👥</span>
+    <span class="nav-label">Friends</span>
   </a>
 
-
-  <!-- REQUESTS -->
-
-  <a
-    href="requests.html"
-    title="Friend Requests"
-    class="nav-link"
-  >
+  <a href="requests.html" title="Requests" class="nav-link">
     <span class="nav-icon">🤝</span>
+    <span class="nav-label">Requests</span>
   </a>
 
-
-  <!-- MY FRIENDS -->
-
-  <a
-    href="myfriends.html"
-    title="My Friends"
-    class="nav-link"
-  >
+  <a href="myfriends.html" title="My Friends" class="nav-link">
     <span class="nav-icon">🧑‍🤝‍🧑</span>
+    <span class="nav-label">My Friends</span>
   </a>
 
-
-  <!-- MESSAGES -->
-
-  <a
-    href="messages.html"
-    title="Messages"
-    class="nav-link"
-  >
+  <a href="messages.html" title="Messages" class="nav-link">
     <span class="nav-icon">💬</span>
+    <span class="nav-label">Messages</span>
   </a>
 
-
-  <!-- NOTIFICATIONS -->
-
-  <a
-    href="notifications.html"
-    title="Notifications"
-    class="nav-link"
-  >
+  <a href="notifications.html" title="Notifications" class="nav-link">
     <span class="nav-icon">🔔</span>
+    <span class="nav-label">Notifications</span>
   </a>
 
-
-  <!-- PROFILE -->
-
-  <a
-    href="profile.html"
-    title="Profile"
-    class="nav-link"
-  >
+  <a href="profile.html" title="Profile" class="nav-link">
     <span class="nav-icon">👤</span>
+    <span class="nav-label">Profile</span>
   </a>
 
-
-  <!-- SETTINGS -->
-
-  <a
-    href="settings.html"
-    title="Settings"
-    class="nav-link"
-  >
+  <a href="settings.html" title="Settings" class="nav-link">
     <span class="nav-icon">⚙️</span>
+    <span class="nav-label">Settings</span>
   </a>
 
-
-  <!-- ABOUT -->
-
-  <a
-    href="about.html"
-    title="About"
-    class="nav-link"
-  >
+  <a href="about.html" title="About" class="nav-link">
     <span class="nav-icon">ⓘ</span>
+    <span class="nav-label">About</span>
   </a>
-
 
 </nav>
 
-
-<!-- =================================================
-     ACCOUNT
-     ================================================= -->
+<!-- ACCOUNT -->
 
 <div
   id="accountButton"
   class="account-button"
-  onclick="handleAccountClick()"
->
+  onclick="handleAccountClick()">
 
   <div
     id="navAvatar"
-    class="nav-avatar"
-  >
+    class="nav-avatar">
     ?
   </div>
-
 
   <span id="loginButton">
     Login
@@ -912,24 +586,19 @@
 
 </div>
 
-
 <!-- ACCOUNT MENU -->
 
 <div
   id="accountMenu"
-  class="account-menu"
-  style="display: none;"
->
+  class="account-menu">
 
   <button onclick="goToMyProfile()">
     My Profile
   </button>
 
-
   <button onclick="openEditProfile()">
     Edit Profile
   </button>
-
 
   <button onclick="logout()">
     Logout
@@ -947,52 +616,41 @@
   <main>
 
 ```
-<!-- =================================================
-     HERO
-     ================================================= -->
+<!-- HERO -->
 
-<section
-  class="hero"
-  id="home"
->
-
+<section class="hero" id="home">
 
   <div class="hero-content">
-
 
     <h1>
       Connect with the people<br>
       who matter most.
     </h1>
 
-
     <p>
       Find your friends, stay connected and build
       meaningful connections with YouRemo.
     </p>
 
-
     <div class="hero-buttons">
-
 
       <button
         class="primary-btn"
-        onclick="window.location.href='friends.html'"
-      >
-        Find Friends
-      </button>
+        onclick="window.location.href='friends.html'">
 
+        Find Friends
+
+      </button>
 
       <button
         class="secondary-btn"
-        onclick="window.location.href='about.html'"
-      >
+        onclick="window.location.href='about.html'">
+
         Learn More
+
       </button>
 
-
     </div>
-
 
   </div>
 
@@ -1001,39 +659,32 @@
 
   <div class="hero-card">
 
-
     <div class="card-icon">
       👥
     </div>
-
 
     <h2>
       Your people. Your connections.
     </h2>
 
-
     <p>
       Discover friends and connect with them easily.
     </p>
 
-
   </div>
-
 
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      QUICK ACCESS
-     ================================================= -->
+     ===================================================== -->
 
 <section class="home-links">
-
 
   <h2>
     YouRemo
   </h2>
-
 
   <p class="section-text">
     Everything you need to manage your connections.
@@ -1042,23 +693,15 @@
 
   <div class="features">
 
-
-    <!-- FIND FRIENDS -->
-
     <div
       class="feature"
-      onclick="window.location.href='friends.html'"
-    >
+      onclick="window.location.href='friends.html'">
 
-      <span>
-        🔎
-      </span>
-
+      <span>🔎</span>
 
       <h3>
         Find Friends
       </h3>
-
 
       <p>
         Search for people and connect with them.
@@ -1067,22 +710,15 @@
     </div>
 
 
-    <!-- FRIEND REQUESTS -->
-
     <div
       class="feature"
-      onclick="window.location.href='requests.html'"
-    >
+      onclick="window.location.href='requests.html'">
 
-      <span>
-        🤝
-      </span>
-
+      <span>🤝</span>
 
       <h3>
         Friend Requests
       </h3>
-
 
       <p>
         See and respond to your incoming requests.
@@ -1091,22 +727,15 @@
     </div>
 
 
-    <!-- PROFILE -->
-
     <div
       class="feature"
-      onclick="window.location.href='profile.html'"
-    >
+      onclick="window.location.href='profile.html'">
 
-      <span>
-        👤
-      </span>
-
+      <span>👤</span>
 
       <h3>
         My Profile
       </h3>
-
 
       <p>
         View and manage your YouRemo profile.
@@ -1115,22 +744,15 @@
     </div>
 
 
-    <!-- MY FRIENDS -->
-
     <div
       class="feature"
-      onclick="window.location.href='myfriends.html'"
-    >
+      onclick="window.location.href='myfriends.html'">
 
-      <span>
-        👥
-      </span>
-
+      <span>👥</span>
 
       <h3>
         My Friends
       </h3>
-
 
       <p>
         See everyone you're connected with.
@@ -1138,39 +760,33 @@
 
     </div>
 
-
   </div>
-
 
 </section>
 
 
-<!-- =================================================
+<!-- =====================================================
      LOGIN / SIGNUP MODAL
-     ================================================= -->
+     ===================================================== -->
 
 <div
   id="authModal"
-  class="auth-modal"
->
-
+  class="auth-modal">
 
   <div class="auth-box">
-
 
     <button
       type="button"
       class="close-auth"
-      onclick="closeAuth()"
-    >
-      ×
-    </button>
+      onclick="closeAuth()">
 
+      ×
+
+    </button>
 
     <h2 id="authTitle">
       Welcome to YouRemo
     </h2>
-
 
     <p id="authSubtitle">
       Create your account
@@ -1180,37 +796,34 @@
     <input
       type="text"
       id="authName"
-      placeholder="Full name"
-    >
+      placeholder="Full name">
 
 
     <input
       type="text"
       id="authUsername"
-      placeholder="Username"
-    >
+      placeholder="Username">
 
 
     <input
       type="email"
       id="authEmail"
-      placeholder="Email address"
-    >
+      placeholder="Email address">
 
 
     <input
       type="password"
       id="authPassword"
-      placeholder="Password"
-    >
+      placeholder="Password">
 
 
     <button
       type="button"
       class="auth-submit"
-      onclick="signUp()"
-    >
+      onclick="signUp()">
+
       Create Account
+
     </button>
 
 
@@ -1224,9 +837,7 @@
 
     </p>
 
-
   </div>
-
 
 </div>
 ```
@@ -1254,7 +865,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- =====================================================
-       YOUREMO JAVASCRIPT
+       YOUR EXISTING JAVASCRIPT
        ===================================================== -->
 
   <script src="script.js"></script>
