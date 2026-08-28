@@ -9,13 +9,16 @@
    messages.html
    profile.html
 
-   Supabase:
-   Authentication
-   Profiles
-   Friends
-   Friend Requests
-   Messages
-   Realtime Messaging
+   Features:
+   - Supabase authentication
+   - Profiles
+   - Avatar upload
+   - Friend search
+   - Friend requests
+   - Friends list
+   - Messaging
+   - Realtime messages
+   - Navigation
    ========================================================= */
 
 
@@ -44,11 +47,9 @@ window.supabaseClient = supabaseClient;
 
 let currentUser = null;
 
-let selectedMessageFriend = null;
-
 let messageRealtimeChannel = null;
 
-let messageFriends = [];
+let selectedMessageFriend = null;
 
 
 /* =========================================================
@@ -72,30 +73,20 @@ function getCurrentPage() {
 
 
 /* =========================================================
-   4. PAGE START
+   4. DOM READY
    ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   async function () {
 
-    console.log(
-      "================================="
-    );
-
-    console.log(
-      "YouRemo script.js loaded"
-    );
-
+    console.log("=================================");
+    console.log("YouRemo script loaded");
     console.log(
       "Current page:",
       getCurrentPage()
     );
-
-    console.log(
-      "================================="
-    );
-
+    console.log("=================================");
 
     await loadCurrentUser();
 
@@ -104,6 +95,8 @@ document.addEventListener(
     setupProfilePage();
 
     setupSearchEnterKey();
+
+    setupMessagePage();
 
     setupPageSpecificFeatures();
 
@@ -170,7 +163,9 @@ function setupPageSpecificFeatures() {
 
     if (currentUser) {
 
-      initializeMessagesPage();
+      startMessageRealtime();
+
+      loadMessageFriends();
 
     }
 
@@ -234,7 +229,9 @@ async function loadCurrentUser() {
         "messages.html"
       ) {
 
-        await initializeMessagesPage();
+        await loadMessageFriends();
+
+        startMessageRealtime();
 
       }
 
@@ -257,7 +254,10 @@ async function loadCurrentUser() {
    ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  function (event, session) {
+  function (
+    event,
+    session
+  ) {
 
     console.log(
       "Auth event:",
@@ -292,7 +292,9 @@ supabaseClient.auth.onAuthStateChange(
             "messages.html"
           ) {
 
-            await initializeMessagesPage();
+            await loadMessageFriends();
+
+            startMessageRealtime();
 
           }
 
@@ -321,12 +323,10 @@ async function refreshAccountUI() {
       "loginButton"
     );
 
-
   const navAvatar =
     document.getElementById(
       "navAvatar"
     );
-
 
   const accountMenu =
     document.getElementById(
@@ -485,16 +485,26 @@ function handleAccountClick() {
   }
 
 
-  menu.style.display =
-    menu.style.display === "block"
-      ? "none"
-      : "block";
+  if (
+    menu.style.display ===
+    "block"
+  ) {
+
+    menu.style.display =
+      "none";
+
+  } else {
+
+    menu.style.display =
+      "block";
+
+  }
 
 }
 
 
 /* =========================================================
-   10. AUTH
+   10. AUTH MODAL
    ========================================================= */
 
 function openAuth() {
@@ -538,7 +548,7 @@ function closeAuth() {
 
 
 /* =========================================================
-   11. LOGIN FORM
+   11. LOGIN / SIGNUP UI
    ========================================================= */
 
 function showLogin() {
@@ -606,10 +616,6 @@ function showLogin() {
 }
 
 
-/* =========================================================
-   12. SIGNUP FORM
-   ========================================================= */
-
 function showSignup() {
 
   const title =
@@ -676,54 +682,22 @@ function showSignup() {
 
 
 /* =========================================================
-   13. SIGN UP
+   12. SIGN UP
    ========================================================= */
 
 async function signUp() {
 
-  const nameElement =
-    document.getElementById(
-      "authName"
-    );
-
-  const usernameElement =
-    document.getElementById(
-      "authUsername"
-    );
-
-  const emailElement =
-    document.getElementById(
-      "authEmail"
-    );
-
-  const passwordElement =
-    document.getElementById(
-      "authPassword"
-    );
-
-
   const name =
-    nameElement
-      ? nameElement.value.trim()
-      : "";
-
+    getInputValue("authName");
 
   const username =
-    usernameElement
-      ? usernameElement.value.trim()
-      : "";
-
+    getInputValue("authUsername");
 
   const email =
-    emailElement
-      ? emailElement.value.trim()
-      : "";
-
+    getInputValue("authEmail");
 
   const password =
-    passwordElement
-      ? passwordElement.value
-      : "";
+    getInputValue("authPassword");
 
 
   if (!name) {
@@ -784,15 +758,6 @@ async function signUp() {
           username
         )
         .maybeSingle();
-
-
-    if (usernameCheck.error) {
-
-      console.error(
-        usernameCheck.error
-      );
-
-    }
 
 
     if (usernameCheck.data) {
@@ -895,6 +860,7 @@ async function signUp() {
 
     await loadCurrentUser();
 
+
   } catch (error) {
 
     console.error(
@@ -913,32 +879,16 @@ async function signUp() {
 
 
 /* =========================================================
-   14. LOGIN
+   13. LOGIN
    ========================================================= */
 
 async function login() {
 
-  const emailElement =
-    document.getElementById(
-      "authEmail"
-    );
-
-  const passwordElement =
-    document.getElementById(
-      "authPassword"
-    );
-
-
   const email =
-    emailElement
-      ? emailElement.value.trim()
-      : "";
-
+    getInputValue("authEmail");
 
   const password =
-    passwordElement
-      ? passwordElement.value
-      : "";
+    getInputValue("authPassword");
 
 
   if (
@@ -1008,9 +958,12 @@ async function login() {
       "messages.html"
     ) {
 
-      await initializeMessagesPage();
+      await loadMessageFriends();
+
+      startMessageRealtime();
 
     }
+
 
   } catch (error) {
 
@@ -1030,7 +983,7 @@ async function login() {
 
 
 /* =========================================================
-   15. LOGOUT
+   14. LOGOUT
    ========================================================= */
 
 async function logout() {
@@ -1041,7 +994,8 @@ async function logout() {
 
 
     const result =
-      await supabaseClient.auth.signOut();
+      await supabaseClient.auth
+        .signOut();
 
 
     if (result.error) {
@@ -1079,6 +1033,7 @@ async function logout() {
     window.location.href =
       "index.html";
 
+
   } catch (error) {
 
     console.error(
@@ -1092,25 +1047,17 @@ async function logout() {
 
 
 /* =========================================================
-   16. CLEAR AUTH FORM
+   15. CLEAR AUTH FORM
    ========================================================= */
 
 function clearAuthForm() {
 
-  const fields = [
-
+  [
     "authName",
-
     "authUsername",
-
     "authEmail",
-
     "authPassword"
-
-  ];
-
-
-  fields.forEach(
+  ].forEach(
     function (id) {
 
       const element =
@@ -1118,10 +1065,7 @@ function clearAuthForm() {
 
 
       if (element) {
-
-        element.value =
-          "";
-
+        element.value = "";
       }
 
     }
@@ -1131,7 +1075,7 @@ function clearAuthForm() {
 
 
 /* =========================================================
-   17. FIND FRIENDS
+   16. FIND FRIENDS
    ========================================================= */
 
 function findFriends() {
@@ -1145,10 +1089,8 @@ function findFriends() {
   if (section) {
 
     section.scrollIntoView({
-
       behavior:
         "smooth"
-
     });
 
 
@@ -1162,9 +1104,7 @@ function findFriends() {
 
       setTimeout(
         function () {
-
           input.focus();
-
         },
         400
       );
@@ -1183,33 +1123,7 @@ function findFriends() {
 
 
 /* =========================================================
-   18. LEARN MORE
-   ========================================================= */
-
-function learnMore() {
-
-  const about =
-    document.getElementById(
-      "about"
-    );
-
-
-  if (about) {
-
-    about.scrollIntoView({
-
-      behavior:
-        "smooth"
-
-    });
-
-  }
-
-}
-
-
-/* =========================================================
-   19. SEARCH FRIENDS
+   17. SEARCH FRIENDS
    ========================================================= */
 
 async function searchFriends() {
@@ -1229,9 +1143,7 @@ async function searchFriends() {
     !input ||
     !results
   ) {
-
     return;
-
   }
 
 
@@ -1242,11 +1154,13 @@ async function searchFriends() {
   if (!searchTerm) {
 
     results.innerHTML =
-      '<div class="empty-state">' +
-      '<div>👥</div>' +
-      '<h2>Find Friends</h2>' +
-      '<p>Enter a name or username to find people on YouRemo.</p>' +
-      '</div>';
+      `
+      <div class="empty-state">
+        <div>👥</div>
+        <h2>Find Friends</h2>
+        <p>Enter a name or username to find people on YouRemo.</p>
+      </div>
+      `;
 
     return;
 
@@ -1254,10 +1168,12 @@ async function searchFriends() {
 
 
   results.innerHTML =
-    '<div class="empty-state">' +
-    '<div>🔎</div>' +
-    '<p>Searching...</p>' +
-    '</div>';
+    `
+    <div class="empty-state">
+      <div>🔎</div>
+      <p>Searching...</p>
+    </div>
+    `;
 
 
   try {
@@ -1343,11 +1259,13 @@ async function searchFriends() {
     if (!people.length) {
 
       results.innerHTML =
-        '<div class="empty-state">' +
-        '<div>😕</div>' +
-        '<h2>No people found</h2>' +
-        '<p>Try another name or username.</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>😕</div>
+          <h2>No people found</h2>
+          <p>Try another name or username.</p>
+        </div>
+        `;
 
       return;
 
@@ -1357,13 +1275,7 @@ async function searchFriends() {
     results.innerHTML =
       people
         .map(
-          function (person) {
-
-            return createFriendResultCard(
-              person
-            );
-
-          }
+          createFriendResultCard
         )
         .join("");
 
@@ -1376,6 +1288,7 @@ async function searchFriends() {
 
     }
 
+
   } catch (error) {
 
     console.error(
@@ -1385,11 +1298,13 @@ async function searchFriends() {
 
 
     results.innerHTML =
-      '<div class="empty-state">' +
-      '<div>⚠️</div>' +
-      '<h2>Search Error</h2>' +
-      '<p>Something went wrong while searching.</p>' +
-      '</div>';
+      `
+      <div class="empty-state">
+        <div>⚠️</div>
+        <h2>Search Error</h2>
+        <p>Something went wrong while searching.</p>
+      </div>
+      `;
 
   }
 
@@ -1397,10 +1312,12 @@ async function searchFriends() {
 
 
 /* =========================================================
-   20. FRIEND RESULT CARD
+   18. FRIEND RESULT CARD
    ========================================================= */
 
-function createFriendResultCard(person) {
+function createFriendResultCard(
+  person
+) {
 
   const name =
     person.full_name ||
@@ -1414,80 +1331,59 @@ function createFriendResultCard(person) {
       : "";
 
 
-  let avatarHTML =
-    "";
+  const avatar =
+    createAvatarHTML(
+      person.avatar_url,
+      name,
+      "friend-avatar"
+    );
 
 
-  if (person.avatar_url) {
+  return `
+    <div
+      class="friend-card"
+      data-user-id="${escapeHTML(person.id)}"
+    >
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      '<img src="' +
-      escapeHTML(person.avatar_url) +
-      '" alt="' +
-      escapeHTML(name) +
-      '" class="friend-avatar-img">' +
-      '</div>';
+      ${avatar}
 
-  } else {
+      <div class="friend-info">
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      escapeHTML(getInitials(name)) +
-      '</div>';
+        <h3>
+          ${escapeHTML(name)}
+        </h3>
 
-  }
+        <p>
+          ${escapeHTML(username)}
+        </p>
 
+      </div>
 
-  return (
+      <div class="friend-card-actions">
 
-    '<div class="friend-card" data-user-id="' +
-    escapeHTML(person.id) +
-    '">' +
+        <button
+          class="primary-btn friend-request-btn"
+          data-user-id="${escapeHTML(person.id)}"
+          onclick="sendFriendRequest('${escapeJS(person.id)}')"
+        >
+          Add Friend
+        </button>
 
-    avatarHTML +
+      </div>
 
-    '<div class="friend-info">' +
-
-    '<h3>' +
-    escapeHTML(name) +
-    '</h3>' +
-
-    '<p>' +
-    escapeHTML(username) +
-    '</p>' +
-
-    '</div>' +
-
-    '<div class="friend-card-actions">' +
-
-    '<button ' +
-    'class="primary-btn friend-request-btn" ' +
-    'data-user-id="' +
-    escapeHTML(person.id) +
-    '" ' +
-    'onclick="sendFriendRequest(\'' +
-    escapeJS(person.id) +
-    '\')">' +
-
-    'Add Friend' +
-
-    '</button>' +
-
-    '</div>' +
-
-    '</div>'
-
-  );
+    </div>
+  `;
 
 }
 
 
 /* =========================================================
-   21. UPDATE SEARCH BUTTONS
+   19. UPDATE SEARCH BUTTONS
    ========================================================= */
 
-async function updateSearchButtons(people) {
+async function updateSearchButtons(
+  people
+) {
 
   if (!currentUser) {
     return;
@@ -1630,9 +1526,7 @@ async function updateSearchButtons(people) {
 
       const button =
         document.querySelector(
-          '.friend-request-btn[data-user-id="' +
-          CSS.escape(person.id) +
-          '"]'
+          `.friend-request-btn[data-user-id="${CSS.escape(person.id)}"]`
         );
 
 
@@ -1641,7 +1535,9 @@ async function updateSearchButtons(people) {
       }
 
 
-      if (friendIds.has(person.id)) {
+      if (
+        friendIds.has(person.id)
+      ) {
 
         button.textContent =
           "Friends";
@@ -1707,10 +1603,12 @@ async function updateSearchButtons(people) {
 
 
 /* =========================================================
-   22. SEND FRIEND REQUEST
+   20. SEND FRIEND REQUEST
    ========================================================= */
 
-async function sendFriendRequest(receiverId) {
+async function sendFriendRequest(
+  receiverId
+) {
 
   if (!currentUser) {
 
@@ -1792,22 +1690,12 @@ async function sendFriendRequest(receiverId) {
 
     if (requestResult.data) {
 
-      if (
+      alert(
         requestResult.data.sender_id ===
         currentUser.id
-      ) {
-
-        alert(
-          "Friend request already sent."
-        );
-
-      } else {
-
-        alert(
-          "This person has already sent you a friend request."
-        );
-
-      }
+          ? "Friend request already sent."
+          : "This person has already sent you a friend request."
+      );
 
       return;
 
@@ -1838,6 +1726,7 @@ async function sendFriendRequest(receiverId) {
         insertResult.error
       );
 
+
       alert(
         insertResult.error.message
       );
@@ -1849,9 +1738,7 @@ async function sendFriendRequest(receiverId) {
 
     const button =
       document.querySelector(
-        '.friend-request-btn[data-user-id="' +
-        CSS.escape(receiverId) +
-        '"]'
+        `.friend-request-btn[data-user-id="${CSS.escape(receiverId)}"]`
       );
 
 
@@ -1870,12 +1757,14 @@ async function sendFriendRequest(receiverId) {
       "Friend request sent!"
     );
 
+
   } catch (error) {
 
     console.error(
       "sendFriendRequest error:",
       error
     );
+
 
     alert(
       "Could not send friend request."
@@ -1887,7 +1776,7 @@ async function sendFriendRequest(receiverId) {
 
 
 /* =========================================================
-   23. LOAD FRIEND REQUESTS
+   21. LOAD FRIEND REQUESTS
    ========================================================= */
 
 async function loadFriendRequests() {
@@ -1896,7 +1785,6 @@ async function loadFriendRequests() {
     document.getElementById(
       "friendRequests"
     );
-
 
   const badge =
     document.getElementById(
@@ -1912,11 +1800,13 @@ async function loadFriendRequests() {
   if (!currentUser) {
 
     container.innerHTML =
-      '<div class="empty-state">' +
-      '<div>🔐</div>' +
-      '<h2>Login Required</h2>' +
-      '<p>Please login to see your friend requests.</p>' +
-      '</div>';
+      `
+      <div class="empty-state">
+        <div>🔐</div>
+        <h2>Login Required</h2>
+        <p>Please login to see your friend requests.</p>
+      </div>
+      `;
 
 
     if (badge) {
@@ -1973,11 +1863,13 @@ async function loadFriendRequests() {
     if (!requests.length) {
 
       container.innerHTML =
-        '<div class="empty-state">' +
-        '<div>📭</div>' +
-        '<h2>No Friend Requests</h2>' +
-        '<p>You don\'t have any pending requests.</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>📭</div>
+          <h2>No Friend Requests</h2>
+          <p>You don't have any pending requests.</p>
+        </div>
+        `;
 
       return;
 
@@ -2038,6 +1930,7 @@ async function loadFriendRequests() {
         )
         .join("");
 
+
   } catch (error) {
 
     console.error(
@@ -2051,7 +1944,7 @@ async function loadFriendRequests() {
 
 
 /* =========================================================
-   24. REQUEST CARD
+   22. REQUEST CARD
    ========================================================= */
 
 function createRequestCard(
@@ -2076,88 +1969,68 @@ function createRequestCard(
       : "";
 
 
-  let avatarHTML =
-    "";
+  const avatar =
+    createAvatarHTML(
+      sender &&
+      sender.avatar_url
+        ? sender.avatar_url
+        : "",
+      name,
+      "friend-avatar"
+    );
 
 
-  if (
-    sender &&
-    sender.avatar_url
-  ) {
+  return `
+    <div
+      class="friend-card"
+      data-request-id="${escapeHTML(request.id)}"
+    >
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      '<img src="' +
-      escapeHTML(sender.avatar_url) +
-      '" alt="' +
-      escapeHTML(name) +
-      '" class="friend-avatar-img">' +
-      '</div>';
+      ${avatar}
 
-  } else {
+      <div class="friend-info">
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      escapeHTML(getInitials(name)) +
-      '</div>';
+        <h3>
+          ${escapeHTML(name)}
+        </h3>
 
-  }
+        <p>
+          ${escapeHTML(username)}
+        </p>
 
+      </div>
 
-  return (
+      <div class="friend-card-actions">
 
-    '<div class="friend-card" data-request-id="' +
-    escapeHTML(request.id) +
-    '">' +
+        <button
+          class="primary-btn"
+          onclick="acceptFriendRequest('${escapeJS(request.id)}')"
+        >
+          Accept
+        </button>
 
-    avatarHTML +
+        <button
+          class="secondary-btn"
+          onclick="declineFriendRequest('${escapeJS(request.id)}')"
+        >
+          Decline
+        </button>
 
-    '<div class="friend-info">' +
+      </div>
 
-    '<h3>' +
-    escapeHTML(name) +
-    '</h3>' +
-
-    '<p>' +
-    escapeHTML(username) +
-    '</p>' +
-
-    '</div>' +
-
-    '<div class="friend-card-actions">' +
-
-    '<button class="primary-btn" ' +
-    'onclick="acceptFriendRequest(\'' +
-    escapeJS(request.id) +
-    '\')">' +
-
-    'Accept' +
-
-    '</button>' +
-
-    '<button class="secondary-btn" ' +
-    'onclick="declineFriendRequest(\'' +
-    escapeJS(request.id) +
-    '\')">' +
-
-    'Decline' +
-
-    '</button>' +
-
-    '</div>' +
-
-    '</div>'
-
-  );
+    </div>
+  `;
 
 }
 
 
 /* =========================================================
-   25. ACCEPT FRIEND REQUEST
+   23. ACCEPT FRIEND REQUEST
    ========================================================= */
 
-async function acceptFriendRequest(requestId) {
+async function acceptFriendRequest(
+  requestId
+) {
 
   if (!currentUser) {
 
@@ -2230,7 +2103,6 @@ async function acceptFriendRequest(requestId) {
 
             friend_id:
               request.sender_id
-
           },
 
           {
@@ -2239,7 +2111,6 @@ async function acceptFriendRequest(requestId) {
 
             friend_id:
               currentUser.id
-
           }
 
         ]);
@@ -2262,6 +2133,7 @@ async function acceptFriendRequest(requestId) {
           friendshipResult.error
         );
 
+
         alert(
           friendshipResult.error.message
         );
@@ -2277,8 +2149,10 @@ async function acceptFriendRequest(requestId) {
       await supabaseClient
         .from("friend_requests")
         .update({
+
           status:
             "accepted"
+
         })
         .eq(
           "id",
@@ -2306,12 +2180,14 @@ async function acceptFriendRequest(requestId) {
 
     await loadMyFriends();
 
+
   } catch (error) {
 
     console.error(
       "acceptFriendRequest error:",
       error
     );
+
 
     alert(
       "Could not accept friend request."
@@ -2323,10 +2199,12 @@ async function acceptFriendRequest(requestId) {
 
 
 /* =========================================================
-   26. DECLINE FRIEND REQUEST
+   24. DECLINE FRIEND REQUEST
    ========================================================= */
 
-async function declineFriendRequest(requestId) {
+async function declineFriendRequest(
+  requestId
+) {
 
   if (!currentUser) {
     return;
@@ -2339,8 +2217,10 @@ async function declineFriendRequest(requestId) {
       await supabaseClient
         .from("friend_requests")
         .update({
+
           status:
             "declined"
+
         })
         .eq(
           "id",
@@ -2365,6 +2245,7 @@ async function declineFriendRequest(requestId) {
 
     await loadFriendRequests();
 
+
   } catch (error) {
 
     console.error(
@@ -2378,7 +2259,7 @@ async function declineFriendRequest(requestId) {
 
 
 /* =========================================================
-   27. LOAD MY FRIENDS
+   25. LOAD MY FRIENDS
    ========================================================= */
 
 async function loadMyFriends() {
@@ -2387,7 +2268,6 @@ async function loadMyFriends() {
     document.getElementById(
       "myFriendsList"
     );
-
 
   const countElement =
     document.getElementById(
@@ -2403,11 +2283,13 @@ async function loadMyFriends() {
   if (!currentUser) {
 
     container.innerHTML =
-      '<div class="empty-state">' +
-      '<div>🔐</div>' +
-      '<h2>Login Required</h2>' +
-      '<p>Please login to see your friends.</p>' +
-      '</div>';
+      `
+      <div class="empty-state">
+        <div>🔐</div>
+        <h2>Login Required</h2>
+        <p>Please login to see your friends.</p>
+      </div>
+      `;
 
 
     if (countElement) {
@@ -2448,7 +2330,8 @@ async function loadMyFriends() {
     }
 
 
-    const friendIds = [];
+    const friendIds =
+      [];
 
 
     (
@@ -2500,11 +2383,13 @@ async function loadMyFriends() {
     if (!uniqueFriendIds.length) {
 
       container.innerHTML =
-        '<div class="empty-state">' +
-        '<div>👥</div>' +
-        '<h2>No Friends Yet</h2>' +
-        '<p>Search for people and start connecting.</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>👥</div>
+          <h2>No Friends Yet</h2>
+          <p>Search for people and start connecting.</p>
+        </div>
+        `;
 
       return;
 
@@ -2540,15 +2425,10 @@ async function loadMyFriends() {
         profilesResult.data || []
       )
         .map(
-          function (profile) {
-
-            return createMyFriendCard(
-              profile
-            );
-
-          }
+          createMyFriendCard
         )
         .join("");
+
 
   } catch (error) {
 
@@ -2563,10 +2443,12 @@ async function loadMyFriends() {
 
 
 /* =========================================================
-   28. MY FRIEND CARD
+   26. MY FRIEND CARD
    ========================================================= */
 
-function createMyFriendCard(friend) {
+function createMyFriendCard(
+  friend
+) {
 
   const name =
     friend.full_name ||
@@ -2580,58 +2462,53 @@ function createMyFriendCard(friend) {
       : "";
 
 
-  let avatarHTML =
-    "";
+  const avatar =
+    createAvatarHTML(
+      friend.avatar_url,
+      name,
+      "friend-avatar"
+    );
 
 
-  if (friend.avatar_url) {
+  return `
+    <div
+      class="friend-card"
+      data-friend-id="${escapeHTML(friend.id)}"
+    >
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      '<img src="' +
-      escapeHTML(friend.avatar_url) +
-      '" alt="' +
-      escapeHTML(name) +
-      '" class="friend-avatar-img">' +
-      '</div>';
+      ${avatar}
 
-  } else {
+      <div class="friend-info">
 
-    avatarHTML =
-      '<div class="friend-avatar">' +
-      escapeHTML(getInitials(name)) +
-      '</div>';
+        <h3>
+          ${escapeHTML(name)}
+        </h3>
 
-  }
+        <p>
+          ${escapeHTML(username)}
+        </p>
 
+      </div>
 
-  return (
+      <div class="friend-card-actions">
 
-    '<div class="friend-card">' +
+        <button
+          class="primary-btn"
+          onclick="openConversation('${escapeJS(friend.id)}')"
+        >
+          Message
+        </button>
 
-    avatarHTML +
+      </div>
 
-    '<div class="friend-info">' +
-
-    '<h3>' +
-    escapeHTML(name) +
-    '</h3>' +
-
-    '<p>' +
-    escapeHTML(username) +
-    '</p>' +
-
-    '</div>' +
-
-    '</div>'
-
-  );
+    </div>
+  `;
 
 }
 
 
 /* =========================================================
-   29. LOAD PROFILE
+   27. PROFILE
    ========================================================= */
 
 async function loadProfile() {
@@ -2732,7 +2609,8 @@ async function loadProfile() {
 
     setText(
       "displayEmail",
-      currentUser.email || "Not available"
+      currentUser.email ||
+      "Not available"
     );
 
 
@@ -2744,16 +2622,12 @@ async function loadProfile() {
         ).toLocaleDateString(
           "en-IN",
           {
-
             day:
               "numeric",
-
             month:
               "long",
-
             year:
               "numeric"
-
           }
         );
 
@@ -2853,6 +2727,7 @@ async function loadProfile() {
         : ""
     );
 
+
   } catch (error) {
 
     console.error(
@@ -2866,7 +2741,7 @@ async function loadProfile() {
 
 
 /* =========================================================
-   30. EDIT PROFILE
+   28. EDIT PROFILE
    ========================================================= */
 
 function openEditProfile() {
@@ -2936,28 +2811,16 @@ async function saveEditProfile() {
   }
 
 
-  const nameElement =
-    document.getElementById(
+  const name =
+    getInputValue(
       "editProfileName"
     );
 
 
-  const usernameElement =
-    document.getElementById(
+  const username =
+    getInputValue(
       "editProfileUsername"
     );
-
-
-  const name =
-    nameElement
-      ? nameElement.value.trim()
-      : "";
-
-
-  const username =
-    usernameElement
-      ? usernameElement.value.trim()
-      : "";
 
 
   if (!name) {
@@ -3050,6 +2913,7 @@ async function saveEditProfile() {
 
     await refreshAccountUI();
 
+
   } catch (error) {
 
     console.error(
@@ -3068,33 +2932,7 @@ async function saveEditProfile() {
 
 
 /* =========================================================
-   31. PROFILE PAGE SETUP
-   ========================================================= */
-
-function setupProfilePage() {
-
-  window.editProfile =
-    function () {
-
-      if (!currentUser) {
-
-        openAuth();
-
-        return;
-
-      }
-
-
-      window.location.href =
-        "profile.html";
-
-    };
-
-}
-
-
-/* =========================================================
-   32. AVATAR UPLOAD
+   29. AVATAR UPLOAD
    ========================================================= */
 
 function setupAvatarUpload() {
@@ -3132,7 +2970,9 @@ function setupAvatarUpload() {
 }
 
 
-async function uploadAvatar(file) {
+async function uploadAvatar(
+  file
+) {
 
   if (!currentUser) {
 
@@ -3195,13 +3035,10 @@ async function uploadAvatar(file) {
           filePath,
           file,
           {
-
             upsert:
               true,
-
             cacheControl:
               "3600"
-
           }
         );
 
@@ -3280,6 +3117,7 @@ async function uploadAvatar(file) {
 
     await refreshAccountUI();
 
+
   } catch (error) {
 
     console.error(
@@ -3298,280 +3136,108 @@ async function uploadAvatar(file) {
 
 
 /* =========================================================
-   33. SEARCH ENTER KEY
+   30. MESSAGES PAGE SETUP
    ========================================================= */
 
-function setupSearchEnterKey() {
+function setupMessagePage() {
 
-  const input =
-    document.getElementById(
-      "friendSearch"
-    );
+  if (
+    getCurrentPage() !==
+    "messages.html"
+  ) {
 
-
-  if (!input) {
     return;
+
   }
 
 
-  input.addEventListener(
-    "keydown",
-    function (event) {
+  const sendButton =
+    document.getElementById(
+      "sendMessageButton"
+    );
 
-      if (event.key === "Enter") {
 
-        event.preventDefault();
+  const messageInput =
+    document.getElementById(
+      "messageInput"
+    );
 
-        searchFriends();
+
+  if (sendButton) {
+
+    sendButton.addEventListener(
+      "click",
+      sendMessage
+    );
+
+  }
+
+
+  if (messageInput) {
+
+    messageInput.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key ===
+          "Enter" &&
+          !event.shiftKey
+        ) {
+
+          event.preventDefault();
+
+          sendMessage();
+
+        }
 
       }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   34. PROFILE NAVIGATION
-   ========================================================= */
-
-function goToMyProfile() {
-
-  if (!currentUser) {
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  const menu =
-    document.getElementById(
-      "accountMenu"
     );
 
-
-  if (menu) {
-
-    menu.style.display =
-      "none";
-
   }
-
-
-  const profile =
-    document.getElementById(
-      "profile"
-    );
-
-
-  if (profile) {
-
-    profile.scrollIntoView({
-
-      behavior:
-        "smooth"
-
-    });
-
-    return;
-
-  }
-
-
-  window.location.href =
-    "profile.html";
-
-}
-
-
-function editProfile() {
-
-  if (!currentUser) {
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  window.location.href =
-    "profile.html";
 
 }
 
 
 /* =========================================================
-   35. CLICK OUTSIDE ACCOUNT MENU
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  function (event) {
-
-    const accountButton =
-      document.getElementById(
-        "accountButton"
-      );
-
-
-    const accountMenu =
-      document.getElementById(
-        "accountMenu"
-      );
-
-
-    if (
-      !accountButton ||
-      !accountMenu
-    ) {
-
-      return;
-
-    }
-
-
-    if (
-      !accountButton.contains(
-        event.target
-      ) &&
-      !accountMenu.contains(
-        event.target
-      )
-    ) {
-
-      accountMenu.style.display =
-        "none";
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   36. CLOSE MODALS
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  function (event) {
-
-    const authModal =
-      document.getElementById(
-        "authModal"
-      );
-
-
-    const editModal =
-      document.getElementById(
-        "editProfileModal"
-      );
-
-
-    if (
-      authModal &&
-      event.target === authModal
-    ) {
-
-      closeAuth();
-
-    }
-
-
-    if (
-      editModal &&
-      event.target === editModal
-    ) {
-
-      closeEditProfile();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   37. MESSAGES PAGE INITIALIZATION
-   ========================================================= */
-
-async function initializeMessagesPage() {
-
-  if (!currentUser) {
-
-    showMessagesLoginRequired();
-
-    return;
-
-  }
-
-
-  console.log(
-    "Initializing messages..."
-  );
-
-
-  await loadMessageFriends();
-
-
-  setupMessageInput();
-
-
-  startMessageRealtime();
-
-}
-
-
-/* =========================================================
-   38. LOAD MESSAGE FRIENDS
+   31. LOAD MESSAGE FRIENDS
    ========================================================= */
 
 async function loadMessageFriends() {
 
   const container =
     document.getElementById(
-      "messageFriends"
+      "messageFriendsList"
     );
 
 
   if (!container) {
-
-    console.log(
-      "messageFriends container not found."
-    );
-
     return;
-
   }
 
 
   if (!currentUser) {
 
-    showMessagesLoginRequired();
+    container.innerHTML =
+      `
+      <div class="empty-state">
+        <div>🔐</div>
+        <p>Please login to see your friends.</p>
+      </div>
+      `;
 
     return;
 
   }
 
 
-  container.innerHTML =
-    '<div class="empty-state">' +
-    '<div>⏳</div>' +
-    '<p>Loading friends...</p>' +
-    '</div>';
-
-
   try {
 
-    const friendshipResult =
+    const result =
       await supabaseClient
         .from("friendships")
         .select(
-          "id, user_id, friend_id"
+          "user_id, friend_id"
         )
         .or(
           "user_id.eq." +
@@ -3581,29 +3247,24 @@ async function loadMessageFriends() {
         );
 
 
-    if (friendshipResult.error) {
+    if (result.error) {
 
       console.error(
         "Message friends error:",
-        friendshipResult.error
+        result.error
       );
-
-      container.innerHTML =
-        '<div class="empty-state">' +
-        '<div>⚠️</div>' +
-        '<p>Unable to load friends.</p>' +
-        '</div>';
 
       return;
 
     }
 
 
-    const ids = [];
+    const friendIds =
+      new Set();
 
 
     (
-      friendshipResult.data || []
+      result.data || []
     ).forEach(
       function (friendship) {
 
@@ -3612,13 +3273,13 @@ async function loadMessageFriends() {
           currentUser.id
         ) {
 
-          ids.push(
+          friendIds.add(
             friendship.friend_id
           );
 
         } else {
 
-          ids.push(
+          friendIds.add(
             friendship.user_id
           );
 
@@ -3628,30 +3289,23 @@ async function loadMessageFriends() {
     );
 
 
-    const uniqueIds =
-      Array.from(
-        new Set(ids)
-      );
-
-
-    if (!uniqueIds.length) {
-
-      messageFriends = [];
-
+    if (!friendIds.size) {
 
       container.innerHTML =
-        '<div class="empty-state">' +
-        '<div>👥</div>' +
-        '<h3>No friends yet</h3>' +
-        '<p>Add friends first to start messaging.</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>👥</div>
+          <h3>No Friends Yet</h3>
+          <p>Add friends to start messaging.</p>
+        </div>
+        `;
 
       return;
 
     }
 
 
-    const profileResult =
+    const profilesResult =
       await supabaseClient
         .from("profiles")
         .select(
@@ -3659,42 +3313,28 @@ async function loadMessageFriends() {
         )
         .in(
           "id",
-          uniqueIds
+          Array.from(friendIds)
         );
 
 
-    if (profileResult.error) {
+    if (profilesResult.error) {
 
       console.error(
-        "Message profile error:",
-        profileResult.error
+        "Message profiles error:",
+        profilesResult.error
       );
-
-      container.innerHTML =
-        '<div class="empty-state">' +
-        '<div>⚠️</div>' +
-        '<p>Unable to load friend profiles.</p>' +
-        '</div>';
 
       return;
 
     }
 
 
-    messageFriends =
-      profileResult.data || [];
-
-
     container.innerHTML =
-      messageFriends
+      (
+        profilesResult.data || []
+      )
         .map(
-          function (friend) {
-
-            return createMessageFriendCard(
-              friend
-            );
-
-          }
+          createMessageFriendCard
         )
         .join("");
 
@@ -3712,10 +3352,12 @@ async function loadMessageFriends() {
 
 
 /* =========================================================
-   39. MESSAGE FRIEND CARD
+   32. MESSAGE FRIEND CARD
    ========================================================= */
 
-function createMessageFriendCard(friend) {
+function createMessageFriendCard(
+  friend
+) {
 
   const name =
     friend.full_name ||
@@ -3723,72 +3365,48 @@ function createMessageFriendCard(friend) {
     "YouRemo User";
 
 
-  const username =
-    friend.username
-      ? "@" + friend.username
-      : "";
-
-
   const avatar =
-    friend.avatar_url
-
-      ? '<img src="' +
-        escapeHTML(friend.avatar_url) +
-        '" alt="' +
-        escapeHTML(name) +
-        '" class="message-friend-avatar-img">'
-
-      : escapeHTML(
-          getInitials(name)
-        );
+    createAvatarHTML(
+      friend.avatar_url,
+      name,
+      "message-friend-avatar"
+    );
 
 
-  return (
+  return `
+    <button
+      class="message-friend"
+      data-friend-id="${escapeHTML(friend.id)}"
+      onclick="openConversation('${escapeJS(friend.id)}')"
+    >
 
-    '<button ' +
+      ${avatar}
 
-    'type="button" ' +
+      <span class="message-friend-info">
 
-    'class="message-friend" ' +
+        <strong>
+          ${escapeHTML(name)}
+        </strong>
 
-    'data-friend-id="' +
-    escapeHTML(friend.id) +
-    '" ' +
+        <small>
+          @${escapeHTML(friend.username || "")}
+        </small>
 
-    'onclick="openConversation(\'' +
-    escapeJS(friend.id) +
-    '\')">' +
+      </span>
 
-    '<div class="message-friend-avatar">' +
-
-    avatar +
-
-    '</div>' +
-
-    '<div class="message-friend-info">' +
-
-    '<strong>' +
-    escapeHTML(name) +
-    '</strong>' +
-
-    '<span>' +
-    escapeHTML(username) +
-    '</span>' +
-
-    '</div>' +
-
-    '</button>'
-
-  );
+    </button>
+  `;
 
 }
 
 
 /* =========================================================
-   40. OPEN CONVERSATION
+   33. OPEN CONVERSATION
    ========================================================= */
 
-async function openConversation(friendId) {
+async function openConversation(
+  friendId
+) {
 
   if (!currentUser) {
 
@@ -3799,82 +3417,102 @@ async function openConversation(friendId) {
   }
 
 
-  const friend =
-    messageFriends.find(
-      function (item) {
+  try {
 
-        return item.id === friendId;
+    const result =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .eq(
+          "id",
+          friendId
+        )
+        .maybeSingle();
 
-      }
+
+    if (
+      result.error ||
+      !result.data
+    ) {
+
+      alert(
+        "Could not load this friend."
+      );
+
+      return;
+
+    }
+
+
+    setSelectedMessageFriend(
+      result.data
     );
 
 
-  if (!friend) {
+    updateConversationHeader(
+      result.data
+    );
 
-    console.error(
-      "Friend not found:",
+
+    await loadConversation(
       friendId
     );
 
-    return;
+
+    document
+      .querySelectorAll(
+        ".message-friend"
+      )
+      .forEach(
+        function (element) {
+
+          element.classList.remove(
+            "active"
+          );
+
+        }
+      );
+
+
+    const selected =
+      document.querySelector(
+        `.message-friend[data-friend-id="${CSS.escape(friendId)}"]`
+      );
+
+
+    if (selected) {
+
+      selected.classList.add(
+        "active"
+      );
+
+    }
+
+
+    startMessageRealtime();
+
+
+  } catch (error) {
+
+    console.error(
+      "openConversation error:",
+      error
+    );
 
   }
-
-
-  setSelectedMessageFriend(
-    friend
-  );
-
-
-  document
-    .querySelectorAll(
-      ".message-friend"
-    )
-    .forEach(
-      function (element) {
-
-        element.classList.remove(
-          "active"
-        );
-
-      }
-    );
-
-
-  const selectedElement =
-    document.querySelector(
-      '.message-friend[data-friend-id="' +
-      CSS.escape(friendId) +
-      '"]'
-    );
-
-
-  if (selectedElement) {
-
-    selectedElement.classList.add(
-      "active"
-    );
-
-  }
-
-
-  updateConversationHeader(
-    friend
-  );
-
-
-  await loadConversation(
-    friend.id
-  );
 
 }
 
 
 /* =========================================================
-   41. CONVERSATION HEADER
+   34. CONVERSATION HEADER
    ========================================================= */
 
-function updateConversationHeader(friend) {
+function updateConversationHeader(
+  friend
+) {
 
   const name =
     friend.full_name ||
@@ -3906,10 +3544,12 @@ function updateConversationHeader(friend) {
 
 
 /* =========================================================
-   42. LOAD CONVERSATION
+   35. LOAD CONVERSATION
    ========================================================= */
 
-async function loadConversation(friendId) {
+async function loadConversation(
+  friendId
+) {
 
   const chat =
     document.getElementById(
@@ -3922,16 +3562,13 @@ async function loadConversation(friendId) {
   }
 
 
-  if (!currentUser) {
-    return;
-  }
-
-
   chat.innerHTML =
-    '<div class="empty-state">' +
-    '<div>⏳</div>' +
-    '<p>Loading messages...</p>' +
-    '</div>';
+    `
+    <div class="empty-state">
+      <div>💬</div>
+      <p>Loading messages...</p>
+    </div>
+    `;
 
 
   try {
@@ -3965,16 +3602,18 @@ async function loadConversation(friendId) {
     if (result.error) {
 
       console.error(
-        "Conversation loading error:",
+        "Load conversation error:",
         result.error
       );
 
 
       chat.innerHTML =
-        '<div class="empty-state">' +
-        '<div>⚠️</div>' +
-        '<p>Unable to load messages.</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>⚠️</div>
+          <p>Unable to load messages.</p>
+        </div>
+        `;
 
       return;
 
@@ -3985,40 +3624,45 @@ async function loadConversation(friendId) {
       result.data || [];
 
 
+    chat.innerHTML =
+      "";
+
+
     if (!messages.length) {
 
       chat.innerHTML =
-        '<div class="empty-state">' +
-        '<div>💬</div>' +
-        '<h3>No messages yet</h3>' +
-        '<p>Start the conversation!</p>' +
-        '</div>';
+        `
+        <div class="empty-state">
+          <div>💬</div>
+          <h3>No messages yet</h3>
+          <p>Send the first message!</p>
+        </div>
+        `;
 
-    } else {
-
-      chat.innerHTML = "";
-
-
-      messages.forEach(
-        function (message) {
-
-          appendMessageToChat(
-            message,
-            false
-          );
-
-        }
-      );
+      return;
 
     }
 
 
-    await markConversationAsSeen(
-      friendId
+    messages.forEach(
+      function (message) {
+
+        appendRealtimeMessage(
+          message
+        );
+
+      }
     );
 
 
-    scrollChatToBottom();
+    chat.scrollTop =
+      chat.scrollHeight;
+
+
+    await markConversationSeen(
+      friendId
+    );
+
 
   } catch (error) {
 
@@ -4033,259 +3677,7 @@ async function loadConversation(friendId) {
 
 
 /* =========================================================
-   43. APPEND MESSAGE TO CHAT
-   ========================================================= */
-
-function appendMessageToChat(
-  message,
-  scroll
-) {
-
-  const chat =
-    document.getElementById(
-      "chatMessages"
-    );
-
-
-  if (!chat) {
-    return;
-  }
-
-
-  if (
-    message.id &&
-    chat.querySelector(
-      '[data-message-id="' +
-      CSS.escape(
-        String(message.id)
-      ) +
-      '"]'
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  const emptyState =
-    chat.querySelector(
-      ".empty-state"
-    );
-
-
-  if (emptyState) {
-
-    chat.innerHTML =
-      "";
-
-  }
-
-
-  const mine =
-    message.sender_id ===
-    currentUser.id;
-
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-
-  row.className =
-    "message-row " +
-    (
-      mine
-        ? "mine"
-        : "theirs"
-    );
-
-
-  if (message.id) {
-
-    row.setAttribute(
-      "data-message-id",
-      String(message.id)
-    );
-
-  }
-
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-
-  bubble.className =
-    "message-bubble";
-
-
-  const text =
-    document.createElement(
-      "div"
-    );
-
-
-  text.className =
-    "message-text";
-
-
-  text.textContent =
-    message.message || "";
-
-
-  bubble.appendChild(
-    text
-  );
-
-
-  const meta =
-    document.createElement(
-      "div"
-    );
-
-
-  meta.className =
-    "message-meta";
-
-
-  const time =
-    document.createElement(
-      "span"
-    );
-
-
-  time.className =
-    "message-time";
-
-
-  time.textContent =
-    formatMessageTime(
-      message.created_at
-    );
-
-
-  meta.appendChild(
-    time
-  );
-
-
-  if (mine) {
-
-    const seen =
-      document.createElement(
-        "span"
-      );
-
-
-    seen.className =
-      "message-seen";
-
-
-    seen.textContent =
-      message.seen
-        ? "✓✓"
-        : "✓";
-
-
-    seen.setAttribute(
-      "data-seen-id",
-      String(message.id)
-    );
-
-
-    meta.appendChild(
-      seen
-    );
-
-  }
-
-
-  bubble.appendChild(
-    meta
-  );
-
-
-  row.appendChild(
-    bubble
-  );
-
-
-  chat.appendChild(
-    row
-  );
-
-
-  if (scroll) {
-
-    scrollChatToBottom();
-
-  }
-
-}
-
-
-/* =========================================================
-   44. SETUP MESSAGE INPUT
-   ========================================================= */
-
-function setupMessageInput() {
-
-  const input =
-    document.getElementById(
-      "messageInput"
-    );
-
-
-  const sendButton =
-    document.getElementById(
-      "sendMessageButton"
-    );
-
-
-  if (input) {
-
-    input.addEventListener(
-      "keydown",
-      function (event) {
-
-        if (
-          event.key === "Enter" &&
-          !event.shiftKey
-        ) {
-
-          event.preventDefault();
-
-          sendMessage();
-
-        }
-
-      }
-    );
-
-  }
-
-
-  if (sendButton) {
-
-    sendButton.addEventListener(
-      "click",
-      function () {
-
-        sendMessage();
-
-      }
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   45. SEND MESSAGE
+   36. SEND MESSAGE
    ========================================================= */
 
 async function sendMessage() {
@@ -4392,14 +3784,13 @@ async function sendMessage() {
 
     /*
      * Realtime normally adds the message.
-     * This fallback immediately displays it
-     * if realtime is delayed.
+     * If realtime is delayed, add it immediately.
      */
 
-    appendMessageToChat(
-      result.data,
-      true
+    appendRealtimeMessage(
+      result.data
     );
+
 
   } catch (error) {
 
@@ -4425,289 +3816,10 @@ async function sendMessage() {
 
 
 /* =========================================================
-   46. START REALTIME
+   37. MARK CONVERSATION SEEN
    ========================================================= */
 
-function startMessageRealtime() {
-
-  if (!currentUser) {
-
-    console.log(
-      "Realtime: no logged-in user."
-    );
-
-    return;
-
-  }
-
-
-  if (
-    getCurrentPage() !==
-    "messages.html"
-  ) {
-
-    return;
-
-  }
-
-
-  stopMessageRealtime();
-
-
-  console.log(
-    "Starting message realtime..."
-  );
-
-
-  messageRealtimeChannel =
-    supabaseClient
-
-      .channel(
-        "messages-channel-" +
-        currentUser.id +
-        "-" +
-        Date.now()
-      )
-
-      .on(
-        "postgres_changes",
-        {
-
-          event:
-            "INSERT",
-
-          schema:
-            "public",
-
-          table:
-            "messages"
-
-        },
-
-        function (payload) {
-
-          console.log(
-            "🔥 REALTIME MESSAGE:",
-            payload.new
-          );
-
-
-          handleRealtimeMessage(
-            payload.new
-          );
-
-        }
-      )
-
-      .on(
-        "postgres_changes",
-        {
-
-          event:
-            "UPDATE",
-
-          schema:
-            "public",
-
-          table:
-            "messages"
-
-        },
-
-        function (payload) {
-
-          console.log(
-            "👀 MESSAGE UPDATED:",
-            payload.new
-          );
-
-
-          if (
-            payload.new.seen === true
-          ) {
-
-            updateMessageSeen(
-              payload.new.id
-            );
-
-          }
-
-        }
-      )
-
-      .subscribe(
-        function (
-          status,
-          error
-        ) {
-
-          console.log(
-            "Realtime status:",
-            status
-          );
-
-
-          if (error) {
-
-            console.error(
-              "Realtime error:",
-              error
-            );
-
-          }
-
-        }
-      );
-
-}
-
-
-/* =========================================================
-   47. HANDLE REALTIME MESSAGE
-   ========================================================= */
-
-function handleRealtimeMessage(message) {
-
-  if (!currentUser) {
-    return;
-  }
-
-
-  const belongsToCurrentUser =
-    message.sender_id === currentUser.id ||
-    message.receiver_id === currentUser.id;
-
-
-  if (!belongsToCurrentUser) {
-    return;
-  }
-
-
-  const friend =
-    getSelectedMessageFriend();
-
-
-  if (!friend) {
-    return;
-  }
-
-
-  const friendId =
-    friend.id;
-
-
-  const belongsToOpenConversation =
-
-    (
-      message.sender_id ===
-      currentUser.id &&
-
-      message.receiver_id ===
-      friendId
-    )
-
-    ||
-
-    (
-      message.sender_id ===
-      friendId &&
-
-      message.receiver_id ===
-      currentUser.id
-    );
-
-
-  if (
-    !belongsToOpenConversation
-  ) {
-
-    console.log(
-      "Message belongs to another conversation."
-    );
-
-    return;
-
-  }
-
-
-  appendMessageToChat(
-    message,
-    true
-  );
-
-
-  if (
-    message.sender_id ===
-    friendId
-  ) {
-
-    markMessageSeen(
-      message.id
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   48. MARK MESSAGE SEEN
-   ========================================================= */
-
-async function markMessageSeen(messageId) {
-
-  if (!currentUser) {
-    return;
-  }
-
-
-  try {
-
-    const result =
-      await supabaseClient
-        .from("messages")
-        .update({
-
-          seen:
-            true
-
-        })
-        .eq(
-          "id",
-          messageId
-        )
-        .eq(
-          "receiver_id",
-          currentUser.id
-        );
-
-
-    if (result.error) {
-
-      console.error(
-        "Mark seen error:",
-        result.error
-      );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "markMessageSeen error:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   49. MARK CONVERSATION SEEN
-   ========================================================= */
-
-async function markConversationAsSeen(
+async function markConversationSeen(
   friendId
 ) {
 
@@ -4744,7 +3856,7 @@ async function markConversationAsSeen(
     if (result.error) {
 
       console.error(
-        "Conversation seen error:",
+        "Mark messages seen error:",
         result.error
       );
 
@@ -4753,7 +3865,7 @@ async function markConversationAsSeen(
   } catch (error) {
 
     console.error(
-      "markConversationAsSeen error:",
+      "markConversationSeen error:",
       error
     );
 
@@ -4763,42 +3875,158 @@ async function markConversationAsSeen(
 
 
 /* =========================================================
-   50. UPDATE SEEN UI
+   38. REALTIME MESSAGING
    ========================================================= */
 
-function updateMessageSeen(
-  messageId
-) {
+function startMessageRealtime() {
 
-  const element =
-    document.querySelector(
-      '[data-seen-id="' +
-      CSS.escape(
-        String(messageId)
-      ) +
-      '"]'
-    );
+  if (!currentUser) {
+    return;
+  }
 
 
-  if (element) {
+  if (
+    getCurrentPage() !==
+    "messages.html"
+  ) {
 
-    element.textContent =
-      "✓✓";
+    return;
 
   }
+
+
+  if (messageRealtimeChannel) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel =
+      null;
+
+  }
+
+
+  console.log(
+    "Starting message realtime..."
+  );
+
+
+  messageRealtimeChannel =
+    supabaseClient
+      .channel(
+        "messages-channel-" +
+        currentUser.id +
+        "-" +
+        Date.now()
+      )
+
+
+      .on(
+        "postgres_changes",
+        {
+
+          event:
+            "INSERT",
+
+          schema:
+            "public",
+
+          table:
+            "messages"
+
+        },
+
+        function (payload) {
+
+          console.log(
+            "Realtime message:",
+            payload.new
+          );
+
+
+          handleRealtimeMessage(
+            payload.new
+          );
+
+        }
+      )
+
+
+      .on(
+        "postgres_changes",
+        {
+
+          event:
+            "UPDATE",
+
+          schema:
+            "public",
+
+          table:
+            "messages"
+
+        },
+
+        function (payload) {
+
+          console.log(
+            "Message updated:",
+            payload.new
+          );
+
+
+          if (
+            payload.new.seen ===
+            true
+          ) {
+
+            updateMessageSeen(
+              payload.new.id
+            );
+
+          }
+
+        }
+      )
+
+
+      .subscribe(
+        function (status) {
+
+          console.log(
+            "Realtime status:",
+            status
+          );
+
+        }
+      );
 
 }
 
 
 /* =========================================================
-   51. REALTIME APPEND COMPATIBILITY
+   39. HANDLE REALTIME MESSAGE
    ========================================================= */
 
-function appendRealtimeMessage(
+function handleRealtimeMessage(
   message
 ) {
 
   if (!currentUser) {
+    return;
+  }
+
+
+  const belongs =
+    message.sender_id ===
+      currentUser.id ||
+
+    message.receiver_id ===
+      currentUser.id;
+
+
+  if (!belongs) {
     return;
   }
 
@@ -4812,42 +4040,250 @@ function appendRealtimeMessage(
   }
 
 
-  const belongs =
+  const friendId =
+    friend.id;
 
+
+  const openConversation =
     (
       message.sender_id ===
       currentUser.id &&
-
       message.receiver_id ===
-      friend.id
+      friendId
     )
-
     ||
-
     (
       message.sender_id ===
-      friend.id &&
-
+      friendId &&
       message.receiver_id ===
       currentUser.id
     );
 
 
-  if (!belongs) {
+  if (!openConversation) {
     return;
   }
 
 
-  appendMessageToChat(
-    message,
-    true
+  appendRealtimeMessage(
+    message
+  );
+
+
+  if (
+    message.sender_id !==
+    currentUser.id
+  ) {
+
+    markConversationSeen(
+      friendId
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   40. APPEND MESSAGE
+   ========================================================= */
+
+function appendRealtimeMessage(
+  message
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (
+    !chat ||
+    !currentUser
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    message.id &&
+    chat.querySelector(
+      `[data-message-id="${CSS.escape(String(message.id))}"]`
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const emptyState =
+    chat.querySelector(
+      ".empty-state"
+    );
+
+
+  if (emptyState) {
+
+    chat.innerHTML =
+      "";
+
+  }
+
+
+  const mine =
+    message.sender_id ===
+    currentUser.id;
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "message-row " +
+    (
+      mine
+        ? "mine"
+        : "theirs"
+    );
+
+
+  if (message.id) {
+
+    row.setAttribute(
+      "data-message-id",
+      String(message.id)
+    );
+
+  }
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+
+  bubble.className =
+    "message-bubble";
+
+
+  bubble.textContent =
+    message.message ||
+    "";
+
+
+  const time =
+    document.createElement(
+      "div"
+    );
+
+
+  time.className =
+    "message-time";
+
+
+  if (message.created_at) {
+
+    time.textContent =
+      new Date(
+        message.created_at
+      ).toLocaleTimeString(
+        "en-IN",
+        {
+          hour:
+            "numeric",
+          minute:
+            "2-digit"
+        }
+      );
+
+  }
+
+
+  bubble.appendChild(
+    time
+  );
+
+
+  row.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    row
+  );
+
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+/* =========================================================
+   41. MESSAGE SEEN UPDATE
+   ========================================================= */
+
+function updateMessageSeen(
+  messageId
+) {
+
+  const element =
+    document.querySelector(
+      `[data-message-id="${CSS.escape(String(messageId))}"]`
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  element.classList.add(
+    "seen"
   );
 
 }
 
 
 /* =========================================================
-   52. SELECTED MESSAGE FRIEND
+   42. STOP REALTIME
+   ========================================================= */
+
+function stopMessageRealtime() {
+
+  if (
+    messageRealtimeChannel
+  ) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+
+    messageRealtimeChannel =
+      null;
+
+
+    console.log(
+      "Message realtime stopped."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   43. SELECTED MESSAGE FRIEND
    ========================================================= */
 
 function setSelectedMessageFriend(
@@ -4876,90 +4312,36 @@ function getSelectedMessageFriend() {
 
 
 /* =========================================================
-   53. STOP REALTIME
+   44. SEARCH ENTER KEY
    ========================================================= */
 
-function stopMessageRealtime() {
+function setupSearchEnterKey() {
 
-  if (
-    messageRealtimeChannel
-  ) {
-
-    supabaseClient.removeChannel(
-      messageRealtimeChannel
-    );
-
-
-    messageRealtimeChannel =
-      null;
-
-
-    console.log(
-      "Message realtime stopped."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   54. MESSAGE HELPERS
-   ========================================================= */
-
-function formatMessageTime(
-  dateString
-) {
-
-  if (!dateString) {
-    return "";
-  }
-
-
-  try {
-
-    return new Date(
-      dateString
-    ).toLocaleTimeString(
-      "en-IN",
-      {
-
-        hour:
-          "numeric",
-
-        minute:
-          "2-digit"
-
-      }
-    );
-
-  } catch (error) {
-
-    return "";
-
-  }
-
-}
-
-
-function scrollChatToBottom() {
-
-  const chat =
+  const input =
     document.getElementById(
-      "chatMessages"
+      "friendSearch"
     );
 
 
-  if (!chat) {
+  if (!input) {
     return;
   }
 
 
-  requestAnimationFrame(
-    function () {
+  input.addEventListener(
+    "keydown",
+    function (event) {
 
-      chat.scrollTop =
-        chat.scrollHeight;
+      if (
+        event.key ===
+        "Enter"
+      ) {
+
+        event.preventDefault();
+
+        searchFriends();
+
+      }
 
     }
   );
@@ -4967,48 +4349,83 @@ function scrollChatToBottom() {
 }
 
 
-function showMessagesLoginRequired() {
+/* =========================================================
+   45. PROFILE NAVIGATION
+   ========================================================= */
 
-  const friends =
-    document.getElementById(
-      "messageFriends"
-    );
+function setupProfilePage() {
+
+  window.editProfile =
+    function () {
+
+      if (!currentUser) {
+
+        openAuth();
+
+        return;
+
+      }
 
 
-  const chat =
-    document.getElementById(
-      "chatMessages"
-    );
+      window.location.href =
+        "profile.html";
+
+    };
+
+}
 
 
-  if (friends) {
+function goToMyProfile() {
 
-    friends.innerHTML =
-      '<div class="empty-state">' +
-      '<div>🔐</div>' +
-      '<h3>Login Required</h3>' +
-      '<p>Please login to use messages.</p>' +
-      '</div>';
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
 
   }
 
 
-  if (chat) {
+  const menu =
+    document.getElementById(
+      "accountMenu"
+    );
 
-    chat.innerHTML =
-      '<div class="empty-state">' +
-      '<div>🔐</div>' +
-      '<h3>Please Login</h3>' +
-      '<p>Login to start messaging your friends.</p>' +
-      '</div>';
+
+  if (menu) {
+
+    menu.style.display =
+      "none";
 
   }
+
+
+  const profile =
+    document.getElementById(
+      "profile"
+    );
+
+
+  if (profile) {
+
+    profile.scrollIntoView({
+      behavior:
+        "smooth"
+    });
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "profile.html";
 
 }
 
 
 /* =========================================================
-   55. NAVIGATION
+   46. NAVIGATION
    ========================================================= */
 
 function goHome() {
@@ -5078,9 +4495,47 @@ function goToRequests() {
 }
 
 
+function learnMore() {
+
+  const about =
+    document.getElementById(
+      "about"
+    );
+
+
+  if (about) {
+
+    about.scrollIntoView({
+      behavior:
+        "smooth"
+    });
+
+  }
+
+}
+
+
 /* =========================================================
-   56. GENERAL HELPERS
+   47. UTILITY FUNCTIONS
    ========================================================= */
+
+function getInputValue(
+  id
+) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (!element) {
+    return "";
+  }
+
+
+  return element.value.trim();
+
+}
+
 
 function setText(
   id,
@@ -5126,7 +4581,13 @@ function setValue(
 }
 
 
-function getInitials(name) {
+/* =========================================================
+   48. INITIALS
+   ========================================================= */
+
+function getInitials(
+  name
+) {
 
   if (!name) {
     return "?";
@@ -5140,11 +4601,15 @@ function getInitials(name) {
 
 
   if (
-    words.length === 1
+    words.length ===
+    1
   ) {
 
     return words[0]
-      .substring(0, 2)
+      .substring(
+        0,
+        2
+      )
       .toUpperCase();
 
   }
@@ -5152,11 +4617,17 @@ function getInitials(name) {
 
   return (
     words[0][0] +
-    words[words.length - 1][0]
+    words[
+      words.length - 1
+    ][0]
   ).toUpperCase();
 
 }
 
+
+/* =========================================================
+   49. AVATAR ELEMENT
+   ========================================================= */
 
 function updateAvatarElement(
   id,
@@ -5229,7 +4700,48 @@ function updateAvatarElement(
 }
 
 
-function escapeHTML(value) {
+/* =========================================================
+   50. CREATE AVATAR HTML
+   ========================================================= */
+
+function createAvatarHTML(
+  avatarUrl,
+  name,
+  className
+) {
+
+  if (avatarUrl) {
+
+    return `
+      <div class="${className}">
+        <img
+          src="${escapeHTML(avatarUrl)}"
+          alt="${escapeHTML(name)}"
+          class="${className}-img"
+          onerror="this.style.display='none'; this.parentElement.textContent='${escapeJS(getInitials(name))}'"
+        >
+      </div>
+    `;
+
+  }
+
+
+  return `
+    <div class="${className}">
+      ${escapeHTML(getInitials(name))}
+    </div>
+  `;
+
+}
+
+
+/* =========================================================
+   51. ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(
+  value
+) {
 
   if (
     value === null ||
@@ -5242,27 +4754,22 @@ function escapeHTML(value) {
 
 
   return String(value)
-
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
@@ -5271,25 +4778,27 @@ function escapeHTML(value) {
 }
 
 
-function escapeJS(value) {
+/* =========================================================
+   52. ESCAPE JAVASCRIPT
+   ========================================================= */
+
+function escapeJS(
+  value
+) {
 
   return String(value)
-
     .replace(
       /\\/g,
       "\\\\"
     )
-
     .replace(
       /'/g,
       "\\'"
     )
-
     .replace(
       /\r/g,
       "\\r"
     )
-
     .replace(
       /\n/g,
       "\\n"
@@ -5299,8 +4808,123 @@ function escapeJS(value) {
 
 
 /* =========================================================
-   57. WINDOW EXPORTS
+   53. EDIT PROFILE
    ========================================================= */
+
+function editProfile() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "profile.html";
+
+}
+
+
+/* =========================================================
+   54. CLICK OUTSIDE ACCOUNT MENU
+   ========================================================= */
+
+document.addEventListener(
+  "click",
+  function (event) {
+
+    const accountButton =
+      document.getElementById(
+        "accountButton"
+      );
+
+    const accountMenu =
+      document.getElementById(
+        "accountMenu"
+      );
+
+
+    if (
+      !accountButton ||
+      !accountMenu
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      !accountButton.contains(
+        event.target
+      ) &&
+      !accountMenu.contains(
+        event.target
+      )
+    ) {
+
+      accountMenu.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   55. CLOSE MODALS OUTSIDE
+   ========================================================= */
+
+document.addEventListener(
+  "click",
+  function (event) {
+
+    const authModal =
+      document.getElementById(
+        "authModal"
+      );
+
+    const editModal =
+      document.getElementById(
+        "editProfileModal"
+      );
+
+
+    if (
+      authModal &&
+      event.target ===
+      authModal
+    ) {
+
+      closeAuth();
+
+    }
+
+
+    if (
+      editModal &&
+      event.target ===
+      editModal
+    ) {
+
+      closeEditProfile();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   56. WINDOW EXPORTS
+   ========================================================= */
+
+
+/* Account */
 
 window.handleAccountClick =
   handleAccountClick;
@@ -5310,6 +4934,9 @@ window.openAuth =
 
 window.closeAuth =
   closeAuth;
+
+
+/* Authentication */
 
 window.showLogin =
   showLogin;
@@ -5326,26 +4953,11 @@ window.login =
 window.logout =
   logout;
 
-window.goHome =
-  goHome;
 
-window.goToFriends =
-  goToFriends;
-
-window.goToMessages =
-  goToMessages;
-
-window.goToProfile =
-  goToProfile;
-
-window.goToRequests =
-  goToRequests;
+/* Friends */
 
 window.findFriends =
   findFriends;
-
-window.learnMore =
-  learnMore;
 
 window.searchFriends =
   searchFriends;
@@ -5358,6 +4970,9 @@ window.acceptFriendRequest =
 
 window.declineFriendRequest =
   declineFriendRequest;
+
+
+/* Profile */
 
 window.openEditProfile =
   openEditProfile;
@@ -5374,17 +4989,23 @@ window.goToMyProfile =
 window.editProfile =
   editProfile;
 
-window.setSelectedMessageFriend =
-  setSelectedMessageFriend;
 
-window.getSelectedMessageFriend =
-  getSelectedMessageFriend;
+/* Messaging */
 
 window.openConversation =
   openConversation;
 
 window.sendMessage =
   sendMessage;
+
+window.loadConversation =
+  loadConversation;
+
+window.setSelectedMessageFriend =
+  setSelectedMessageFriend;
+
+window.getSelectedMessageFriend =
+  getSelectedMessageFriend;
 
 window.startMessageRealtime =
   startMessageRealtime;
@@ -5395,15 +5016,36 @@ window.stopMessageRealtime =
 window.appendRealtimeMessage =
   appendRealtimeMessage;
 
-window.markMessageSeen =
-  markMessageSeen;
+window.updateMessageSeen =
+  updateMessageSeen;
+
+
+/* Navigation */
+
+window.goHome =
+  goHome;
+
+window.goToFriends =
+  goToFriends;
+
+window.goToMessages =
+  goToMessages;
+
+window.goToProfile =
+  goToProfile;
+
+window.goToRequests =
+  goToRequests;
+
+window.learnMore =
+  learnMore;
 
 
 /* =========================================================
-   58. READY
+   57. READY
    ========================================================= */
 
 console.log(
-  "YouRemo complete script.js ready."
+  "YouRemo script.js ready."
 );
 ```
