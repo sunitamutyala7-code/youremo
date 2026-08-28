@@ -1,4 +1,3 @@
-```javascript
 /* =========================================================
    YOUREMO - COMPLETE SCRIPT.JS
    CLEAN REPLACEMENT
