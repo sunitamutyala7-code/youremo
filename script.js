@@ -1,7 +1,6 @@
 /* =========================================================
    YOUREMO - COMPLETE SCRIPT.JS
-   VERSION FOR SEPARATE PAGES
-   =========================================================
+   SEPARATE PAGES VERSION
 
    Pages:
    index.html
@@ -34,7 +33,9 @@ const supabaseClient =
     SUPABASE_URL,
     SUPABASE_KEY
   );
+
 window.supabaseClient = supabaseClient;
+
 
 /* =========================================================
    2. GLOBAL VARIABLES
@@ -59,12 +60,11 @@ function getCurrentPage() {
       .pop()
       .toLowerCase();
 
-  if (!path || path === "") {
+  if (!path) {
     return "index.html";
   }
 
   return path;
-
 }
 
 
@@ -76,26 +76,12 @@ document.addEventListener(
   "DOMContentLoaded",
   async function () {
 
-    console.log(
-      "================================="
-    );
-
-    console.log(
-      "YouRemo script loaded"
-    );
-
-    console.log(
-      "Current page:",
-      getCurrentPage()
-    );
-
-    console.log(
-      "================================="
-    );
-
+    console.log("=================================");
+    console.log("YouRemo script loaded");
+    console.log("Current page:", getCurrentPage());
+    console.log("=================================");
 
     await loadCurrentUser();
-
 
     setupAvatarUpload();
 
@@ -103,106 +89,14 @@ document.addEventListener(
 
     setupSearchEnterKey();
 
-    setupPageSpecificFeatures();
+    setupMessagePage();
 
   }
 );
 
 
 /* =========================================================
-   5. PAGE-SPECIFIC SETUP
-   ========================================================= */
-
-function setupPageSpecificFeatures() {
-
-  const page =
-    getCurrentPage();
-
-
-  /* -------------------------------------------------------
-     HOME PAGE
-     ------------------------------------------------------- */
-
-  if (
-    page === "index.html"
-  ) {
-
-    console.log(
-      "Home page initialized."
-    );
-
-  }
-
-
-  /* -------------------------------------------------------
-     FRIENDS PAGE
-     ------------------------------------------------------- */
-
-  if (
-    page === "friends.html"
-  ) {
-
-    console.log(
-      "Friends page initialized."
-    );
-
-    if (currentUser) {
-
-      loadFriendRequests();
-
-      loadMyFriends();
-
-    }
-
-  }
-
-
-  /* -------------------------------------------------------
-     PROFILE PAGE
-     ------------------------------------------------------- */
-
-  if (
-    page === "profile.html"
-  ) {
-
-    console.log(
-      "Profile page initialized."
-    );
-
-    if (currentUser) {
-
-      loadProfile();
-
-    }
-
-  }
-
-
-  /* -------------------------------------------------------
-     MESSAGES PAGE
-     ------------------------------------------------------- */
-
-  if (
-    page === "messages.html"
-  ) {
-
-    console.log(
-      "Messages page initialized."
-    );
-
-    if (currentUser) {
-
-      startMessageRealtime();
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   6. LOAD CURRENT USER
+   5. LOAD CURRENT USER
    ========================================================= */
 
 async function loadCurrentUser() {
@@ -211,7 +105,6 @@ async function loadCurrentUser() {
 
     const result =
       await supabaseClient.auth.getUser();
-
 
     if (result.error) {
 
@@ -225,22 +118,17 @@ async function loadCurrentUser() {
       await refreshAccountUI();
 
       return;
-
     }
-
 
     currentUser =
       result.data.user || null;
-
 
     console.log(
       "Current user:",
       currentUser
     );
 
-
     await refreshAccountUI();
-
 
     if (currentUser) {
 
@@ -250,18 +138,17 @@ async function loadCurrentUser() {
 
       await loadMyFriends();
 
-
       if (
         getCurrentPage() ===
         "messages.html"
       ) {
 
+        await loadMessageFriends();
+
         startMessageRealtime();
 
       }
-
     }
-
 
   } catch (error) {
 
@@ -271,12 +158,11 @@ async function loadCurrentUser() {
     );
 
   }
-
 }
 
 
 /* =========================================================
-   7. AUTH STATE CHANGE
+   6. AUTH STATE CHANGE
    ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
@@ -290,19 +176,16 @@ supabaseClient.auth.onAuthStateChange(
       event
     );
 
-
     currentUser =
       session &&
       session.user
         ? session.user
         : null;
 
-
     setTimeout(
       async function () {
 
         await refreshAccountUI();
-
 
         if (currentUser) {
 
@@ -312,11 +195,12 @@ supabaseClient.auth.onAuthStateChange(
 
           await loadMyFriends();
 
-
           if (
             getCurrentPage() ===
             "messages.html"
           ) {
+
+            await loadMessageFriends();
 
             startMessageRealtime();
 
@@ -337,7 +221,7 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* =========================================================
-   8. ACCOUNT UI
+   7. ACCOUNT UI
    ========================================================= */
 
 async function refreshAccountUI() {
@@ -347,28 +231,18 @@ async function refreshAccountUI() {
       "loginButton"
     );
 
-
   const navAvatar =
     document.getElementById(
       "navAvatar"
     );
-
 
   const accountMenu =
     document.getElementById(
       "accountMenu"
     );
 
-
-  /*
-   * Some pages may not contain
-   * the account button.
-   */
-
   if (!loginButton) {
-
     return;
-
   }
 
 
@@ -381,7 +255,6 @@ async function refreshAccountUI() {
     loginButton.textContent =
       "Login";
 
-
     if (navAvatar) {
 
       navAvatar.style.backgroundImage =
@@ -392,7 +265,6 @@ async function refreshAccountUI() {
 
     }
 
-
     if (accountMenu) {
 
       accountMenu.style.display =
@@ -400,9 +272,7 @@ async function refreshAccountUI() {
 
     }
 
-
     return;
-
   }
 
 
@@ -411,7 +281,6 @@ async function refreshAccountUI() {
      ------------------------------------------------------- */
 
   let profile = null;
-
 
   try {
 
@@ -427,12 +296,8 @@ async function refreshAccountUI() {
         )
         .maybeSingle();
 
-
     if (!result.error) {
-
-      profile =
-        result.data;
-
+      profile = result.data;
     }
 
   } catch (error) {
@@ -462,7 +327,7 @@ async function refreshAccountUI() {
 
 
   /* -------------------------------------------------------
-     NAVIGATION AVATAR
+     NAV AVATAR
      ------------------------------------------------------- */
 
   if (navAvatar) {
@@ -472,7 +337,6 @@ async function refreshAccountUI() {
 
     navAvatar.textContent =
       "";
-
 
     if (
       profile &&
@@ -496,9 +360,7 @@ async function refreshAccountUI() {
     } else {
 
       navAvatar.textContent =
-        getInitials(
-          displayName
-        );
+        getInitials(displayName);
 
     }
 
@@ -508,7 +370,7 @@ async function refreshAccountUI() {
 
 
 /* =========================================================
-   9. ACCOUNT BUTTON
+   8. ACCOUNT BUTTON
    ========================================================= */
 
 function handleAccountClick() {
@@ -521,19 +383,14 @@ function handleAccountClick() {
 
   }
 
-
   const menu =
     document.getElementById(
       "accountMenu"
     );
 
-
   if (!menu) {
-
     return;
-
   }
-
 
   if (
     menu.style.display ===
@@ -554,7 +411,7 @@ function handleAccountClick() {
 
 
 /* =========================================================
-   10. OPEN AUTH
+   9. AUTH MODAL
    ========================================================= */
 
 function openAuth() {
@@ -564,26 +421,17 @@ function openAuth() {
       "authModal"
     );
 
-
   if (!modal) {
-
     return;
-
   }
-
 
   modal.style.display =
     "flex";
-
 
   showLogin();
 
 }
 
-
-/* =========================================================
-   11. CLOSE AUTH
-   ========================================================= */
 
 function closeAuth() {
 
@@ -591,7 +439,6 @@ function closeAuth() {
     document.getElementById(
       "authModal"
     );
-
 
   if (modal) {
 
@@ -604,7 +451,7 @@ function closeAuth() {
 
 
 /* =========================================================
-   12. SHOW LOGIN
+   10. LOGIN FORM
    ========================================================= */
 
 function showLogin() {
@@ -614,62 +461,45 @@ function showLogin() {
       "authTitle"
     );
 
-
   const subtitle =
     document.getElementById(
       "authSubtitle"
     );
-
 
   const name =
     document.getElementById(
       "authName"
     );
 
-
   const username =
     document.getElementById(
       "authUsername"
     );
-
 
   const button =
     document.querySelector(
       ".auth-submit"
     );
 
-
   if (title) {
-
     title.textContent =
       "Welcome Back";
-
   }
-
 
   if (subtitle) {
-
     subtitle.textContent =
       "Login to your YouRemo account";
-
   }
-
 
   if (name) {
-
     name.style.display =
       "none";
-
   }
-
 
   if (username) {
-
     username.style.display =
       "none";
-
   }
-
 
   if (button) {
 
@@ -685,7 +515,7 @@ function showLogin() {
 
 
 /* =========================================================
-   13. SHOW SIGNUP
+   11. SIGNUP FORM
    ========================================================= */
 
 function showSignup() {
@@ -695,62 +525,45 @@ function showSignup() {
       "authTitle"
     );
 
-
   const subtitle =
     document.getElementById(
       "authSubtitle"
     );
-
 
   const name =
     document.getElementById(
       "authName"
     );
 
-
   const username =
     document.getElementById(
       "authUsername"
     );
-
 
   const button =
     document.querySelector(
       ".auth-submit"
     );
 
-
   if (title) {
-
     title.textContent =
       "Welcome to YouRemo";
-
   }
-
 
   if (subtitle) {
-
     subtitle.textContent =
       "Create your account";
-
   }
-
 
   if (name) {
-
     name.style.display =
       "block";
-
   }
-
 
   if (username) {
-
     username.style.display =
       "block";
-
   }
-
 
   if (button) {
 
@@ -766,7 +579,7 @@ function showSignup() {
 
 
 /* =========================================================
-   14. SIGN UP
+   12. SIGN UP
    ========================================================= */
 
 async function signUp() {
@@ -776,42 +589,35 @@ async function signUp() {
       "authName"
     );
 
-
   const usernameElement =
     document.getElementById(
       "authUsername"
     );
-
 
   const emailElement =
     document.getElementById(
       "authEmail"
     );
 
-
   const passwordElement =
     document.getElementById(
       "authPassword"
     );
-
 
   const name =
     nameElement
       ? nameElement.value.trim()
       : "";
 
-
   const username =
     usernameElement
       ? usernameElement.value.trim()
       : "";
 
-
   const email =
     emailElement
       ? emailElement.value.trim()
       : "";
-
 
   const password =
     passwordElement
@@ -826,7 +632,6 @@ async function signUp() {
     );
 
     return;
-
   }
 
 
@@ -837,7 +642,6 @@ async function signUp() {
     );
 
     return;
-
   }
 
 
@@ -848,7 +652,6 @@ async function signUp() {
     );
 
     return;
-
   }
 
 
@@ -862,15 +665,10 @@ async function signUp() {
     );
 
     return;
-
   }
 
 
   try {
-
-    /* -----------------------------------------------------
-       CHECK USERNAME
-       ----------------------------------------------------- */
 
     const usernameCheck =
       await supabaseClient
@@ -883,22 +681,15 @@ async function signUp() {
         .maybeSingle();
 
 
-    if (
-      usernameCheck.data
-    ) {
+    if (usernameCheck.data) {
 
       alert(
         "That username is already taken."
       );
 
       return;
-
     }
 
-
-    /* -----------------------------------------------------
-       CREATE ACCOUNT
-       ----------------------------------------------------- */
 
     const signupResult =
       await supabaseClient.auth.signUp({
@@ -933,7 +724,6 @@ async function signUp() {
       );
 
       return;
-
     }
 
 
@@ -947,13 +737,8 @@ async function signUp() {
       );
 
       return;
-
     }
 
-
-    /* -----------------------------------------------------
-       CREATE PROFILE
-       ----------------------------------------------------- */
 
     const profileResult =
       await supabaseClient
@@ -986,13 +771,11 @@ async function signUp() {
       "Account created successfully!"
     );
 
-
     closeAuth();
 
     clearAuthForm();
 
     await loadCurrentUser();
-
 
   } catch (error) {
 
@@ -1000,7 +783,6 @@ async function signUp() {
       "Signup error:",
       error
     );
-
 
     alert(
       "Something went wrong while creating your account."
@@ -1012,7 +794,7 @@ async function signUp() {
 
 
 /* =========================================================
-   15. LOGIN
+   13. LOGIN
    ========================================================= */
 
 async function login() {
@@ -1022,18 +804,15 @@ async function login() {
       "authEmail"
     );
 
-
   const passwordElement =
     document.getElementById(
       "authPassword"
     );
 
-
   const email =
     emailElement
       ? emailElement.value.trim()
       : "";
-
 
   const password =
     passwordElement
@@ -1051,7 +830,6 @@ async function login() {
     );
 
     return;
-
   }
 
 
@@ -1077,7 +855,6 @@ async function login() {
       );
 
       return;
-
     }
 
 
@@ -1108,10 +885,11 @@ async function login() {
       "messages.html"
     ) {
 
+      await loadMessageFriends();
+
       startMessageRealtime();
 
     }
-
 
   } catch (error) {
 
@@ -1119,7 +897,6 @@ async function login() {
       "Login error:",
       error
     );
-
 
     alert(
       "Login failed."
@@ -1131,7 +908,7 @@ async function login() {
 
 
 /* =========================================================
-   16. LOGOUT
+   14. LOGOUT
    ========================================================= */
 
 async function logout() {
@@ -1139,7 +916,6 @@ async function logout() {
   try {
 
     stopMessageRealtime();
-
 
     const result =
       await supabaseClient.auth
@@ -1153,7 +929,6 @@ async function logout() {
       );
 
       return;
-
     }
 
 
@@ -1195,7 +970,7 @@ async function logout() {
 
 
 /* =========================================================
-   17. CLEAR AUTH FORM
+   15. CLEAR AUTH FORM
    ========================================================= */
 
 function clearAuthForm() {
@@ -1203,11 +978,8 @@ function clearAuthForm() {
   const fields = [
 
     "authName",
-
     "authUsername",
-
     "authEmail",
-
     "authPassword"
 
   ];
@@ -1217,10 +989,7 @@ function clearAuthForm() {
     function (id) {
 
       const element =
-        document.getElementById(
-          id
-        );
-
+        document.getElementById(id);
 
       if (element) {
 
@@ -1236,7 +1005,7 @@ function clearAuthForm() {
 
 
 /* =========================================================
-   18. FIND FRIENDS
+   16. FIND FRIENDS
    ========================================================= */
 
 function findFriends() {
@@ -1276,9 +1045,7 @@ function findFriends() {
 
     }
 
-
     return;
-
   }
 
 
@@ -1289,7 +1056,7 @@ function findFriends() {
 
 
 /* =========================================================
-   19. LEARN MORE
+   17. LEARN MORE
    ========================================================= */
 
 function learnMore() {
@@ -1298,7 +1065,6 @@ function learnMore() {
     document.getElementById(
       "about"
     );
-
 
   if (about) {
 
@@ -1315,7 +1081,7 @@ function learnMore() {
 
 
 /* =========================================================
-   20. SEARCH FRIENDS
+   18. SEARCH FRIENDS
    ========================================================= */
 
 async function searchFriends() {
@@ -1324,7 +1090,6 @@ async function searchFriends() {
     document.getElementById(
       "friendSearch"
     );
-
 
   const results =
     document.getElementById(
@@ -1369,10 +1134,6 @@ async function searchFriends() {
 
   try {
 
-    /* -----------------------------------------------------
-       SEARCH BY NAME
-       ----------------------------------------------------- */
-
     const nameResult =
       await supabaseClient
         .from("profiles")
@@ -1388,10 +1149,6 @@ async function searchFriends() {
         .limit(30);
 
 
-    /* -----------------------------------------------------
-       SEARCH BY USERNAME
-       ----------------------------------------------------- */
-
     const usernameResult =
       await supabaseClient
         .from("profiles")
@@ -1405,26 +1162,6 @@ async function searchFriends() {
           "%"
         )
         .limit(30);
-
-
-    if (nameResult.error) {
-
-      console.error(
-        "Name search error:",
-        nameResult.error
-      );
-
-    }
-
-
-    if (usernameResult.error) {
-
-      console.error(
-        "Username search error:",
-        usernameResult.error
-      );
-
-    }
 
 
     const combined = [
@@ -1458,10 +1195,6 @@ async function searchFriends() {
       );
 
 
-    /* -----------------------------------------------------
-       REMOVE CURRENT USER
-       ----------------------------------------------------- */
-
     if (currentUser) {
 
       people =
@@ -1479,10 +1212,6 @@ async function searchFriends() {
     }
 
 
-    /* -----------------------------------------------------
-       NO RESULTS
-       ----------------------------------------------------- */
-
     if (!people.length) {
 
       results.innerHTML =
@@ -1496,10 +1225,6 @@ async function searchFriends() {
 
     }
 
-
-    /* -----------------------------------------------------
-       DISPLAY RESULTS
-       ----------------------------------------------------- */
 
     results.innerHTML =
       people
@@ -1545,7 +1270,7 @@ async function searchFriends() {
 
 
 /* =========================================================
-   21. CREATE FRIEND RESULT CARD
+   19. FRIEND RESULT CARD
    ========================================================= */
 
 function createFriendResultCard(
@@ -1569,48 +1294,29 @@ function createFriendResultCard(
     "";
 
 
-  if (
-    person.avatar_url
-  ) {
+  if (person.avatar_url) {
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
       '<img ' +
-
       'src="' +
-      escapeHTML(
-        person.avatar_url
-      ) +
+      escapeHTML(person.avatar_url) +
       '" ' +
-
       'alt="' +
       escapeHTML(name) +
       '" ' +
-
       'class="friend-avatar-img" ' +
-
       'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
-
-      escapeJS(
-        getInitials(name)
-      ) +
-
+      escapeJS(getInitials(name)) +
       '\'"' +
-
       '>' +
-
       '</div>';
 
   } else {
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
-      escapeHTML(
-        getInitials(name)
-      ) +
-
+      escapeHTML(getInitials(name)) +
       '</div>';
 
   }
@@ -1619,11 +1325,7 @@ function createFriendResultCard(
   return (
 
     '<div class="friend-card" data-user-id="' +
-
-    escapeHTML(
-      person.id
-    ) +
-
+    escapeHTML(person.id) +
     '">' +
 
     avatarHTML +
@@ -1631,15 +1333,11 @@ function createFriendResultCard(
     '<div class="friend-info">' +
 
     '<h3>' +
-
     escapeHTML(name) +
-
     '</h3>' +
 
     '<p>' +
-
     escapeHTML(username) +
-
     '</p>' +
 
     '</div>' +
@@ -1647,23 +1345,12 @@ function createFriendResultCard(
     '<div class="friend-card-actions">' +
 
     '<button ' +
-
     'class="primary-btn friend-request-btn" ' +
-
     'data-user-id="' +
-
-    escapeHTML(
-      person.id
-    ) +
-
+    escapeHTML(person.id) +
     '" ' +
-
     'onclick="sendFriendRequest(\'' +
-
-    escapeJS(
-      person.id
-    ) +
-
+    escapeJS(person.id) +
     '\')">' +
 
     'Add Friend' +
@@ -1680,7 +1367,7 @@ function createFriendResultCard(
 
 
 /* =========================================================
-   22. UPDATE SEARCH BUTTONS
+   20. UPDATE SEARCH BUTTONS
    ========================================================= */
 
 async function updateSearchButtons(
@@ -1688,9 +1375,7 @@ async function updateSearchButtons(
 ) {
 
   if (!currentUser) {
-
     return;
-
   }
 
 
@@ -1705,15 +1390,9 @@ async function updateSearchButtons(
 
 
   if (!ids.length) {
-
     return;
-
   }
 
-
-  /* -------------------------------------------------------
-     SENT REQUESTS
-     ------------------------------------------------------- */
 
   const sentResult =
     await supabaseClient
@@ -1731,10 +1410,6 @@ async function updateSearchButtons(
       );
 
 
-  /* -------------------------------------------------------
-     RECEIVED REQUESTS
-     ------------------------------------------------------- */
-
   const receivedResult =
     await supabaseClient
       .from("friend_requests")
@@ -1750,10 +1425,6 @@ async function updateSearchButtons(
         ids
       );
 
-
-  /* -------------------------------------------------------
-     FRIENDSHIPS
-     ------------------------------------------------------- */
 
   const friendshipResult =
     await supabaseClient
@@ -1841,27 +1512,19 @@ async function updateSearchButtons(
   );
 
 
-  /* -------------------------------------------------------
-     UPDATE BUTTONS
-     ------------------------------------------------------- */
-
   people.forEach(
     function (person) {
 
       const button =
         document.querySelector(
           '.friend-request-btn[data-user-id="' +
-          CSS.escape(
-            person.id
-          ) +
+          CSS.escape(person.id) +
           '"]'
         );
 
 
       if (!button) {
-
         return;
-
       }
 
 
@@ -1878,14 +1541,11 @@ async function updateSearchButtons(
           true;
 
         return;
-
       }
 
 
       if (
-        sentMap.get(
-          person.id
-        ) ===
+        sentMap.get(person.id) ===
         "pending"
       ) {
 
@@ -1896,14 +1556,11 @@ async function updateSearchButtons(
           true;
 
         return;
-
       }
 
 
       if (
-        receivedMap.get(
-          person.id
-        ) ===
+        receivedMap.get(person.id) ===
         "pending"
       ) {
 
@@ -1913,7 +1570,6 @@ async function updateSearchButtons(
         button.disabled =
           false;
 
-
         button.onclick =
           function () {
 
@@ -1922,9 +1578,7 @@ async function updateSearchButtons(
 
           };
 
-
         return;
-
       }
 
 
@@ -1941,7 +1595,7 @@ async function updateSearchButtons(
 
 
 /* =========================================================
-   23. SEND FRIEND REQUEST
+   21. SEND FRIEND REQUEST
    ========================================================= */
 
 async function sendFriendRequest(
@@ -1953,7 +1607,6 @@ async function sendFriendRequest(
     openAuth();
 
     return;
-
   }
 
 
@@ -1967,15 +1620,10 @@ async function sendFriendRequest(
     );
 
     return;
-
   }
 
 
   try {
-
-    /* -----------------------------------------------------
-       CHECK EXISTING FRIENDSHIP
-       ----------------------------------------------------- */
 
     const friendshipResult =
       await supabaseClient
@@ -1995,22 +1643,15 @@ async function sendFriendRequest(
         .maybeSingle();
 
 
-    if (
-      friendshipResult.data
-    ) {
+    if (friendshipResult.data) {
 
       alert(
         "You are already friends."
       );
 
       return;
-
     }
 
-
-    /* -----------------------------------------------------
-       CHECK EXISTING REQUEST
-       ----------------------------------------------------- */
 
     const requestResult =
       await supabaseClient
@@ -2036,9 +1677,7 @@ async function sendFriendRequest(
         .maybeSingle();
 
 
-    if (
-      requestResult.data
-    ) {
+    if (requestResult.data) {
 
       if (
         requestResult.data.sender_id ===
@@ -2058,13 +1697,8 @@ async function sendFriendRequest(
       }
 
       return;
-
     }
 
-
-    /* -----------------------------------------------------
-       SEND REQUEST
-       ----------------------------------------------------- */
 
     const insertResult =
       await supabaseClient
@@ -2083,31 +1717,25 @@ async function sendFriendRequest(
         });
 
 
-    if (
-      insertResult.error
-    ) {
+    if (insertResult.error) {
 
       console.error(
         "Send request error:",
         insertResult.error
       );
 
-
       alert(
         insertResult.error.message
       );
 
       return;
-
     }
 
 
     const button =
       document.querySelector(
         '.friend-request-btn[data-user-id="' +
-        CSS.escape(
-          receiverId
-        ) +
+        CSS.escape(receiverId) +
         '"]'
       );
 
@@ -2135,7 +1763,6 @@ async function sendFriendRequest(
       error
     );
 
-
     alert(
       "Could not send friend request."
     );
@@ -2146,7 +1773,7 @@ async function sendFriendRequest(
 
 
 /* =========================================================
-   24. LOAD FRIEND REQUESTS
+   22. LOAD FRIEND REQUESTS
    ========================================================= */
 
 async function loadFriendRequests() {
@@ -2156,22 +1783,14 @@ async function loadFriendRequests() {
       "friendRequests"
     );
 
-
   const badge =
     document.getElementById(
       "requestBadge"
     );
 
 
-  /*
-   * If this page doesn't have requests,
-   * simply stop.
-   */
-
   if (!container) {
-
     return;
-
   }
 
 
@@ -2186,15 +1805,10 @@ async function loadFriendRequests() {
 
 
     if (badge) {
-
-      badge.textContent =
-        "0";
-
+      badge.textContent = "0";
     }
 
-
     return;
-
   }
 
 
@@ -2216,9 +1830,7 @@ async function loadFriendRequests() {
         );
 
 
-    if (
-      result.error
-    ) {
+    if (result.error) {
 
       console.error(
         "Friend request loading error:",
@@ -2226,7 +1838,6 @@ async function loadFriendRequests() {
       );
 
       return;
-
     }
 
 
@@ -2254,7 +1865,6 @@ async function loadFriendRequests() {
         '</div>';
 
       return;
-
     }
 
 
@@ -2328,7 +1938,7 @@ async function loadFriendRequests() {
 
 
 /* =========================================================
-   25. CREATE REQUEST CARD
+   23. REQUEST CARD
    ========================================================= */
 
 function createRequestCard(
@@ -2365,42 +1975,25 @@ function createRequestCard(
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
       '<img ' +
-
       'src="' +
-      escapeHTML(
-        sender.avatar_url
-      ) +
+      escapeHTML(sender.avatar_url) +
       '" ' +
-
       'alt="' +
       escapeHTML(name) +
       '" ' +
-
       'class="friend-avatar-img" ' +
-
       'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
-
-      escapeJS(
-        getInitials(name)
-      ) +
-
+      escapeJS(getInitials(name)) +
       '\'"' +
-
       '>' +
-
       '</div>';
 
   } else {
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
-      escapeHTML(
-        getInitials(name)
-      ) +
-
+      escapeHTML(getInitials(name)) +
       '</div>';
 
   }
@@ -2409,11 +2002,7 @@ function createRequestCard(
   return (
 
     '<div class="friend-card" data-request-id="' +
-
-    escapeHTML(
-      request.id
-    ) +
-
+    escapeHTML(request.id) +
     '">' +
 
     avatarHTML +
@@ -2421,15 +2010,11 @@ function createRequestCard(
     '<div class="friend-info">' +
 
     '<h3>' +
-
     escapeHTML(name) +
-
     '</h3>' +
 
     '<p>' +
-
     escapeHTML(username) +
-
     '</p>' +
 
     '</div>' +
@@ -2437,13 +2022,8 @@ function createRequestCard(
     '<div class="friend-card-actions">' +
 
     '<button class="primary-btn" ' +
-
     'onclick="acceptFriendRequest(\'' +
-
-    escapeJS(
-      request.id
-    ) +
-
+    escapeJS(request.id) +
     '\')">' +
 
     'Accept' +
@@ -2451,13 +2031,8 @@ function createRequestCard(
     '</button>' +
 
     '<button class="secondary-btn" ' +
-
     'onclick="declineFriendRequest(\'' +
-
-    escapeJS(
-      request.id
-    ) +
-
+    escapeJS(request.id) +
     '\')">' +
 
     'Decline' +
@@ -2474,7 +2049,7 @@ function createRequestCard(
 
 
 /* =========================================================
-   26. ACCEPT FRIEND REQUEST
+   24. ACCEPT FRIEND REQUEST
    ========================================================= */
 
 async function acceptFriendRequest(
@@ -2486,7 +2061,6 @@ async function acceptFriendRequest(
     openAuth();
 
     return;
-
   }
 
 
@@ -2519,7 +2093,6 @@ async function acceptFriendRequest(
       );
 
       return;
-
     }
 
 
@@ -2537,13 +2110,8 @@ async function acceptFriendRequest(
       );
 
       return;
-
     }
 
-
-    /* -----------------------------------------------------
-       CREATE FRIENDSHIP
-       ----------------------------------------------------- */
 
     const friendshipResult =
       await supabaseClient
@@ -2556,7 +2124,6 @@ async function acceptFriendRequest(
 
             friend_id:
               request.sender_id
-
           },
 
           {
@@ -2565,7 +2132,6 @@ async function acceptFriendRequest(
 
             friend_id:
               currentUser.id
-
           }
 
         ]);
@@ -2582,9 +2148,7 @@ async function acceptFriendRequest(
 
 
       if (
-        !message.includes(
-          "duplicate"
-        )
+        !message.includes("duplicate")
       ) {
 
         console.error(
@@ -2592,21 +2156,15 @@ async function acceptFriendRequest(
           friendshipResult.error
         );
 
-
         alert(
           friendshipResult.error.message
         );
 
         return;
-
       }
 
     }
 
-
-    /* -----------------------------------------------------
-       UPDATE REQUEST
-       ----------------------------------------------------- */
 
     const updateResult =
       await supabaseClient
@@ -2623,22 +2181,18 @@ async function acceptFriendRequest(
         );
 
 
-    if (
-      updateResult.error
-    ) {
+    if (updateResult.error) {
 
       console.error(
         "Request update error:",
         updateResult.error
       );
 
-
       alert(
         updateResult.error.message
       );
 
       return;
-
     }
 
 
@@ -2659,7 +2213,6 @@ async function acceptFriendRequest(
       error
     );
 
-
     alert(
       "Could not accept friend request."
     );
@@ -2670,7 +2223,7 @@ async function acceptFriendRequest(
 
 
 /* =========================================================
-   27. DECLINE FRIEND REQUEST
+   25. DECLINE FRIEND REQUEST
    ========================================================= */
 
 async function declineFriendRequest(
@@ -2678,9 +2231,7 @@ async function declineFriendRequest(
 ) {
 
   if (!currentUser) {
-
     return;
-
   }
 
 
@@ -2705,22 +2256,18 @@ async function declineFriendRequest(
         );
 
 
-    if (
-      result.error
-    ) {
+    if (result.error) {
 
       console.error(
         "Decline request error:",
         result.error
       );
 
-
       alert(
         result.error.message
       );
 
       return;
-
     }
 
 
@@ -2740,7 +2287,7 @@ async function declineFriendRequest(
 
 
 /* =========================================================
-   28. LOAD MY FRIENDS
+   26. LOAD MY FRIENDS
    ========================================================= */
 
 async function loadMyFriends() {
@@ -2750,7 +2297,6 @@ async function loadMyFriends() {
       "myFriendsList"
     );
 
-
   const countElement =
     document.getElementById(
       "friendCount"
@@ -2758,9 +2304,7 @@ async function loadMyFriends() {
 
 
   if (!container) {
-
     return;
-
   }
 
 
@@ -2781,9 +2325,7 @@ async function loadMyFriends() {
 
     }
 
-
     return;
-
   }
 
 
@@ -2803,9 +2345,7 @@ async function loadMyFriends() {
         );
 
 
-    if (
-      result.error
-    ) {
+    if (result.error) {
 
       console.error(
         "My friends error:",
@@ -2820,12 +2360,10 @@ async function loadMyFriends() {
         '</div>';
 
       return;
-
     }
 
 
-    const friendIds =
-      [];
+    const friendIds = [];
 
 
     (
@@ -2866,8 +2404,7 @@ async function loadMyFriends() {
         uniqueFriendIds.length +
         " " +
         (
-          uniqueFriendIds.length ===
-          1
+          uniqueFriendIds.length === 1
             ? "Friend"
             : "Friends"
         );
@@ -2875,9 +2412,7 @@ async function loadMyFriends() {
     }
 
 
-    if (
-      !uniqueFriendIds.length
-    ) {
+    if (!uniqueFriendIds.length) {
 
       container.innerHTML =
         '<div class="empty-state">' +
@@ -2887,7 +2422,6 @@ async function loadMyFriends() {
         '</div>';
 
       return;
-
     }
 
 
@@ -2903,9 +2437,7 @@ async function loadMyFriends() {
         );
 
 
-    if (
-      profilesResult.error
-    ) {
+    if (profilesResult.error) {
 
       console.error(
         "Friend profile error:",
@@ -2913,7 +2445,6 @@ async function loadMyFriends() {
       );
 
       return;
-
     }
 
 
@@ -2946,7 +2477,7 @@ async function loadMyFriends() {
 
 
 /* =========================================================
-   29. CREATE MY FRIEND CARD
+   27. MY FRIEND CARD
    ========================================================= */
 
 function createMyFriendCard(
@@ -2970,48 +2501,29 @@ function createMyFriendCard(
     "";
 
 
-  if (
-    friend.avatar_url
-  ) {
+  if (friend.avatar_url) {
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
       '<img ' +
-
       'src="' +
-      escapeHTML(
-        friend.avatar_url
-      ) +
+      escapeHTML(friend.avatar_url) +
       '" ' +
-
       'alt="' +
       escapeHTML(name) +
       '" ' +
-
       'class="friend-avatar-img" ' +
-
       'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
-
-      escapeJS(
-        getInitials(name)
-      ) +
-
+      escapeJS(getInitials(name)) +
       '\'"' +
-
       '>' +
-
       '</div>';
 
   } else {
 
     avatarHTML =
       '<div class="friend-avatar">' +
-
-      escapeHTML(
-        getInitials(name)
-      ) +
-
+      escapeHTML(getInitials(name)) +
       '</div>';
 
   }
@@ -3026,15 +2538,11 @@ function createMyFriendCard(
     '<div class="friend-info">' +
 
     '<h3>' +
-
     escapeHTML(name) +
-
     '</h3>' +
 
     '<p>' +
-
     escapeHTML(username) +
-
     '</p>' +
 
     '</div>' +
@@ -3047,15 +2555,13 @@ function createMyFriendCard(
 
 
 /* =========================================================
-   30. LOAD PROFILE
+   28. LOAD PROFILE
    ========================================================= */
 
 async function loadProfile() {
 
   if (!currentUser) {
-
     return;
-
   }
 
 
@@ -3074,9 +2580,7 @@ async function loadProfile() {
         .maybeSingle();
 
 
-    if (
-      result.error
-    ) {
+    if (result.error) {
 
       console.error(
         "Profile load error:",
@@ -3084,7 +2588,6 @@ async function loadProfile() {
       );
 
       return;
-
     }
 
 
@@ -3108,10 +2611,6 @@ async function loadProfile() {
         : "username";
 
 
-    /* -----------------------------------------------------
-       HOME PROFILE
-       ----------------------------------------------------- */
-
     setText(
       "myProfileName",
       name
@@ -3120,21 +2619,15 @@ async function loadProfile() {
 
     setText(
       "profileUsername",
-      "@" +
-      username
+      "@" + username
     );
 
 
     setText(
       "myProfileUsername",
-      "@" +
-      username
+      "@" + username
     );
 
-
-    /* -----------------------------------------------------
-       PROFILE PAGE
-       ----------------------------------------------------- */
 
     setText(
       "profileName",
@@ -3156,8 +2649,7 @@ async function loadProfile() {
 
     setText(
       "displayUsername",
-      "@" +
-      username
+      "@" + username
     );
 
 
@@ -3168,13 +2660,7 @@ async function loadProfile() {
     );
 
 
-    /* -----------------------------------------------------
-       JOINED DATE
-       ----------------------------------------------------- */
-
-    if (
-      currentUser.created_at
-    ) {
+    if (currentUser.created_at) {
 
       const formatted =
         new Date(
@@ -3204,10 +2690,6 @@ async function loadProfile() {
     }
 
 
-    /* -----------------------------------------------------
-       AVATARS
-       ----------------------------------------------------- */
-
     updateAvatarElement(
       "myProfileAvatar",
 
@@ -3231,10 +2713,6 @@ async function loadProfile() {
       name
     );
 
-
-    /* -----------------------------------------------------
-       FRIEND COUNT
-       ----------------------------------------------------- */
 
     const friendshipsResult =
       await supabaseClient
@@ -3286,10 +2764,6 @@ async function loadProfile() {
     );
 
 
-    /* -----------------------------------------------------
-       EDIT PROFILE
-       ----------------------------------------------------- */
-
     setValue(
       "editProfileName",
 
@@ -3323,7 +2797,7 @@ async function loadProfile() {
 
 
 /* =========================================================
-   31. OPEN EDIT PROFILE
+   29. EDIT PROFILE
    ========================================================= */
 
 function openEditProfile() {
@@ -3333,7 +2807,6 @@ function openEditProfile() {
     openAuth();
 
     return;
-
   }
 
 
@@ -3349,22 +2822,16 @@ function openEditProfile() {
       "profile.html";
 
     return;
-
   }
 
 
   loadProfile();
-
 
   modal.style.display =
     "flex";
 
 }
 
-
-/* =========================================================
-   32. CLOSE EDIT PROFILE
-   ========================================================= */
 
 function closeEditProfile() {
 
@@ -3384,10 +2851,6 @@ function closeEditProfile() {
 }
 
 
-/* =========================================================
-   33. SAVE EDIT PROFILE
-   ========================================================= */
-
 async function saveEditProfile() {
 
   if (!currentUser) {
@@ -3397,7 +2860,6 @@ async function saveEditProfile() {
     );
 
     return;
-
   }
 
 
@@ -3432,7 +2894,6 @@ async function saveEditProfile() {
     );
 
     return;
-
   }
 
 
@@ -3443,7 +2904,6 @@ async function saveEditProfile() {
     );
 
     return;
-
   }
 
 
@@ -3464,16 +2924,13 @@ async function saveEditProfile() {
         .maybeSingle();
 
 
-    if (
-      existingResult.data
-    ) {
+    if (existingResult.data) {
 
       alert(
         "That username is already taken."
       );
 
       return;
-
     }
 
 
@@ -3494,22 +2951,18 @@ async function saveEditProfile() {
         });
 
 
-    if (
-      result.error
-    ) {
+    if (result.error) {
 
       console.error(
         "Save profile error:",
         result.error
       );
 
-
       alert(
         result.error.message
       );
 
       return;
-
     }
 
 
@@ -3519,7 +2972,6 @@ async function saveEditProfile() {
 
 
     closeEditProfile();
-
 
     await loadProfile();
 
@@ -3533,7 +2985,6 @@ async function saveEditProfile() {
       error
     );
 
-
     alert(
       "Could not update profile."
     );
@@ -3544,7 +2995,7 @@ async function saveEditProfile() {
 
 
 /* =========================================================
-   34. PROFILE PAGE SETUP
+   30. PROFILE PAGE SETUP
    ========================================================= */
 
 function setupProfilePage() {
@@ -3557,7 +3008,6 @@ function setupProfilePage() {
         openAuth();
 
         return;
-
       }
 
 
@@ -3570,7 +3020,7 @@ function setupProfilePage() {
 
 
 /* =========================================================
-   35. AVATAR UPLOAD SETUP
+   31. AVATAR UPLOAD
    ========================================================= */
 
 function setupAvatarUpload() {
@@ -3582,9 +3032,7 @@ function setupAvatarUpload() {
 
 
   if (!input) {
-
     return;
-
   }
 
 
@@ -3598,25 +3046,17 @@ function setupAvatarUpload() {
 
 
       if (!file) {
-
         return;
-
       }
 
 
-      await uploadAvatar(
-        file
-      );
+      await uploadAvatar(file);
 
     }
   );
 
 }
 
-
-/* =========================================================
-   36. UPLOAD AVATAR
-   ========================================================= */
 
 async function uploadAvatar(
   file
@@ -3629,7 +3069,6 @@ async function uploadAvatar(
     );
 
     return;
-
   }
 
 
@@ -3644,15 +3083,12 @@ async function uploadAvatar(
     );
 
     return;
-
   }
 
 
   if (
     file.size >
-    5 *
-    1024 *
-    1024
+    5 * 1024 * 1024
   ) {
 
     alert(
@@ -3660,7 +3096,6 @@ async function uploadAvatar(
     );
 
     return;
-
   }
 
 
@@ -3698,15 +3133,12 @@ async function uploadAvatar(
         );
 
 
-    if (
-      uploadResult.error
-    ) {
+    if (uploadResult.error) {
 
       console.error(
         "Avatar upload error:",
         uploadResult.error
       );
-
 
       alert(
         "Photo upload failed: " +
@@ -3714,7 +3146,6 @@ async function uploadAvatar(
       );
 
       return;
-
     }
 
 
@@ -3741,7 +3172,6 @@ async function uploadAvatar(
       );
 
       return;
-
     }
 
 
@@ -3760,22 +3190,18 @@ async function uploadAvatar(
         );
 
 
-    if (
-      profileResult.error
-    ) {
+    if (profileResult.error) {
 
       console.error(
         "Avatar profile update:",
         profileResult.error
       );
 
-
       alert(
         profileResult.error.message
       );
 
       return;
-
     }
 
 
@@ -3796,7 +3222,6 @@ async function uploadAvatar(
       error
     );
 
-
     alert(
       "Something went wrong while uploading your photo."
     );
@@ -3807,7 +3232,7 @@ async function uploadAvatar(
 
 
 /* =========================================================
-   37. SEARCH ENTER KEY
+   32. SEARCH ENTER KEY
    ========================================================= */
 
 function setupSearchEnterKey() {
@@ -3819,9 +3244,7 @@ function setupSearchEnterKey() {
 
 
   if (!input) {
-
     return;
-
   }
 
 
@@ -3847,7 +3270,7 @@ function setupSearchEnterKey() {
 
 
 /* =========================================================
-   38. GO TO MY PROFILE
+   33. GO TO MY PROFILE
    ========================================================= */
 
 function goToMyProfile() {
@@ -3857,7 +3280,6 @@ function goToMyProfile() {
     openAuth();
 
     return;
-
   }
 
 
@@ -3875,11 +3297,6 @@ function goToMyProfile() {
   }
 
 
-  /*
-   * If profile section exists on current page,
-   * use it.
-   */
-
   const profile =
     document.getElementById(
       "profile"
@@ -3896,13 +3313,8 @@ function goToMyProfile() {
     });
 
     return;
-
   }
 
-
-  /*
-   * Separate profile page.
-   */
 
   window.location.href =
     "profile.html";
@@ -3911,7 +3323,1536 @@ function goToMyProfile() {
 
 
 /* =========================================================
-   39. CLICK OUTSIDE ACCOUNT MENU
+   34. REAL-TIME MESSAGING
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   MESSAGE PAGE SETUP
+   --------------------------------------------------------- */
+
+function setupMessagePage() {
+
+  if (
+    getCurrentPage() !==
+    "messages.html"
+  ) {
+
+    return;
+  }
+
+
+  console.log(
+    "Messages page setup started."
+  );
+
+
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
+
+
+  if (input) {
+
+    input.addEventListener(
+      "keydown",
+      function (event) {
+
+        if (
+          event.key ===
+          "Enter" &&
+          !event.shiftKey
+        ) {
+
+          event.preventDefault();
+
+          sendMessage();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  const sendButton =
+    document.getElementById(
+      "sendMessageButton"
+    );
+
+
+  if (sendButton) {
+
+    sendButton.addEventListener(
+      "click",
+      function () {
+
+        sendMessage();
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   LOAD FRIENDS FOR MESSAGES PAGE
+   --------------------------------------------------------- */
+
+async function loadMessageFriends() {
+
+  const container =
+    document.getElementById(
+      "messageFriendsList"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  if (!currentUser) {
+
+    container.innerHTML =
+      '<div class="empty-state">' +
+      '<div>🔐</div>' +
+      '<p>Please login to see your messages.</p>' +
+      '</div>';
+
+    return;
+  }
+
+
+  try {
+
+    const friendshipResult =
+      await supabaseClient
+        .from("friendships")
+        .select(
+          "id, user_id, friend_id"
+        )
+        .or(
+          "user_id.eq." +
+          currentUser.id +
+          ",friend_id.eq." +
+          currentUser.id
+        );
+
+
+    if (friendshipResult.error) {
+
+      console.error(
+        "Message friends error:",
+        friendshipResult.error
+      );
+
+      container.innerHTML =
+        '<div class="empty-state">' +
+        '<p>Unable to load friends.</p>' +
+        '</div>';
+
+      return;
+    }
+
+
+    const friendIds = [];
+
+
+    (
+      friendshipResult.data || []
+    ).forEach(
+      function (friendship) {
+
+        if (
+          friendship.user_id ===
+          currentUser.id
+        ) {
+
+          friendIds.push(
+            friendship.friend_id
+          );
+
+        } else {
+
+          friendIds.push(
+            friendship.user_id
+          );
+
+        }
+
+      }
+    );
+
+
+    const uniqueIds =
+      Array.from(
+        new Set(friendIds)
+      );
+
+
+    if (!uniqueIds.length) {
+
+      container.innerHTML =
+        '<div class="empty-state">' +
+        '<div>👥</div>' +
+        '<h3>No Friends Yet</h3>' +
+        '<p>Add friends to start messaging.</p>' +
+        '</div>';
+
+      return;
+    }
+
+
+    const profilesResult =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .in(
+          "id",
+          uniqueIds
+        );
+
+
+    if (profilesResult.error) {
+
+      console.error(
+        "Message profiles error:",
+        profilesResult.error
+      );
+
+      return;
+    }
+
+
+    container.innerHTML =
+      (
+        profilesResult.data || []
+      )
+        .map(
+          function (friend) {
+
+            return createMessageFriendCard(
+              friend
+            );
+
+          }
+        )
+        .join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "loadMessageFriends error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   MESSAGE FRIEND CARD
+   --------------------------------------------------------- */
+
+function createMessageFriendCard(
+  friend
+) {
+
+  const name =
+    friend.full_name ||
+    friend.username ||
+    "YouRemo User";
+
+
+  const username =
+    friend.username
+      ? "@" + friend.username
+      : "";
+
+
+  let avatarHTML =
+    "";
+
+
+  if (friend.avatar_url) {
+
+    avatarHTML =
+      '<div class="message-friend-avatar">' +
+
+      '<img ' +
+
+      'src="' +
+      escapeHTML(
+        friend.avatar_url
+      ) +
+      '" ' +
+
+      'alt="' +
+      escapeHTML(name) +
+      '" ' +
+
+      'class="friend-avatar-img" ' +
+
+      'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' +
+
+      escapeJS(
+        getInitials(name)
+      ) +
+
+      '\'"' +
+
+      '>' +
+
+      '</div>';
+
+  } else {
+
+    avatarHTML =
+      '<div class="message-friend-avatar">' +
+      escapeHTML(
+        getInitials(name)
+      ) +
+      '</div>';
+
+  }
+
+
+  return (
+
+    '<button ' +
+
+    'type="button" ' +
+
+    'class="message-friend-item" ' +
+
+    'data-friend-id="' +
+    escapeHTML(friend.id) +
+    '" ' +
+
+    'onclick="openConversation(\'' +
+    escapeJS(friend.id) +
+    '\')">' +
+
+    avatarHTML +
+
+    '<div class="message-friend-info">' +
+
+    '<strong>' +
+    escapeHTML(name) +
+    '</strong>' +
+
+    '<span>' +
+    escapeHTML(username) +
+    '</span>' +
+
+    '</div>' +
+
+    '</button>'
+
+  );
+
+}
+
+
+/* =========================================================
+   35. OPEN CONVERSATION
+   ========================================================= */
+
+async function openConversation(
+  friendId
+) {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+  }
+
+
+  try {
+
+    const result =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, username, full_name, avatar_url"
+        )
+        .eq(
+          "id",
+          friendId
+        )
+        .maybeSingle();
+
+
+    if (
+      result.error ||
+      !result.data
+    ) {
+
+      alert(
+        "Could not load this friend."
+      );
+
+      return;
+    }
+
+
+    setSelectedMessageFriend(
+      result.data
+    );
+
+
+    updateSelectedFriendUI(
+      result.data
+    );
+
+
+    await loadConversation(
+      friendId
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "openConversation error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   36. UPDATE SELECTED FRIEND UI
+   ========================================================= */
+
+function updateSelectedFriendUI(
+  friend
+) {
+
+  const name =
+    friend.full_name ||
+    friend.username ||
+    "YouRemo User";
+
+
+  setText(
+    "chatFriendName",
+    name
+  );
+
+
+  setText(
+    "chatFriendUsername",
+    friend.username
+      ? "@" + friend.username
+      : ""
+  );
+
+
+  updateAvatarElement(
+    "chatFriendAvatar",
+
+    friend.avatar_url || "",
+
+    name
+  );
+
+
+  document
+    .querySelectorAll(
+      ".message-friend-item"
+    )
+    .forEach(
+      function (item) {
+
+        item.classList.remove(
+          "active"
+        );
+
+
+        if (
+          item.dataset.friendId ===
+          friend.id
+        ) {
+
+          item.classList.add(
+            "active"
+          );
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   37. LOAD CONVERSATION
+   ========================================================= */
+
+async function loadConversation(
+  friendId
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) {
+    return;
+  }
+
+
+  chat.innerHTML =
+    '<div class="empty-state">' +
+    '<div>💬</div>' +
+    '<p>Loading messages...</p>' +
+    '</div>';
+
+
+  try {
+
+    const result =
+      await supabaseClient
+        .from("messages")
+        .select(
+          "id, sender_id, receiver_id, message, created_at, seen"
+        )
+        .or(
+          "and(sender_id.eq." +
+          currentUser.id +
+          ",receiver_id.eq." +
+          friendId +
+          "),and(sender_id.eq." +
+          friendId +
+          ",receiver_id.eq." +
+          currentUser.id +
+          ")"
+        )
+        .order(
+          "created_at",
+          {
+            ascending:
+              true
+          }
+        );
+
+
+    if (result.error) {
+
+      console.error(
+        "Load conversation error:",
+        result.error
+      );
+
+
+      chat.innerHTML =
+        '<div class="empty-state">' +
+        '<div>⚠️</div>' +
+        '<p>Unable to load messages.</p>' +
+        '</div>';
+
+      return;
+    }
+
+
+    chat.innerHTML =
+      "";
+
+
+    const messages =
+      result.data || [];
+
+
+    if (!messages.length) {
+
+      chat.innerHTML =
+        '<div class="empty-state">' +
+        '<div>👋</div>' +
+        '<h3>Start a conversation</h3>' +
+        '<p>Send a message to ' +
+        escapeHTML(
+          getSelectedMessageFriendName()
+        ) +
+        '.</p>' +
+        '</div>';
+
+      return;
+    }
+
+
+    messages.forEach(
+      function (message) {
+
+        appendMessageToChat(
+          message,
+          false
+        );
+
+      }
+    );
+
+
+    scrollChatToBottom();
+
+
+    await markMessagesAsSeen(
+      friendId
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "loadConversation error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   38. SEND MESSAGE
+   ========================================================= */
+
+async function sendMessage() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+  }
+
+
+  const friend =
+    getSelectedMessageFriend();
+
+
+  if (!friend) {
+
+    alert(
+      "Please select a friend first."
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
+
+
+  if (!input) {
+    return;
+  }
+
+
+  const messageText =
+    input.value.trim();
+
+
+  if (!messageText) {
+    return;
+  }
+
+
+  if (
+    messageText.length >
+    5000
+  ) {
+
+    alert(
+      "Message is too long."
+    );
+
+    return;
+  }
+
+
+  const sendButton =
+    document.getElementById(
+      "sendMessageButton"
+    );
+
+
+  if (sendButton) {
+    sendButton.disabled = true;
+  }
+
+
+  try {
+
+    const result =
+      await supabaseClient
+        .from("messages")
+        .insert({
+
+          sender_id:
+            currentUser.id,
+
+          receiver_id:
+            friend.id,
+
+          message:
+            messageText,
+
+          seen:
+            false
+
+        })
+        .select()
+        .single();
+
+
+    if (result.error) {
+
+      console.error(
+        "Send message error:",
+        result.error
+      );
+
+      alert(
+        "Could not send message: " +
+        result.error.message
+      );
+
+      return;
+    }
+
+
+    input.value =
+      "";
+
+
+    /*
+     * Realtime normally adds this message.
+     * Add it immediately only if realtime
+     * has not already displayed it.
+     */
+
+    appendMessageToChat(
+      result.data,
+      true
+    );
+
+
+    scrollChatToBottom();
+
+
+  } catch (error) {
+
+    console.error(
+      "sendMessage error:",
+      error
+    );
+
+    alert(
+      "Could not send message."
+    );
+
+  } finally {
+
+    if (sendButton) {
+      sendButton.disabled = false;
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   39. APPEND MESSAGE TO CHAT
+   ========================================================= */
+
+function appendMessageToChat(
+  message,
+  scroll
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (
+    !chat ||
+    !currentUser
+  ) {
+
+    return;
+  }
+
+
+  if (
+    message.id &&
+    chat.querySelector(
+      '[data-message-id="' +
+      CSS.escape(
+        String(message.id)
+      ) +
+      '"]'
+    )
+  ) {
+
+    return;
+  }
+
+
+  const emptyState =
+    chat.querySelector(
+      ".empty-state"
+    );
+
+
+  if (emptyState) {
+    chat.innerHTML = "";
+  }
+
+
+  const mine =
+    message.sender_id ===
+    currentUser.id;
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "message-row " +
+    (
+      mine
+        ? "mine"
+        : "theirs"
+    );
+
+
+  row.setAttribute(
+    "data-message-id",
+    String(
+      message.id
+    )
+  );
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+
+  bubble.className =
+    "message-bubble";
+
+
+  const text =
+    document.createElement(
+      "div"
+    );
+
+
+  text.className =
+    "message-text";
+
+
+  text.textContent =
+    message.message || "";
+
+
+  const time =
+    document.createElement(
+      "div"
+    );
+
+
+  time.className =
+    "message-time";
+
+
+  if (message.created_at) {
+
+    time.textContent =
+      new Date(
+        message.created_at
+      ).toLocaleTimeString(
+        "en-IN",
+        {
+
+          hour:
+            "numeric",
+
+          minute:
+            "2-digit"
+
+        }
+      );
+
+  }
+
+
+  bubble.appendChild(
+    text
+  );
+
+
+  bubble.appendChild(
+    time
+  );
+
+
+  if (mine) {
+
+    const seen =
+      document.createElement(
+        "span"
+      );
+
+
+    seen.className =
+      "message-seen";
+
+
+    seen.setAttribute(
+      "data-seen-for",
+      String(message.id)
+    );
+
+
+    seen.textContent =
+      message.seen
+        ? "Seen"
+        : "Sent";
+
+
+    bubble.appendChild(
+      seen
+    );
+
+  }
+
+
+  row.appendChild(
+    bubble
+  );
+
+
+  chat.appendChild(
+    row
+  );
+
+
+  if (scroll) {
+
+    scrollChatToBottom();
+
+  }
+
+}
+
+
+/* =========================================================
+   40. START MESSAGE REALTIME
+   ========================================================= */
+
+function startMessageRealtime() {
+
+  if (!currentUser) {
+
+    console.log(
+      "Realtime: no logged-in user."
+    );
+
+    return;
+  }
+
+
+  if (
+    getCurrentPage() !==
+    "messages.html"
+  ) {
+
+    return;
+  }
+
+
+  if (
+    messageRealtimeChannel
+  ) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel =
+      null;
+
+  }
+
+
+  console.log(
+    "Starting message realtime..."
+  );
+
+
+  messageRealtimeChannel =
+    supabaseClient
+
+      .channel(
+        "messages-channel-" +
+        currentUser.id +
+        "-" +
+        Date.now()
+      )
+
+
+      /* -----------------------------------------------------
+         NEW MESSAGE
+         ----------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+
+          event:
+            "INSERT",
+
+          schema:
+            "public",
+
+          table:
+            "messages"
+
+        },
+
+        function (payload) {
+
+          console.log(
+            "🔥 REALTIME MESSAGE RECEIVED:",
+            payload.new
+          );
+
+
+          handleRealtimeMessage(
+            payload.new
+          );
+
+        }
+      )
+
+
+      /* -----------------------------------------------------
+         UPDATED MESSAGE
+         ----------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+
+          event:
+            "UPDATE",
+
+          schema:
+            "public",
+
+          table:
+            "messages"
+
+        },
+
+        function (payload) {
+
+          console.log(
+            "👀 MESSAGE UPDATED:",
+            payload.new
+          );
+
+
+          if (
+            payload.new.seen ===
+            true
+          ) {
+
+            updateMessageSeen(
+              payload.new.id
+            );
+
+          }
+
+        }
+      )
+
+
+      .subscribe(
+        function (
+          status,
+          error
+        ) {
+
+          console.log(
+            "Realtime status:",
+            status
+          );
+
+
+          if (error) {
+
+            console.error(
+              "Realtime subscription error:",
+              error
+            );
+
+          }
+
+        }
+      );
+
+}
+
+
+/* =========================================================
+   41. HANDLE REALTIME MESSAGE
+   ========================================================= */
+
+function handleRealtimeMessage(
+  message
+) {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const belongsToCurrentUser =
+    message.sender_id ===
+      currentUser.id ||
+
+    message.receiver_id ===
+      currentUser.id;
+
+
+  if (!belongsToCurrentUser) {
+    return;
+  }
+
+
+  const friend =
+    getSelectedMessageFriend();
+
+
+  if (!friend) {
+
+    console.log(
+      "Message received but no conversation selected."
+    );
+
+    return;
+  }
+
+
+  const belongsToOpenConversation =
+
+    (
+      message.sender_id ===
+      currentUser.id &&
+
+      message.receiver_id ===
+      friend.id
+    )
+
+    ||
+
+    (
+      message.sender_id ===
+      friend.id &&
+
+      message.receiver_id ===
+      currentUser.id
+    );
+
+
+  if (
+    !belongsToOpenConversation
+  ) {
+
+    console.log(
+      "Message belongs to another conversation."
+    );
+
+    return;
+  }
+
+
+  appendMessageToChat(
+    message,
+    true
+  );
+
+
+  /*
+   * If somebody sends us a message while
+   * their conversation is open, mark it seen.
+   */
+
+  if (
+    message.sender_id ===
+    friend.id &&
+    message.receiver_id ===
+    currentUser.id
+  ) {
+
+    markSingleMessageAsSeen(
+      message.id
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   42. MARK MESSAGE SEEN
+   ========================================================= */
+
+async function markSingleMessageAsSeen(
+  messageId
+) {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  try {
+
+    const result =
+      await supabaseClient
+        .from("messages")
+        .update({
+
+          seen:
+            true
+
+        })
+        .eq(
+          "id",
+          messageId
+        )
+        .eq(
+          "receiver_id",
+          currentUser.id
+        );
+
+
+    if (result.error) {
+
+      console.error(
+        "Mark message seen error:",
+        result.error
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "markSingleMessageAsSeen error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   43. MARK CONVERSATION AS SEEN
+   ========================================================= */
+
+async function markMessagesAsSeen(
+  friendId
+) {
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  try {
+
+    const result =
+      await supabaseClient
+        .from("messages")
+        .update({
+
+          seen:
+            true
+
+        })
+        .eq(
+          "sender_id",
+          friendId
+        )
+        .eq(
+          "receiver_id",
+          currentUser.id
+        )
+        .eq(
+          "seen",
+          false
+        );
+
+
+    if (result.error) {
+
+      console.error(
+        "Mark conversation seen error:",
+        result.error
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "markMessagesAsSeen error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   44. UPDATE MESSAGE SEEN UI
+   ========================================================= */
+
+function updateMessageSeen(
+  messageId
+) {
+
+  const element =
+    document.querySelector(
+      '[data-seen-for="' +
+      CSS.escape(
+        String(messageId)
+      ) +
+      '"]'
+    );
+
+
+  if (element) {
+
+    element.textContent =
+      "Seen";
+
+  }
+
+}
+
+
+/* =========================================================
+   45. SELECTED MESSAGE FRIEND
+   ========================================================= */
+
+function setSelectedMessageFriend(
+  friend
+) {
+
+  selectedMessageFriend =
+    friend;
+
+
+  window.selectedMessageFriend =
+    friend;
+
+}
+
+
+function getSelectedMessageFriend() {
+
+  return (
+    window.selectedMessageFriend ||
+    selectedMessageFriend ||
+    null
+  );
+
+}
+
+
+function getSelectedMessageFriendName() {
+
+  const friend =
+    getSelectedMessageFriend();
+
+
+  if (!friend) {
+    return "your friend";
+  }
+
+
+  return (
+    friend.full_name ||
+    friend.username ||
+    "your friend"
+  );
+
+}
+
+
+/* =========================================================
+   46. STOP REALTIME
+   ========================================================= */
+
+function stopMessageRealtime() {
+
+  if (
+    messageRealtimeChannel
+  ) {
+
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+
+    messageRealtimeChannel =
+      null;
+
+
+    console.log(
+      "Message realtime stopped."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   47. SCROLL CHAT
+   ========================================================= */
+
+function scrollChatToBottom() {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) {
+    return;
+  }
+
+
+  setTimeout(
+    function () {
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+    },
+    20
+  );
+
+}
+
+
+/* =========================================================
+   48. NAVIGATION
+   ========================================================= */
+
+function goHome() {
+
+  window.location.href =
+    "index.html";
+
+}
+
+
+function goToFriends() {
+
+  window.location.href =
+    "friends.html";
+
+}
+
+
+function goToMessages() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+  }
+
+
+  window.location.href =
+    "messages.html";
+
+}
+
+
+function goToProfile() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+  }
+
+
+  window.location.href =
+    "profile.html";
+
+}
+
+
+function goToRequests() {
+
+  if (!currentUser) {
+
+    openAuth();
+
+    return;
+  }
+
+
+  window.location.href =
+    "friends.html#requests";
+
+}
+
+
+/* =========================================================
+   49. CLICK OUTSIDE ACCOUNT MENU
    ========================================================= */
 
 document.addEventListener(
@@ -3922,7 +4863,6 @@ document.addEventListener(
       document.getElementById(
         "accountButton"
       );
-
 
     const accountMenu =
       document.getElementById(
@@ -3936,7 +4876,6 @@ document.addEventListener(
     ) {
 
       return;
-
     }
 
 
@@ -3959,7 +4898,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   40. CLOSE MODALS OUTSIDE
+   50. CLOSE MODALS OUTSIDE
    ========================================================= */
 
 document.addEventListener(
@@ -4004,7 +4943,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   41. SET TEXT
+   51. SET TEXT
    ========================================================= */
 
 function setText(
@@ -4032,7 +4971,7 @@ function setText(
 
 
 /* =========================================================
-   42. SET VALUE
+   52. SET VALUE
    ========================================================= */
 
 function setValue(
@@ -4060,7 +4999,7 @@ function setValue(
 
 
 /* =========================================================
-   43. GET INITIALS
+   53. GET INITIALS
    ========================================================= */
 
 function getInitials(
@@ -4068,9 +5007,7 @@ function getInitials(
 ) {
 
   if (!name) {
-
     return "?";
-
   }
 
 
@@ -4109,7 +5046,7 @@ function getInitials(
 
 
 /* =========================================================
-   44. UPDATE AVATAR ELEMENT
+   54. UPDATE AVATAR ELEMENT
    ========================================================= */
 
 function updateAvatarElement(
@@ -4125,9 +5062,7 @@ function updateAvatarElement(
 
 
   if (!element) {
-
     return;
-
   }
 
 
@@ -4177,7 +5112,6 @@ function updateAvatarElement(
 
 
     return;
-
   }
 
 
@@ -4188,7 +5122,7 @@ function updateAvatarElement(
 
 
 /* =========================================================
-   45. ESCAPE HTML
+   55. ESCAPE HTML
    ========================================================= */
 
 function escapeHTML(
@@ -4236,7 +5170,7 @@ function escapeHTML(
 
 
 /* =========================================================
-   46. ESCAPE JAVASCRIPT
+   56. ESCAPE JAVASCRIPT
    ========================================================= */
 
 function escapeJS(
@@ -4269,7 +5203,7 @@ function escapeJS(
 
 
 /* =========================================================
-   47. EDIT PROFILE
+   57. EDIT PROFILE REDIRECT
    ========================================================= */
 
 function editProfile() {
@@ -4290,632 +5224,7 @@ function editProfile() {
 
 
 /* =========================================================
-   48. REAL-TIME MESSAGING
-   ========================================================= */
-
-
-/* ---------------------------------------------------------
-   START REALTIME
-   --------------------------------------------------------- */
-
-function startMessageRealtime() {
-
-  if (!currentUser) {
-
-    console.log(
-      "Realtime: no logged-in user."
-    );
-
-    return;
-
-  }
-
-
-  /*
-   * Only start realtime on messages page.
-   */
-
-  if (
-    getCurrentPage() !==
-    "messages.html"
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    messageRealtimeChannel
-  ) {
-
-    supabaseClient.removeChannel(
-      messageRealtimeChannel
-    );
-
-    messageRealtimeChannel =
-      null;
-
-  }
-
-
-  console.log(
-    "Starting message realtime..."
-  );
-
-
-  messageRealtimeChannel =
-    supabaseClient
-
-      .channel(
-        "messages-channel-" +
-        currentUser.id +
-        "-" +
-        Date.now()
-      )
-
-
-      /* =====================================================
-         NEW MESSAGE
-         ===================================================== */
-
-      .on(
-        "postgres_changes",
-        {
-
-          event:
-            "INSERT",
-
-          schema:
-            "public",
-
-          table:
-            "messages"
-
-        },
-
-        function (payload) {
-
-          console.log(
-            "🔥 REALTIME MESSAGE RECEIVED:",
-            payload.new
-          );
-
-
-          handleRealtimeMessage(
-            payload.new
-          );
-
-        }
-      )
-
-
-      /* =====================================================
-         MESSAGE UPDATED
-         ===================================================== */
-
-      .on(
-        "postgres_changes",
-        {
-
-          event:
-            "UPDATE",
-
-          schema:
-            "public",
-
-          table:
-            "messages"
-
-        },
-
-        function (payload) {
-
-          console.log(
-            "👀 MESSAGE UPDATED:",
-            payload.new
-          );
-
-
-          if (
-            payload.new.seen ===
-            true
-          ) {
-
-            console.log(
-              "✅ MESSAGE IS NOW SEEN:",
-              payload.new.id
-            );
-
-
-            if (
-              typeof updateMessageSeen ===
-              "function"
-            ) {
-
-              updateMessageSeen(
-                payload.new.id
-              );
-
-            }
-
-          }
-
-        }
-      )
-
-
-      /* =====================================================
-         SUBSCRIBE
-         ===================================================== */
-
-      .subscribe(
-        function (
-          status,
-          error
-        ) {
-
-          console.log(
-            "Realtime status:",
-            status
-          );
-
-
-          if (error) {
-
-            console.error(
-              "Realtime subscription error:",
-              error
-            );
-
-          }
-
-        }
-      );
-
-}
-
-
-/* =========================================================
-   49. HANDLE REALTIME MESSAGE
-   ========================================================= */
-
-function handleRealtimeMessage(
-  message
-) {
-
-  if (!currentUser) {
-
-    return;
-
-  }
-
-
-  /*
-   * Ignore messages not related
-   * to current user.
-   */
-
-  const belongsToCurrentUser =
-    message.sender_id ===
-      currentUser.id ||
-
-    message.receiver_id ===
-      currentUser.id;
-
-
-  if (!belongsToCurrentUser) {
-
-    return;
-
-  }
-
-
-  /*
-   * Get currently selected friend.
-   *
-   * This allows messages.html to use
-   * window.selectedMessageFriend too.
-   */
-
-  const friend =
-    window.selectedMessageFriend ||
-    selectedMessageFriend;
-
-
-  if (!friend) {
-
-    console.log(
-      "No conversation selected."
-    );
-
-    return;
-
-  }
-
-
-  const friendId =
-    friend.id;
-
-
-  const belongsToOpenConversation =
-
-    (
-      message.sender_id ===
-      currentUser.id &&
-
-      message.receiver_id ===
-      friendId
-    )
-
-    ||
-
-    (
-      message.sender_id ===
-      friendId &&
-
-      message.receiver_id ===
-      currentUser.id
-    );
-
-
-  if (
-    !belongsToOpenConversation
-  ) {
-
-    console.log(
-      "New message belongs to another conversation."
-    );
-
-    return;
-
-  }
-
-
-  appendRealtimeMessage(
-    message
-  );
-
-}
-
-
-/* =========================================================
-   50. APPEND REALTIME MESSAGE
-   ========================================================= */
-
-function appendRealtimeMessage(
-  message
-) {
-
-  const chat =
-    document.getElementById(
-      "chatMessages"
-    );
-
-
-  if (
-    !chat ||
-    !currentUser
-  ) {
-
-    return;
-
-  }
-
-
-  /* -------------------------------------------------------
-     CHECK DUPLICATE
-     ------------------------------------------------------- */
-
-  if (
-    message.id &&
-    chat.querySelector(
-      '[data-message-id="' +
-      CSS.escape(
-        String(message.id)
-      ) +
-      '"]'
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  /* -------------------------------------------------------
-     REMOVE EMPTY STATE
-     ------------------------------------------------------- */
-
-  const emptyState =
-    chat.querySelector(
-      ".empty-state"
-    );
-
-
-  if (emptyState) {
-
-    chat.innerHTML =
-      "";
-
-  }
-
-
-  /* -------------------------------------------------------
-     MESSAGE ROW
-     ------------------------------------------------------- */
-
-  const mine =
-    message.sender_id ===
-    currentUser.id;
-
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-
-  row.className =
-    "message-row " +
-    (
-      mine
-        ? "mine"
-        : "theirs"
-    );
-
-
-  row.setAttribute(
-    "data-message-id",
-    String(
-      message.id
-    )
-  );
-
-
-  /* -------------------------------------------------------
-     MESSAGE BUBBLE
-     ------------------------------------------------------- */
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-
-  bubble.className =
-    "message-bubble";
-
-
-  /* -------------------------------------------------------
-     MESSAGE TEXT
-     ------------------------------------------------------- */
-
-  bubble.textContent =
-    message.message ||
-    "";
-
-
-  /* -------------------------------------------------------
-     TIMESTAMP
-     ------------------------------------------------------- */
-
-  const time =
-    document.createElement(
-      "div"
-    );
-
-
-  time.className =
-    "message-time";
-
-
-  time.textContent =
-    message.created_at
-
-      ? new Date(
-          message.created_at
-        ).toLocaleTimeString(
-          "en-IN",
-          {
-
-            hour:
-              "numeric",
-
-            minute:
-              "2-digit"
-
-          }
-        )
-
-      : "";
-
-
-  bubble.appendChild(
-    time
-  );
-
-
-  row.appendChild(
-    bubble
-  );
-
-
-  chat.appendChild(
-    row
-  );
-
-
-  /* -------------------------------------------------------
-     SCROLL TO NEWEST
-     ------------------------------------------------------- */
-
-  chat.scrollTop =
-    chat.scrollHeight;
-
-}
-
-
-/* =========================================================
-   51. SET SELECTED MESSAGE FRIEND
-   ========================================================= */
-
-function setSelectedMessageFriend(
-  friend
-) {
-
-  selectedMessageFriend =
-    friend;
-
-
-  /*
-   * Also expose it globally so
-   * messages.html can interact with it.
-   */
-
-  window.selectedMessageFriend =
-    friend;
-
-}
-
-
-/* =========================================================
-   52. GET SELECTED MESSAGE FRIEND
-   ========================================================= */
-
-function getSelectedMessageFriend() {
-
-  return (
-    window.selectedMessageFriend ||
-    selectedMessageFriend ||
-    null
-  );
-
-}
-
-
-/* =========================================================
-   53. STOP REALTIME
-   ========================================================= */
-
-function stopMessageRealtime() {
-
-  if (
-    messageRealtimeChannel
-  ) {
-
-    supabaseClient.removeChannel(
-      messageRealtimeChannel
-    );
-
-
-    messageRealtimeChannel =
-      null;
-
-
-    console.log(
-      "Message realtime stopped."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   54. NAVIGATION HELPERS
-   ========================================================= */
-
-
-/* ---------------------------------------------------------
-   GO HOME
-   --------------------------------------------------------- */
-
-function goHome() {
-
-  window.location.href =
-    "index.html";
-
-}
-
-
-/* ---------------------------------------------------------
-   GO FRIENDS
-   --------------------------------------------------------- */
-
-function goToFriends() {
-
-  window.location.href =
-    "friends.html";
-
-}
-
-
-/* ---------------------------------------------------------
-   GO MESSAGES
-   --------------------------------------------------------- */
-
-function goToMessages() {
-
-  if (!currentUser) {
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  window.location.href =
-    "messages.html";
-
-}
-
-
-/* ---------------------------------------------------------
-   GO PROFILE
-   --------------------------------------------------------- */
-
-function goToProfile() {
-
-  if (!currentUser) {
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  window.location.href =
-    "profile.html";
-
-}
-
-
-/* ---------------------------------------------------------
-   GO REQUESTS
-   --------------------------------------------------------- */
-
-function goToRequests() {
-
-  if (!currentUser) {
-
-    openAuth();
-
-    return;
-
-  }
-
-
-  window.location.href =
-    "friends.html#requests";
-
-}
-
-
-/* =========================================================
-   55. EXPORT FUNCTIONS TO WINDOW
+   58. EXPORT FUNCTIONS TO WINDOW
    ========================================================= */
 
 
@@ -5005,6 +5314,15 @@ window.editProfile =
 
 /* Messaging */
 
+window.loadMessageFriends =
+  loadMessageFriends;
+
+window.openConversation =
+  openConversation;
+
+window.sendMessage =
+  sendMessage;
+
 window.setSelectedMessageFriend =
   setSelectedMessageFriend;
 
@@ -5017,14 +5335,17 @@ window.startMessageRealtime =
 window.stopMessageRealtime =
   stopMessageRealtime;
 
-window.appendRealtimeMessage =
-  appendRealtimeMessage;
+window.appendMessageToChat =
+  appendMessageToChat;
+
+window.updateMessageSeen =
+  updateMessageSeen;
 
 
 /* =========================================================
-   56. FINAL MESSAGE
+   59. FINAL
    ========================================================= */
 
 console.log(
-  "YouRemo script.js ready."
+  "YouRemo complete script.js ready."
 );
