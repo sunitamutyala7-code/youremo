@@ -11,9 +11,28 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+
     /* =====================================================
-       YOUREMO HOME NAVIGATION
-       ICONS ONLY
+       YOUREMO HOME PAGE
+       MOBILE OPTIMIZED VERSION
+       ===================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+
+    /* =====================================================
+       NAVIGATION
        ===================================================== */
 
     .navbar {
@@ -21,18 +40,24 @@
       top: 0;
       z-index: 1000;
 
+      width: 100%;
+      min-height: 72px;
+
       display: flex;
       align-items: center;
-      gap: 20px;
 
-      min-height: 72px;
+      gap: 18px;
+
       padding: 0 28px;
 
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
+
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
 
       border-bottom: 1px solid #e8eaf0;
     }
+
 
     /* LOGO */
 
@@ -41,13 +66,15 @@
 
       font-size: 25px;
       font-weight: 800;
+
       letter-spacing: -0.6px;
 
-      background: linear-gradient(
-        135deg,
-        #4f46e5,
-        #7c3aed
-      );
+      background:
+        linear-gradient(
+          135deg,
+          #4f46e5,
+          #7c3aed
+        );
 
       -webkit-background-clip: text;
       background-clip: text;
@@ -55,7 +82,10 @@
       color: transparent;
     }
 
-    /* NAVIGATION */
+
+    /* =====================================================
+       MAIN NAVIGATION
+       ===================================================== */
 
     .main-nav {
       flex: 1;
@@ -65,15 +95,20 @@
       justify-content: center;
 
       gap: 6px;
+
+      min-width: 0;
     }
 
-    /* ICON LINKS */
+
+    /* ICON LINK */
 
     .main-nav a {
       position: relative;
 
       width: 44px;
       height: 44px;
+
+      flex-shrink: 0;
 
       display: flex;
       align-items: center;
@@ -84,6 +119,7 @@
       border-radius: 12px;
 
       color: #667085;
+
       background: transparent;
 
       transition:
@@ -93,37 +129,47 @@
         box-shadow 0.2s ease;
     }
 
+
     /* ICON */
 
     .nav-icon {
       display: flex;
+
       align-items: center;
       justify-content: center;
 
       font-size: 20px;
+
       line-height: 1;
     }
+
 
     /* HOVER */
 
     .main-nav a:hover {
       background: #eef2ff;
+
       color: #4f46e5;
 
       transform: translateY(-2px);
     }
 
-    /* ACTIVE HOME */
+
+    /* ACTIVE */
 
     .main-nav a.active {
       background: #eef2ff;
+
       color: #4f46e5;
 
       box-shadow:
         0 4px 14px rgba(79, 70, 229, 0.12);
     }
 
-    /* TOOLTIP */
+
+    /* =====================================================
+       TOOLTIP
+       ===================================================== */
 
     .main-nav a::after {
       content: attr(title);
@@ -131,42 +177,57 @@
       position: absolute;
 
       top: calc(100% + 9px);
+
       left: 50%;
 
-      transform: translateX(-50%) translateY(-4px);
+      transform:
+        translateX(-50%)
+        translateY(-4px);
 
       padding: 6px 9px;
 
-      background: #20242d;
-      color: #ffffff;
-
       border-radius: 7px;
 
+      background: #20242d;
+
+      color: white;
+
       font-size: 11px;
+
       font-weight: 600;
 
       white-space: nowrap;
 
       opacity: 0;
+
       visibility: hidden;
 
       pointer-events: none;
 
       transition: 0.2s ease;
+
+      z-index: 2000;
     }
+
 
     .main-nav a:hover::after {
       opacity: 1;
+
       visibility: visible;
 
-      transform: translateX(-50%) translateY(0);
+      transform:
+        translateX(-50%)
+        translateY(0);
     }
+
 
     /* =====================================================
        ACCOUNT
        ===================================================== */
 
     .account-button {
+      position: relative;
+
       flex-shrink: 0;
 
       min-height: 44px;
@@ -174,11 +235,13 @@
       padding: 5px 12px 5px 6px;
 
       display: flex;
+
       align-items: center;
 
       gap: 9px;
 
       border: 1px solid #e5e7eb;
+
       border-radius: 12px;
 
       background: #ffffff;
@@ -192,6 +255,7 @@
       transition: 0.2s ease;
     }
 
+
     .account-button:hover {
       border-color: #c7c9f7;
 
@@ -199,11 +263,15 @@
         0 5px 18px rgba(50, 50, 93, 0.08);
     }
 
+
+    /* AVATAR */
+
     .nav-avatar {
       width: 34px;
       height: 34px;
 
       display: flex;
+
       align-items: center;
       justify-content: center;
 
@@ -211,31 +279,40 @@
 
       border-radius: 50%;
 
-      background: linear-gradient(
-        135deg,
-        #6366f1,
-        #8b5cf6
-      );
+      background:
+        linear-gradient(
+          135deg,
+          #6366f1,
+          #8b5cf6
+        );
 
-      color: #ffffff;
+      color: white;
 
       font-size: 15px;
+
       font-weight: 800;
     }
+
 
     .nav-avatar img {
       width: 100%;
       height: 100%;
 
       object-fit: cover;
+
+      display: block;
     }
 
-    /* ACCOUNT MENU */
+
+    /* =====================================================
+       ACCOUNT MENU
+       ===================================================== */
 
     .account-menu {
       position: absolute;
 
       right: 28px;
+
       top: 65px;
 
       width: 190px;
@@ -245,11 +322,15 @@
       background: #ffffff;
 
       border: 1px solid #e5e7eb;
+
       border-radius: 14px;
 
       box-shadow:
         0 15px 40px rgba(20, 25, 45, 0.14);
+
+      z-index: 1500;
     }
+
 
     .account-menu button {
       width: 100%;
@@ -257,101 +338,429 @@
       padding: 11px 12px;
 
       border: 0;
+
       border-radius: 9px;
 
       background: transparent;
 
-      text-align: left;
-
       color: #353942;
+
+      text-align: left;
 
       font-weight: 600;
 
       cursor: pointer;
     }
 
+
     .account-menu button:hover {
       background: #f3f4ff;
+
       color: #4f46e5;
     }
+
+
+    /* =====================================================
+       HERO MOBILE SAFETY
+       ===================================================== */
+
+    .hero {
+      width: 100%;
+
+      overflow: hidden;
+    }
+
+
+    .hero-content {
+      min-width: 0;
+    }
+
+
+    .hero-content h1 {
+      word-wrap: break-word;
+    }
+
+
+    .hero-content p {
+      max-width: 650px;
+    }
+
+
+    .hero-buttons {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 12px;
+    }
+
+
+    /* =====================================================
+       QUICK ACCESS
+       ===================================================== */
+
+    .home-links {
+      width: 100%;
+
+      overflow: hidden;
+    }
+
+
+    .features {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+
+      gap: 18px;
+    }
+
+
+    .feature {
+      min-width: 0;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+
+    .feature:hover {
+      transform: translateY(-3px);
+    }
+
 
     /* =====================================================
        MOBILE
        ===================================================== */
 
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
 
       .navbar {
-        gap: 8px;
-        padding: 0 12px;
+        gap: 10px;
+
+        padding:
+          0 14px;
       }
+
 
       .logo {
         font-size: 21px;
       }
 
+
       .main-nav {
         gap: 2px;
       }
 
+
       .main-nav a {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+
+        height: 40px;
       }
+
 
       .nav-icon {
         font-size: 18px;
       }
 
+
       #loginButton {
         display: none;
       }
 
+
       .account-button {
-        padding-right: 6px;
+        padding:
+          4px 5px;
       }
+
 
       .account-menu {
-        right: 12px;
+        right: 14px;
       }
+
+
+      .features {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
     }
 
-    @media (max-width: 560px) {
+
+    /* =====================================================
+       SMALL TABLET / LARGE PHONE
+       ===================================================== */
+
+    @media (max-width: 700px) {
 
       .navbar {
-        min-height: 62px;
+        min-height: 64px;
+
+        padding:
+          0 10px;
+
+        gap: 5px;
       }
+
 
       .logo {
-        font-size: 19px;
+        font-size: 20px;
       }
+
 
       .main-nav {
-        gap: 0;
+        gap: 1px;
       }
 
+
       .main-nav a {
-        width: 34px;
-        height: 34px;
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 10px;
       }
+
 
       .nav-icon {
         font-size: 17px;
       }
 
+
       .account-button {
         min-height: 38px;
+
+        border-radius: 10px;
       }
 
+
       .nav-avatar {
-        width: 30px;
-        height: 30px;
+        width: 29px;
+
+        height: 29px;
+
+        font-size: 13px;
       }
+
+
+      .hero {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+
+      .hero-buttons {
+        flex-direction: column;
+
+        width: 100%;
+      }
+
+
+      .hero-buttons button {
+        width: 100%;
+      }
+
+
+      .home-links {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+
+      .features {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+      }
+
+    }
+
+
+    /* =====================================================
+       MOBILE PHONE
+       ===================================================== */
+
+    @media (max-width: 520px) {
+
+      .navbar {
+        min-height: 60px;
+
+        padding:
+          0 7px;
+
+        gap: 3px;
+      }
+
+
+      .logo {
+        font-size: 18px;
+
+        letter-spacing: -0.4px;
+      }
+
+
+      .main-nav {
+        gap: 0;
+
+        justify-content: flex-end;
+      }
+
+
+      .main-nav a {
+        width: 33px;
+
+        height: 36px;
+
+        border-radius: 9px;
+      }
+
+
+      .nav-icon {
+        font-size: 16px;
+      }
+
+
+      /* Hide tooltip on touch devices */
 
       .main-nav a::after {
         display: none;
       }
+
+
+      .account-button {
+        min-height: 36px;
+
+        border-radius: 9px;
+
+        border-color: #e5e7eb;
+      }
+
+
+      .nav-avatar {
+        width: 27px;
+
+        height: 27px;
+
+        font-size: 12px;
+      }
+
+
+      .account-menu {
+        top: 56px;
+
+        right: 7px;
+
+        width: 175px;
+      }
+
+
+      /* HERO */
+
+      .hero {
+        padding-top: 35px;
+
+        padding-bottom: 35px;
+      }
+
+
+      .hero-content h1 {
+        font-size:
+          clamp(
+            30px,
+            9vw,
+            40px
+          );
+
+        line-height: 1.08;
+
+        letter-spacing: -1px;
+      }
+
+
+      .hero-content p {
+        font-size: 14px;
+
+        line-height: 1.6;
+      }
+
+
+      /* HERO CARD */
+
+      .hero-card {
+        width: 100%;
+
+        max-width: 100%;
+
+        margin-top: 25px;
+      }
+
+
+      /* QUICK ACCESS */
+
+      .home-links h2 {
+        font-size: 24px;
+      }
+
+
+      .section-text {
+        font-size: 13px;
+      }
+
+
+      .feature {
+        padding: 20px;
+      }
+
     }
+
+
+    /* =====================================================
+       VERY SMALL PHONES
+       ===================================================== */
+
+    @media (max-width: 380px) {
+
+      .logo {
+        font-size: 16px;
+      }
+
+
+      .main-nav a {
+        width: 30px;
+
+        height: 34px;
+      }
+
+
+      .nav-icon {
+        font-size: 15px;
+      }
+
+
+      .navbar {
+        padding:
+          0 5px;
+      }
+
+
+      .hero-content h1 {
+        font-size: 29px;
+      }
+
+    }
+
+
   </style>
 
 </head>
@@ -372,9 +781,12 @@
 </div>
 
 
-<!-- ICON-ONLY NAVIGATION -->
+<!-- ICON ONLY NAVIGATION -->
 
 <nav class="main-nav">
+
+
+  <!-- HOME -->
 
   <a
     href="index.html"
@@ -385,6 +797,8 @@
   </a>
 
 
+  <!-- FIND FRIENDS -->
+
   <a
     href="friends.html"
     title="Friends"
@@ -393,6 +807,8 @@
     <span class="nav-icon">👥</span>
   </a>
 
+
+  <!-- REQUESTS -->
 
   <a
     href="requests.html"
@@ -403,6 +819,8 @@
   </a>
 
 
+  <!-- MY FRIENDS -->
+
   <a
     href="myfriends.html"
     title="My Friends"
@@ -411,6 +829,8 @@
     <span class="nav-icon">🧑‍🤝‍🧑</span>
   </a>
 
+
+  <!-- MESSAGES -->
 
   <a
     href="messages.html"
@@ -421,6 +841,8 @@
   </a>
 
 
+  <!-- NOTIFICATIONS -->
+
   <a
     href="notifications.html"
     title="Notifications"
@@ -429,6 +851,8 @@
     <span class="nav-icon">🔔</span>
   </a>
 
+
+  <!-- PROFILE -->
 
   <a
     href="profile.html"
@@ -439,6 +863,8 @@
   </a>
 
 
+  <!-- SETTINGS -->
+
   <a
     href="settings.html"
     title="Settings"
@@ -448,6 +874,8 @@
   </a>
 
 
+  <!-- ABOUT -->
+
   <a
     href="about.html"
     title="About"
@@ -456,10 +884,13 @@
     <span class="nav-icon">ⓘ</span>
   </a>
 
+
 </nav>
 
 
-<!-- ACCOUNT BUTTON -->
+<!-- =================================================
+     ACCOUNT
+     ================================================= -->
 
 <div
   id="accountButton"
@@ -473,6 +904,7 @@
   >
     ?
   </div>
+
 
   <span id="loginButton">
     Login
@@ -493,9 +925,11 @@
     My Profile
   </button>
 
+
   <button onclick="openEditProfile()">
     Edit Profile
   </button>
+
 
   <button onclick="logout()">
     Logout
@@ -513,19 +947,24 @@
   <main>
 
 ```
-<!-- HERO -->
+<!-- =================================================
+     HERO
+     ================================================= -->
 
 <section
   class="hero"
   id="home"
 >
 
+
   <div class="hero-content">
+
 
     <h1>
       Connect with the people<br>
       who matter most.
     </h1>
+
 
     <p>
       Find your friends, stay connected and build
@@ -534,6 +973,7 @@
 
 
     <div class="hero-buttons">
+
 
       <button
         class="primary-btn"
@@ -550,7 +990,9 @@
         Learn More
       </button>
 
+
     </div>
+
 
   </div>
 
@@ -559,32 +1001,39 @@
 
   <div class="hero-card">
 
+
     <div class="card-icon">
       👥
     </div>
+
 
     <h2>
       Your people. Your connections.
     </h2>
 
+
     <p>
       Discover friends and connect with them easily.
     </p>
 
+
   </div>
+
 
 </section>
 
 
-<!-- =====================================================
+<!-- =================================================
      QUICK ACCESS
-     ===================================================== -->
+     ================================================= -->
 
 <section class="home-links">
+
 
   <h2>
     YouRemo
   </h2>
+
 
   <p class="section-text">
     Everything you need to manage your connections.
@@ -605,9 +1054,11 @@
         🔎
       </span>
 
+
       <h3>
         Find Friends
       </h3>
+
 
       <p>
         Search for people and connect with them.
@@ -616,7 +1067,7 @@
     </div>
 
 
-    <!-- REQUESTS -->
+    <!-- FRIEND REQUESTS -->
 
     <div
       class="feature"
@@ -627,9 +1078,11 @@
         🤝
       </span>
 
+
       <h3>
         Friend Requests
       </h3>
+
 
       <p>
         See and respond to your incoming requests.
@@ -649,9 +1102,11 @@
         👤
       </span>
 
+
       <h3>
         My Profile
       </h3>
+
 
       <p>
         View and manage your YouRemo profile.
@@ -671,9 +1126,11 @@
         👥
       </span>
 
+
       <h3>
         My Friends
       </h3>
+
 
       <p>
         See everyone you're connected with.
@@ -681,19 +1138,22 @@
 
     </div>
 
+
   </div>
+
 
 </section>
 
 
-<!-- =====================================================
+<!-- =================================================
      LOGIN / SIGNUP MODAL
-     ===================================================== -->
+     ================================================= -->
 
 <div
   id="authModal"
   class="auth-modal"
 >
+
 
   <div class="auth-box">
 
@@ -764,7 +1224,9 @@
 
     </p>
 
+
   </div>
+
 
 </div>
 ```
