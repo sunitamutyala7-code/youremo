@@ -1,47 +1,473 @@
+```html
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouRemo - Friends</title><link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body>
-<header class="nav">
-  <a class="logo" href="index.html">YouRemo</a>
-  <nav class="nav-links">
-    <button onclick="goHome()">🏠</button><button onclick="goToFriends()">👥</button>
-    <button onclick="goToRequests()">🔔 <span id="requestBadge" class="badge">0</span></button>
-    <button onclick="goToMessages()">💬</button><button onclick="goToProfile()">👤</button>
-  </nav>
-  <div class="account">
-    <button class="account-btn" id="loginButton" onclick="handleAccountClick()"><span id="navAvatar" class="avatar">?</span><span>Login</span></button>
-    <div id="accountMenu" class="account-menu">
-      <button onclick="goToProfile()">My Profile</button><button onclick="goToFriends()">My Friends</button>
-      <button class="logout" onclick="logout()">Logout</button>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>YouRemo - Friends</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       NAVIGATION
+       ===================================================== -->
+
+  <header class="top-nav">
+
+    <div class="nav-container">
+
+
+      <!-- LOGO -->
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+        YouRemo
+      </a>
+
+
+      <!-- NAVIGATION LINKS -->
+
+      <nav class="main-nav">
+
+        <a
+          href="index.html"
+          class="nav-link"
+        >
+          🏠 Home
+        </a>
+
+        <a
+          href="friends.html"
+          class="nav-link active"
+        >
+          👥 Friends
+        </a>
+
+        <a
+          href="profile.html"
+          class="nav-link"
+        >
+          👤 Profile
+        </a>
+
+      </nav>
+
+
+      <!-- ACCOUNT -->
+
+      <div
+        class="account-area"
+        id="accountButton"
+      >
+
+        <button
+          type="button"
+          class="account-button"
+          onclick="handleAccountClick()"
+        >
+
+          <div
+            id="navAvatar"
+            class="nav-avatar"
+          >
+            👤
+          </div>
+
+          <span id="loginButton">
+            Login
+          </span>
+
+        </button>
+
+
+        <!-- ACCOUNT MENU -->
+
+        <div
+          id="accountMenu"
+          class="account-menu"
+          style="display:none;"
+        >
+
+          <button
+            type="button"
+            onclick="goToMyProfile()"
+          >
+            👤 My Profile
+          </button>
+
+          <button
+            type="button"
+            onclick="logout()"
+          >
+            🚪 Logout
+          </button>
+
+        </div>
+
+      </div>
+
     </div>
-  </div>
-</header>
 
-<main class="container page">
-<div class="page-head"><h1>Find your people.</h1><p>Discover new people, build connections, and grow your YouRemo network.</p></div>
-<div class="card"><h2>🔎 Find Friends</h2><p>Search by name or username.</p>
-<div class="search-box"><input id="friendSearch" placeholder="Search by name or username..."><button class="primary-btn" onclick="searchFriends()">Search</button></div>
-<div id="friendResults" class="results"><div class="empty-state"><div>🔎</div><h2>Discover People</h2><p>Enter a name or username above to find people.</p></div></div></div>
-<section class="section" id="requests"><div class="section-title"><h2>📩 Friend Requests</h2><p>Manage your incoming connection requests.</p></div><div id="friendRequests" class="requests-list"></div></section>
-<section><div class="section-title"><h2>👥 My Friends</h2><p id="friendsCount">0 Friends</p></div><div id="friendsList" class="friends-list"></div></section>
-</main>
+  </header>
 
-<div id="authModal" class="modal">
-  <div class="modal-card">
-    <button class="modal-close" onclick="closeAuth()">×</button>
-    <form class="auth-form" onsubmit="event.preventDefault(); document.querySelector('.auth-submit').click();">
-      <h2 id="authTitle">Welcome Back</h2><p id="authSubtitle">Login to your YouRemo account</p>
-      <input id="authName" style="display:none" placeholder="Full name" autocomplete="name">
-      <input id="authUsername" style="display:none" placeholder="Username" autocomplete="username">
-      <input id="authEmail" type="email" placeholder="Email" autocomplete="email">
-      <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
-      <button class="primary-btn auth-submit" type="button" onclick="login()">Login</button>
-      <button id="authSwitch" class="auth-switch" type="button" onclick="showSignup()">Create an account</button>
-    </form>
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main class="friends-page">
+
+
+    <!-- PAGE HERO -->
+
+    <section class="friends-hero">
+
+      <div class="friends-hero-content">
+
+        <span class="section-badge">
+          👥 YouRemo Community
+        </span>
+
+        <h1>
+          Friends
+        </h1>
+
+        <p>
+          Find people, send friend requests,
+          and connect with your YouRemo community.
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         FIND FRIENDS
+         =================================================== -->
+
+    <section class="friends-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            🔎 Find Friends
+          </h2>
+
+          <p>
+            Search by name or username.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="friend-search-box">
+
+        <input
+          type="text"
+          id="friendSearch"
+          placeholder="Search by name or username..."
+          autocomplete="off"
+        >
+
+        <button
+          type="button"
+          class="primary-btn"
+          onclick="searchFriends()"
+        >
+          Search
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH RESULTS -->
+
+      <div
+        id="friendResults"
+        class="friends-list"
+      >
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            👥
+          </div>
+
+          <h2>
+            Find Friends
+          </h2>
+
+          <p>
+            Enter a name or username to find
+            people on YouRemo.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         FRIEND REQUESTS
+         =================================================== -->
+
+    <section class="friends-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            📩 Friend Requests
+          </h2>
+
+          <p>
+            Manage requests from other people.
+          </p>
+
+        </div>
+
+
+        <div
+          id="requestBadge"
+          class="notification-badge"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div
+        id="friendRequests"
+        class="friends-list"
+      >
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            📭
+          </div>
+
+          <h2>
+            No Friend Requests
+          </h2>
+
+          <p>
+            You don't have any pending requests.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         MY FRIENDS
+         =================================================== -->
+
+    <section class="friends-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            👥 My Friends
+          </h2>
+
+          <p>
+            People you're connected with.
+          </p>
+
+        </div>
+
+
+        <span
+          id="friendCount"
+          class="friend-count"
+        >
+          0 Friends
+        </span>
+
+      </div>
+
+
+      <div
+        id="myFriendsList"
+        class="friends-list"
+      >
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            👥
+          </div>
+
+          <h2>
+            No Friends Yet
+          </h2>
+
+          <p>
+            Search for people and start connecting.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       AUTH MODAL
+       ===================================================== -->
+
+  <div
+    id="authModal"
+    class="modal"
+    style="display:none;"
+  >
+
+    <div class="modal-content">
+
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeAuth()"
+      >
+        ×
+      </button>
+
+
+      <h2 id="authTitle">
+        Welcome Back
+      </h2>
+
+
+      <p id="authSubtitle">
+        Login to your YouRemo account
+      </p>
+
+
+      <!-- NAME -->
+
+      <input
+        type="text"
+        id="authName"
+        placeholder="Full name"
+        style="display:none;"
+      >
+
+
+      <!-- USERNAME -->
+
+      <input
+        type="text"
+        id="authUsername"
+        placeholder="Username"
+        style="display:none;"
+      >
+
+
+      <!-- EMAIL -->
+
+      <input
+        type="email"
+        id="authEmail"
+        placeholder="Email"
+        autocomplete="email"
+      >
+
+
+      <!-- PASSWORD -->
+
+      <input
+        type="password"
+        id="authPassword"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+
+      <!-- SUBMIT -->
+
+      <button
+        type="button"
+        class="primary-btn auth-submit"
+        onclick="login()"
+      >
+        Login
+      </button>
+
+
+      <!-- SWITCH -->
+
+      <div class="auth-switch">
+
+        <button
+          type="button"
+          onclick="showSignup()"
+        >
+          Create an account
+        </button>
+
+      </div>
+
+    </div>
+
   </div>
-</div>
-<div id="toast" class="toast"></div>
-<script src="script.js"></script></body></html>
+
+
+
+  <!-- =====================================================
+       SCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>
+```
