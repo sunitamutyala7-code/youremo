@@ -1,67 +1,2587 @@
+```css
+/* =========================================================
+   YOUREMO - COMPLETE PROFESSIONAL STYLE
+   ========================================================= */
 
-*{box-sizing:border-box}
-:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#68738a;--primary:#5b5ce2;--primary2:#7c3aed;--border:#e7eaf2;--danger:#ef4444;--success:#16a34a}
-body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
-.nav{height:70px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:22px;padding:0 5%;position:sticky;top:0;z-index:20}
-.logo{font-weight:800;font-size:22px;color:var(--primary);margin-right:auto}
-.nav-links{display:flex;gap:10px}
-.nav-links button{border:0;background:transparent;padding:10px 12px;border-radius:10px;color:#566078}
-.nav-links button:hover{background:#f1f2ff;color:var(--primary)}
-.account{position:relative}
-.account-btn{display:flex;align-items:center;gap:9px;border:1px solid var(--border);background:#fff;padding:8px 12px;border-radius:12px;font-weight:650}
-.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ececff;color:var(--primary);overflow:hidden;font-weight:700}
-.avatar img,.friend-avatar img,.conversation-avatar img{width:100%;height:100%;object-fit:cover}
-.account-menu{display:none;position:absolute;right:0;top:50px;width:190px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px;box-shadow:0 15px 40px #18213d1c}
-.account-menu button{width:100%;border:0;background:#fff;text-align:left;padding:11px;border-radius:9px}
-.account-menu button:hover{background:#f5f6fb}
-.account-menu .logout{color:var(--danger)}
-.container{width:min(1120px,92%);margin:0 auto}
-.hero{padding:90px 0 70px;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
-.hero h1{font-size:clamp(42px,6vw,70px);line-height:1.02;margin:0 0 20px}
-.hero h1 span{color:var(--primary)}
-.hero p{font-size:18px;color:var(--muted);line-height:1.7;max-width:650px}
-.actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
-.primary-btn,.secondary-btn{border:0;border-radius:11px;padding:11px 17px;font-weight:700}
-.primary-btn{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
-.secondary-btn{background:#fff;color:var(--text);border:1px solid var(--border)}
-.primary-btn:disabled{opacity:.55;cursor:not-allowed}
-.hero-card{background:#fff;border:1px solid var(--border);border-radius:28px;padding:32px;box-shadow:0 20px 55px #18213d12}
-.hero-card .big-icon{font-size:72px}
-.section{padding:60px 0}
-.section-title{text-align:center;margin-bottom:30px}
-.section-title h2{font-size:34px;margin:0 0 10px}
-.section-title p{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px}
-.card-icon{font-size:30px;margin-bottom:12px}
-.card h3{margin:0 0 7px}.card p{color:var(--muted);line-height:1.5}
-.page{padding:45px 0 70px}.page-head{margin-bottom:25px}.page-head h1{margin:0 0 8px;font-size:38px}.page-head p{margin:0;color:var(--muted)}
-.search-box{display:flex;gap:10px;margin-bottom:20px}.search-box input,.auth-form input,.profile-form input,.profile-form textarea,.message-input{width:100%;border:1px solid var(--border);border-radius:11px;padding:13px 14px;outline:none;background:#fff}.search-box input:focus,.auth-form input:focus,.profile-form input:focus,.profile-form textarea:focus,.message-input:focus{border-color:#9a9bf0;box-shadow:0 0 0 3px #5b5ce21a}
-.results,.friends-list,.requests-list{display:grid;gap:12px}
-.friend-result-card,.friend-card,.friend-request-card{display:flex;align-items:center;gap:15px;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}
-.friend-avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none;background:#ececff;color:var(--primary);font-weight:800;overflow:hidden}
-.friend-result-info,.friend-info{flex:1}.friend-result-info h3,.friend-info h3{margin:0 0 3px}.friend-result-info p,.friend-info p{margin:0;color:var(--muted);font-size:14px}
-.request-actions{display:flex;gap:8px}
-.empty-state{text-align:center;padding:38px 20px;background:#fff;border:1px dashed var(--border);border-radius:16px;color:var(--muted)}
-.empty-state div{font-size:38px;margin-bottom:8px}.empty-state h2{color:var(--text);margin:5px 0 8px}
-.badge{display:none;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:#ef4444;color:#fff;font-size:12px;align-items:center;justify-content:center}
-.messages-layout{display:grid;grid-template-columns:310px 1fr;gap:18px;height:650px}
-.conversations,.chat-panel{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden}
-.conversation-search{padding:12px;border-bottom:1px solid var(--border)}.conversation-search input{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px}
-.conversation-list{padding:8px;overflow:auto;height:calc(100% - 70px)}
-.conversation-card{width:100%;border:0;background:#fff;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border-radius:12px}.conversation-card:hover,.conversation-card.selected{background:#f0f1ff}
-.conversation-avatar{width:43px;height:43px;border-radius:50%;background:#ececff;color:var(--primary);display:grid;place-items:center;overflow:hidden;flex:none;font-weight:700}
-.conversation-info h3{margin:0 0 2px;font-size:15px}.conversation-info p{margin:0;color:var(--muted);font-size:13px}
-.chat-header{height:72px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 18px}.chat-header h3{margin:0}.chat-header p{margin:2px 0 0;color:var(--muted);font-size:13px}
-.chat-messages{height:calc(100% - 135px);overflow:auto;padding:20px;display:flex;flex-direction:column;gap:8px}
-.message-bubble-wrapper{display:flex;flex-direction:column;max-width:72%}.message-bubble-wrapper.sent{align-self:flex-end;align-items:flex-end}.message-bubble-wrapper.received{align-self:flex-start}
-.message-bubble{padding:10px 13px;border-radius:15px;background:#eef0f5;line-height:1.4;word-break:break-word}.sent .message-bubble{background:var(--primary);color:#fff}.message-seen{font-size:11px;color:var(--muted);margin-top:3px}
-.message-compose{height:63px;border-top:1px solid var(--border);display:flex;gap:8px;padding:10px}.message-input{flex:1}.profile-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px;max-width:760px;margin:auto}
-.profile-top{display:flex;align-items:center;gap:18px;padding-bottom:25px;border-bottom:1px solid var(--border)}.profile-avatar{width:90px;height:90px;border-radius:50%;background:#ececff;display:grid;place-items:center;overflow:hidden;color:var(--primary);font-size:25px;font-weight:800}.profile-avatar img{width:100%;height:100%;object-fit:cover}.profile-form{padding-top:25px;display:grid;gap:14px}.profile-form textarea{min-height:110px;resize:vertical}
-.modal{display:none;position:fixed;inset:0;background:#11182780;z-index:100;align-items:center;justify-content:center;padding:20px}.modal-card{width:min(440px,100%);background:#fff;border-radius:20px;padding:28px;position:relative;box-shadow:0 25px 80px #0003}.modal-close{position:absolute;right:15px;top:12px;border:0;background:transparent;font-size:24px;color:#8a93a8}.auth-form{display:grid;gap:12px}.auth-form h2{margin:0}.auth-form p{color:var(--muted);margin-top:5px}.auth-switch{border:0;background:transparent;color:var(--primary);font-weight:700}.footer{text-align:center;color:var(--muted);padding:30px;border-top:1px solid var(--border)}
-.toast{position:fixed;right:20px;bottom:20px;background:#172033;color:#fff;padding:13px 16px;border-radius:12px;display:none;z-index:200;box-shadow:0 10px 30px #0002}
-@media(max-width:850px){.nav-links{display:none}.hero{grid-template-columns:1fr;padding-top:55px}.grid{grid-template-columns:1fr 1fr}.messages-layout{grid-template-columns:1fr;height:auto}.conversations{height:300px}.chat-panel{height:620px}}
-@media(max-width:560px){.grid{grid-template-columns:1fr}.friend-result-card,.friend-card,.friend-request-card{align-items:flex-start;flex-wrap:wrap}.request-actions{width:100%}.nav{padding:0 3%}.hero h1{font-size:43px}.search-box{flex-direction:column}}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f8fc;
+  color: #172033;
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+  height: 68px;
+  width: 100%;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 4%;
+  gap: 20px;
+
+  border-bottom: 1px solid #e8eaf0;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 800;
+  color: #5548e8;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   NORMAL NAVIGATION
+   ========================================================= */
+
+.navbar nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.navbar nav a {
+  text-decoration: none;
+  color: #555d70;
+
+  padding: 9px 11px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition: 0.2s ease;
+}
+
+.navbar nav a:hover {
+  color: #4f46e5;
+  background: #f1f2ff;
+}
+
+/* =========================================================
+   COMPACT ICON NAVIGATION
+   Works with .main-nav
+   ========================================================= */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+}
+
+.main-nav a {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  text-decoration: none;
+  color: #555d70;
+
+  transition: all 0.2s ease;
+}
+
+.main-nav a:hover {
+  background: #f1f2ff;
+  color: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.nav-icon {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.main-nav a.active {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* =========================================================
+   ACCOUNT BUTTON
+   ========================================================= */
+
+.account-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 5px 11px 5px 6px;
+
+  background: #ffffff;
+
+  border: 1px solid #e1e4ec;
+  border-radius: 30px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #202124;
+
+  white-space: nowrap;
+
+  transition: 0.2s ease;
+}
+
+.account-button:hover {
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.nav-avatar {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #6258ee, #9189ff);
+
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================================
+   ACCOUNT MENU
+   ========================================================= */
+
+.account-menu {
+  position: fixed;
+
+  top: 74px;
+  right: 4%;
+
+  width: 190px;
+
+  padding: 8px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e9ef;
+  border-radius: 14px;
+
+  box-shadow: 0 15px 40px rgba(20, 25, 50, 0.15);
+
+  display: none;
+
+  z-index: 2000;
+}
+
+.account-menu.show {
+  display: block;
+}
+
+.account-menu button {
+  width: 100%;
+
+  border: none;
+  background: transparent;
+
+  padding: 11px 13px;
+
+  text-align: left;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  color: #333a4d;
+}
+
+.account-menu button:hover {
+  background: #f3f4f8;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  min-height: 560px;
+
+  padding: 70px 7%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 50px;
+
+  background: linear-gradient(
+    135deg,
+    #f8f9ff 0%,
+    #eef0ff 100%
+  );
+}
+
+.hero-content {
+  max-width: 620px;
+}
+
+.hero h1 {
+  font-size: 52px;
+  line-height: 1.08;
+
+  letter-spacing: -2px;
+
+  color: #151b2c;
+
+  margin-bottom: 22px;
+}
+
+.hero p {
+  max-width: 550px;
+
+  color: #6d7485;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.primary-btn,
+.secondary-btn {
+  min-height: 46px;
+
+  padding: 0 22px;
+
+  border-radius: 11px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.primary-btn {
+  border: 1px solid #4f46e5;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.secondary-btn {
+  border: 1px solid #d7d9e3;
+
+  background: #ffffff;
+
+  color: #333a4d;
+}
+
+.secondary-btn:hover {
+  background: #f5f5fa;
+}
+
+/* =========================================================
+   HERO CARD
+   ========================================================= */
+
+.hero-card {
+  width: 330px;
+  min-width: 330px;
+
+  padding: 35px 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #eceef4;
+
+  border-radius: 23px;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 55px rgba(45, 48, 95, 0.12);
+}
+
+.card-icon {
+  width: 76px;
+  height: 76px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: #eeeeff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 35px;
+}
+
+.hero-card h2 {
+  color: #202124;
+
+  font-size: 21px;
+  line-height: 1.35;
+
+  margin-bottom: 10px;
+}
+
+.hero-card p {
+  font-size: 14px;
+  line-height: 1.6;
+
+  margin: 0;
+}
+
+/* =========================================================
+   COMMON SECTIONS
+   ========================================================= */
+
+.friends-section,
+.requests-section,
+.friends-list-section,
+.profile-section,
+.about {
+  padding: 70px 6%;
+}
+
+.friends-section {
+  background: #ffffff;
+}
+
+.requests-section,
+.profile-section {
+  background: #f7f8fc;
+}
+
+.friends-list-section {
+  background: #ffffff;
+}
+
+.about {
+  background: #f7f8fc;
+}
+
+.friends-section h2,
+.requests-section h2,
+.friends-list-section h2,
+.profile-section h2,
+.about h2 {
+  text-align: center;
+
+  font-size: 32px;
+
+  color: #1d2435;
+
+  margin-bottom: 10px;
+}
+
+.section-text {
+  text-align: center;
+
+  color: #737b8d;
+
+  line-height: 1.6;
+
+  margin-bottom: 25px;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-box {
+  width: 100%;
+  max-width: 650px;
+
+  margin: 30px auto 35px;
+
+  display: flex;
+  gap: 10px;
+}
+
+.search-box input {
+  flex: 1;
+
+  height: 50px;
+
+  padding: 0 17px;
+
+  border: 1px solid #dfe2ea;
+
+  border-radius: 12px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  color: #202124;
+
+  background: #ffffff;
+}
+
+.search-box input:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 4px rgba(79, 70, 229, 0.08);
+}
+
+.search-box button {
+  height: 50px;
+
+  padding: 0 23px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background: #4338ca;
+}
+
+/* =========================================================
+   FRIEND RESULTS
+   ========================================================= */
+
+.friend-results {
+  width: 100%;
+  max-width: 760px;
+
+  margin: 30px auto 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 13px;
+}
+
+/* =========================================================
+   FRIEND CARD
+   ========================================================= */
+
+.friend-card {
+  width: 100%;
+
+  min-height: 76px;
+
+  padding: 14px 17px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e9ef;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 18px rgba(30, 35, 65, 0.05);
+
+  transition: 0.2s ease;
+}
+
+.friend-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(30, 35, 65, 0.08);
+}
+
+/* =========================================================
+   AVATARS
+   ========================================================= */
+
+.friend-card .avatar,
+#myFriendsList .avatar,
+#friendRequests .avatar {
+  width: 52px;
+  height: 52px;
+
+  min-width: 52px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(135deg, #6258ee, #9189ff);
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.friend-card .avatar img,
+#myFriendsList .avatar img,
+#friendRequests .avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* =========================================================
+   FRIEND AVATAR
+   ========================================================= */
+
+.friend-avatar {
+  width: 56px;
+  height: 56px;
+
+  min-width: 56px;
+  min-height: 56px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background:
+    linear-gradient(135deg, #667eea, #764ba2);
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.friend-avatar img,
+.friend-avatar-img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   FRIEND INFORMATION
+   ========================================================= */
+
+.friend-info,
+.friend-card > div:nth-child(2) {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.friend-card h3 {
+  margin-bottom: 4px;
+
+  color: #202124;
+
+  font-size: 16px;
+}
+
+.friend-card p {
+  color: #777d8a;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   FRIEND BUTTON
+   ========================================================= */
+
+.friend-card button {
+  border: none;
+
+  border-radius: 9px;
+
+  padding: 9px 14px;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.friend-card button:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.friend-card button:disabled {
+  background: #e9eaf0;
+
+  color: #666b76;
+
+  cursor: default;
+}
+
+.secondary-request {
+  background: #f0f0f5 !important;
+  color: #555 !important;
+}
+
+.secondary-request:hover {
+  background: #e3e3e9 !important;
+}
+
+/* =========================================================
+   FRIEND STATUS
+   ========================================================= */
+
+.friend-status {
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   FRIEND COUNT
+   ========================================================= */
+
+.friend-count {
+  text-align: center;
+
+  margin: 8px 0 18px;
+
+  color: #4f46e5;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+.friend-count-box {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 11px 18px;
+
+  margin-bottom: 30px;
+
+  background: #ffffff;
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.07);
+
+  font-size: 15px;
+}
+
+.friend-count-box span {
+  font-size: 21px;
+}
+
+.friend-count-box strong {
+  font-weight: 600;
+}
+
+/* =========================================================
+   REQUEST BADGE
+   ========================================================= */
+
+.request-badge {
+  display: block;
+
+  width: fit-content;
+
+  min-width: 22px;
+
+  height: 22px;
+
+  padding: 0 6px;
+
+  margin: 4px auto 0;
+
+  border-radius: 999px;
+
+  background: #ef4444;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  line-height: 22px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.my-profile-card {
+  width: 100%;
+  max-width: 720px;
+
+  margin: 30px auto 0;
+
+  padding: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7e9ef;
+
+  border-radius: 21px;
+
+  box-shadow:
+    0 12px 35px rgba(30, 35, 65, 0.07);
+}
+
+.profile-avatar-large {
+  width: 110px;
+  height: 110px;
+
+  min-width: 110px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(135deg, #667eea, #764ba2);
+
+  color: #ffffff;
+
+  font-size: 34px;
+  font-weight: 700;
+
+  border: 4px solid #eef2ff;
+
+  text-transform: uppercase;
+}
+
+.profile-avatar-large img,
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  display: block;
+}
+
+.my-profile-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.my-profile-info h3 {
+  margin-bottom: 6px;
+
+  color: #202124;
+
+  font-size: 25px;
+}
+
+.my-profile-info > p {
+  margin-bottom: 17px;
+
+  color: #777d8a;
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   PROFILE STATS
+   ========================================================= */
+
+.profile-stats {
+  display: flex;
+
+  gap: 30px;
+
+  margin-bottom: 20px;
+}
+
+.profile-stat {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.profile-stat strong {
+  color: #4f46e5;
+
+  font-size: 23px;
+}
+
+.profile-stat span {
+  color: #777d8a;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   PROFILE ACTION BUTTONS
+   ========================================================= */
+
+.profile-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+.profile-action-btn {
+  width: 135px !important;
+  min-width: 135px !important;
+  max-width: 135px !important;
+
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+
+  border-radius: 10px !important;
+
+  font-size: 13px !important;
+
+  font-weight: 600 !important;
+
+  line-height: 1 !important;
+
+  cursor: pointer;
+}
+
+.profile-action-btn.edit-profile-btn {
+  background: #ffffff !important;
+
+  color: #4f46e5 !important;
+
+  border: 1px solid #4f46e5 !important;
+}
+
+.profile-action-btn.edit-profile-btn:hover {
+  background: #eef2ff !important;
+}
+
+.profile-action-btn.upload-avatar-btn {
+  background: #4f46e5 !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid #4f46e5 !important;
+}
+
+.profile-action-btn.upload-avatar-btn:hover {
+  background: #4338ca !important;
+}
+
+.upload-avatar-btn input {
+  display: none !important;
+}
+
+/* =========================================================
+   MY FRIENDS PAGE
+   ========================================================= */
+
+.friends-list-section {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 65px 25px 90px;
+}
+
+.friends-list-section h1 {
+  margin-bottom: 10px;
+
+  font-size: 36px;
+
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.friends-list-section .section-text {
+  margin-bottom: 25px;
+}
+
+#myFriendsList.friend-results {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(290px, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+
+  max-width: none;
+}
+
+#myFriendsList .friend-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border-radius: 17px;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#myFriendsList .friend-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.11);
+}
+
+#myFriendsList .friend-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+#myFriendsList .friend-info h3 {
+  margin: 0 0 5px;
+
+  font-size: 17px;
+
+  font-weight: 650;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+#myFriendsList .friend-info p {
+  margin: 0;
+
+  font-size: 13px;
+
+  opacity: 0.65;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+#myFriendsList .empty-state,
+#friendRequests .empty-state {
+  grid-column: 1 / -1;
+
+  text-align: center;
+
+  padding: 60px 25px;
+
+  background: #ffffff;
+
+  border-radius: 19px;
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.06);
+}
+
+#myFriendsList .empty-state > div,
+#friendRequests .empty-state > div {
+  font-size: 46px;
+
+  margin-bottom: 14px;
+}
+
+#myFriendsList .empty-state h2,
+#friendRequests .empty-state h2 {
+  margin-bottom: 9px;
+}
+
+/* =========================================================
+   FIND MORE FRIENDS
+   ========================================================= */
+
+.my-friends-action,
+.requests-action {
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 35px;
+}
+
+.my-friends-action .primary-btn,
+.requests-action .primary-btn {
+  padding: 12px 25px;
+
+  border-radius: 11px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   REQUESTS PAGE
+   ========================================================= */
+
+.requests-page {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 65px 25px 90px;
+}
+
+.requests-heading {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 30px;
+}
+
+.requests-heading h1 {
+  margin: 0 0 8px;
+
+  font-size: 36px;
+
+  font-weight: 700;
+}
+
+.requests-heading .section-text {
+  margin: 0;
+
+  text-align: left;
+}
+
+.request-count-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 12px 18px;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.07);
+
+  white-space: nowrap;
+}
+
+.request-count-box span {
+  font-size: 21px;
+}
+
+.request-count-box strong {
+  font-size: 21px;
+}
+
+.request-count-box small {
+  opacity: 0.65;
+
+  font-size: 13px;
+}
+
+#friendRequests.friend-results {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(320px, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+
+  max-width: none;
+}
+
+#friendRequests .friend-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border-radius: 17px;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#friendRequests .friend-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.11);
+}
+
+#friendRequests .friend-avatar {
+  width: 62px;
+  height: 62px;
+
+  min-width: 62px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+
+  font-size: 19px;
+
+  font-weight: 700;
+
+  border: 3px solid #ffffff;
+
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+#friendRequests .friend-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+#friendRequests .friend-info h3 {
+  margin: 0 0 5px;
+
+  font-size: 17px;
+
+  font-weight: 650;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+#friendRequests .friend-info p {
+  margin: 0;
+
+  font-size: 13px;
+
+  opacity: 0.65;
+}
+
+#friendRequests .friend-card-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+#friendRequests .friend-card-actions button {
+  min-width: 85px;
+
+  padding: 8px 12px;
+
+  border-radius: 9px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   ABOUT FEATURES
+   ========================================================= */
+
+.features {
+  max-width: 1000px;
+
+  margin: 40px auto 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 22px;
+}
+
+.feature {
+  padding: 32px 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e8eaf0;
+
+  border-radius: 17px;
+
+  text-align: center;
+
+  box-shadow:
+    0 8px 25px rgba(30, 35, 70, 0.05);
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.feature:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(30, 35, 70, 0.08);
+}
+
+.feature span {
+  font-size: 32px;
+}
+
+.feature h3 {
+  margin: 15px 0 9px;
+
+  color: #202124;
+}
+
+.feature p {
+  color: #737b8d;
+
+  line-height: 1.6;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   AUTH MODAL
+   ========================================================= */
+
+.auth-modal,
+#editProfileModal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 3000;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(15, 20, 40, 0.65);
+
+  backdrop-filter: blur(5px);
+}
+
+.auth-box {
+  position: relative;
+
+  width: 100%;
+
+  max-width: 420px;
+
+  padding: 35px;
+
+  background: #ffffff;
+
+  border-radius: 21px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.22);
+}
+
+.close-auth {
+  position: absolute;
+
+  top: 12px;
+  right: 16px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #777;
+
+  font-size: 29px;
+
+  cursor: pointer;
+}
+
+.auth-box h2 {
+  margin-bottom: 7px;
+
+  color: #202124;
+
+  font-size: 26px;
+}
+
+.auth-box > p {
+  margin-bottom: 22px;
+
+  color: #737b8d;
+
+  line-height: 1.5;
+}
+
+.auth-box input {
+  width: 100%;
+
+  height: 47px;
+
+  padding: 0 14px;
+
+  margin-bottom: 12px;
+
+  border: 1px solid #dfe2ea;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.auth-box input:focus {
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+.auth-submit {
+  width: 100%;
+
+  height: 47px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.auth-submit:hover {
+  background: #4338ca;
+}
+
+.auth-switch {
+  text-align: center;
+
+  margin-top: 17px;
+
+  color: #737b8d;
+}
+
+.auth-switch span {
+  color: #4f46e5;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   EDIT PROFILE MODAL
+   ========================================================= */
+
+#editProfileModal .auth-box {
+  max-width: 410px;
+}
+
+/* =========================================================
+   FRIEND PROFILE POPUP
+   ========================================================= */
+
+.friend-profile-box {
+  position: relative;
+
+  padding: 32px 28px;
+
+  border-radius: 23px;
+
+  text-align: center;
+}
+
+.friend-profile-box .profile-avatar {
+  width: 105px;
+  height: 105px;
+
+  margin: 5px auto 18px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-size: 40px;
+
+  font-weight: 700;
+
+  box-shadow:
+    0 8px 25px rgba(79, 70, 229, 0.25);
+}
+
+.friend-profile-box .profile-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.friend-profile-box h2 {
+  margin-bottom: 6px;
+
+  font-size: 24px;
+}
+
+.friend-profile-box > p {
+  color: #777;
+}
+
+.profile-friend-status {
+  display: inline-block;
+
+  margin-top: 17px;
+
+  padding: 8px 15px;
+
+  border-radius: 999px;
+
+  background: #f1edff;
+
+  color: #5b3cc4;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.remove-friend-btn {
+  margin-top: 18px;
+
+  padding: 10px 17px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #fee2e2;
+
+  color: #dc2626;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.remove-friend-btn:hover {
+  background: #fecaca;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+  padding: 27px;
+
+  background: #172033;
+
+  color: #c9ceda;
+
+  text-align: center;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+  .navbar {
+    padding: 0 3%;
+  }
+
+  .navbar nav {
+    gap: 2px;
+  }
+
+  .navbar nav a {
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+
+  .hero {
+    padding: 65px 5%;
+    gap: 35px;
+  }
+
+  .hero h1 {
+    font-size: 45px;
+  }
+
+  .friends-section,
+  .requests-section,
+  .friends-list-section,
+  .profile-section,
+  .about {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .navbar {
+    height: 64px;
+
+    padding: 0 15px;
+
+    gap: 10px;
+  }
+
+  .navbar nav {
+    display: none;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .account-menu {
+    right: 15px;
+
+    top: 69px;
+  }
+
+  .hero {
+    min-height: auto;
+
+    padding: 60px 20px;
+
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 600px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+
+    letter-spacing: -1.5px;
+  }
+
+  .hero p {
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 16px;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+
+    flex-wrap: wrap;
+  }
+
+  .hero-card {
+    width: 100%;
+
+    min-width: 0;
+
+    max-width: 350px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .requests-heading {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .requests-heading .section-text {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .account-button {
+    padding-right: 8px;
+  }
+
+  #loginButton {
+    font-size: 12px;
+  }
+
+  .friends-section,
+  .requests-section,
+  .friends-list-section,
+  .profile-section,
+  .about {
+    padding: 50px 15px;
+  }
+
+  .friends-section h2,
+  .requests-section h2,
+  .friends-list-section h2,
+  .profile-section h2,
+  .about h2 {
+    font-size: 28px;
+  }
+
+  .friends-list-section h1,
+  .requests-heading h1 {
+    font-size: 29px;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box button {
+    width: 100%;
+  }
+
+  .friend-card {
+    padding: 12px;
+
+    gap: 9px;
+  }
+
+  .friend-card .avatar,
+  #myFriendsList .avatar,
+  #friendRequests .avatar {
+    width: 46px;
+    height: 46px;
+
+    min-width: 46px;
+
+    font-size: 16px;
+  }
+
+  .friend-avatar {
+    width: 50px;
+    height: 50px;
+
+    min-width: 50px;
+  }
+
+  .friend-card button {
+    padding: 7px 9px;
+
+    font-size: 11px;
+  }
+
+  .friend-card h3 {
+    font-size: 14px;
+  }
+
+  .friend-card p {
+    font-size: 11px;
+  }
+
+  .my-profile-card {
+    flex-direction: column;
+
+    text-align: center;
+
+    padding: 24px 17px;
+  }
+
+  .my-profile-info {
+    width: 100%;
+  }
+
+  .my-profile-info h3 {
+    font-size: 23px;
+  }
+
+  .profile-actions {
+    justify-content: center;
+  }
+
+  .profile-action-btn {
+    width: 135px !important;
+
+    min-width: 135px !important;
+
+    max-width: 135px !important;
+  }
+
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .auth-box {
+    padding: 30px 21px;
+  }
+
+  #myFriendsList.friend-results,
+  #friendRequests.friend-results {
+    grid-template-columns: 1fr;
+  }
+
+  #friendRequests .friend-card-actions {
+    flex-direction: column;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .profile-action-btn {
+    width: 100% !important;
+
+    max-width: 260px !important;
+  }
+
+  .account-button {
+    padding-right: 6px;
+  }
+
+  #loginButton {
+    display: none;
+  }
+}
+```
+/* =====================================================
+   MESSAGES PAGE - COMPACT DESIGN
+   ===================================================== */
+
+.messages-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 45px 25px 70px;
+}
+
+.messages-header {
+  margin-bottom: 25px;
+}
+
+.messages-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+.messages-header p {
+  margin: 0;
+  color: #737b8d;
+}
+
+
+/* MESSAGE LAYOUT */
+
+.messages-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: 620px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(30, 35, 65, 0.08);
+}
+
+
+/* LEFT CONVERSATION LIST */
+
+.conversation-list {
+  background: #fafbff;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+}
+
+.conversation-search {
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.conversation-search input {
+  width: 100%;
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid #dfe2ea;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+.conversation-search input:focus {
+  border-color: #4f46e5;
+}
+
+
+/* CONVERSATION */
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 15px;
+
+  cursor: pointer;
+
+  border-bottom: 1px solid #eeeeee;
+
+  transition: background 0.2s ease;
+}
+
+.conversation:hover {
+  background: #f0f1ff;
+}
+
+
+/* IMPORTANT:
+   KEEP FRIEND PICTURES SMALL
+*/
+
+.conversation-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: linear-gradient(
+    135deg,
+    #667eea,
+    #764ba2
+  );
+
+  color: #ffffff;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.conversation-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+
+  max-width: 100% !important;
+  max-height: 100% !important;
+
+  object-fit: cover !important;
+
+  border-radius: 50%;
+  display: block;
+}
+
+
+/* CONVERSATION TEXT */
+
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-info strong {
+  display: block;
+
+  font-size: 15px;
+
+  color: #202124;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-info p {
+  margin: 4px 0 0;
+
+  font-size: 12px;
+
+  color: #777d8a;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* EMPTY CONVERSATION */
+
+.empty-conversation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 25px 18px;
+
+  color: #737b8d;
+}
+
+.conversation-icon {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eeeeff;
+
+  font-size: 21px;
+}
+
+
+/* CHAT AREA */
+
+.chat-area {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  background: #ffffff;
+}
+
+
+/* CHAT HEADER */
+
+.chat-header {
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 12px 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.chat-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-user .conversation-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+}
+
+.chat-user strong {
+  display: block;
+  font-size: 15px;
+}
+
+.chat-user p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #777d8a;
+}
+
+
+/* CHAT MESSAGES */
+
+.chat-messages {
+  flex: 1;
+
+  padding: 20px;
+
+  overflow-y: auto;
+
+  background: #f8f9fc;
+}
+
+.message-row {
+  display: flex;
+
+  margin-bottom: 12px;
+}
+
+.message-row.mine {
+  justify-content: flex-end;
+}
+
+.message-row.theirs {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 65%;
+
+  padding: 10px 14px;
+
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  color: #202124;
+
+  font-size: 14px;
+
+  line-height: 1.45;
+
+  word-break: break-word;
+
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04);
+}
+
+.message-row.mine .message-bubble {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+
+/* MESSAGE INPUT */
+
+.message-input-area {
+  display: flex;
+
+  gap: 10px;
+
+  padding: 14px 16px;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.message-input-area input {
+  flex: 1;
+
+  height: 44px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dfe2ea;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.message-input-area input:focus {
+  border-color: #4f46e5;
+}
+
+.message-input-area button {
+  height: 44px;
+
+  padding: 0 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #4f46e5;
+
+  color: #ffffff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.message-input-area button:hover {
+  background: #4338ca;
+}
+
+
+/* LOADING */
+
+.loading-conversations {
+  padding: 30px 20px;
+
+  text-align: center;
+
+  color: #777d8a;
+
+  font-size: 14px;
+}
+
+
+/* EMPTY CHAT */
+
+.chat-messages .empty-state {
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.chat-messages .empty-state > div {
+  font-size: 42px;
+
+  margin-bottom: 12px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 750px) {
+
+  .messages-page {
+    padding: 30px 15px 50px;
+  }
+
+  .messages-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .conversation-list {
+    height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .chat-area {
+    height: 550px;
+  }
+
+  .message-bubble {
+    max-width: 80%;
+  }
+
+}
+/* =========================================================
+   MESSAGE TIME
+   ========================================================= */
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.65;
+  margin-top: 5px;
+  text-align: right;
+  line-height: 1;
+}
+/* =========================================================
+   FINAL CHAT LAYOUT FIX
+   ========================================================= */
+
+.messages-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+
+  height: calc(100vh - 220px);
+  min-height: 500px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 35px rgba(30, 35, 65, 0.08);
+}
+
+
+/* LEFT FRIEND LIST */
+
+.conversation-list {
+  height: 100%;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  background: #fafbff;
+
+  border-right: 1px solid #e5e7eb;
+}
+
+
+/* RIGHT CHAT */
+
+.chat-area {
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+}
+
+
+/* CHAT HEADER */
+
+.chat-header {
+  flex: 0 0 72px;
+
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 12px 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+
+/* MESSAGE AREA */
+
+.chat-messages {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  height: auto;
+
+  padding: 20px;
+
+  overflow-y: auto;
+
+  background: #f8f9fc;
+}
+
+
+/* MESSAGE INPUT */
+
+.message-input-area {
+  flex: 0 0 auto;
+
+  width: 100%;
+
+  display: flex;
+
+  gap: 10px;
+
+  padding: 14px 16px;
+
+  margin: 0;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+
+/* INPUT */
+
+.message-input-area input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 44px;
+}
+
+
+/* SEND BUTTON */
+
+.message-input-area button {
+  flex: 0 0 auto;
+
+  height: 44px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 750px) {
+
+  .messages-layout {
+    display: flex;
+
+    flex-direction: column;
+
+    height: auto;
+
+    min-height: 0;
+  }
+
+  .conversation-list {
+    height: 300px;
+
+    flex: 0 0 300px;
+
+    border-right: none;
+
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .chat-area {
+    height: 550px;
+
+    min-height: 550px;
+  }
+
+  .chat-messages {
+    min-height: 0;
+  }
+
+  .message-bubble {
+    max-width: 80%;
+  }
+
+}
+/* =========================================================
+   MESSAGE TIME
+   ========================================================= */
+
+.message-time {
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.65;
+  text-align: right;
+}
+
+.message-row.mine .message-time {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.message-row.theirs .message-time {
+  color: #777d8a;
+}
