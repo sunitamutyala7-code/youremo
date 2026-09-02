@@ -1,47 +1,2530 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouRemo - Messages</title><link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body>
-<header class="nav">
-  <a class="logo" href="index.html">YouRemo</a>
-  <nav class="nav-links">
-    <button onclick="goHome()">🏠</button><button onclick="goToFriends()">👥</button>
-    <button onclick="goToRequests()">🔔 <span id="requestBadge" class="badge">0</span></button>
-    <button onclick="goToMessages()">💬</button><button onclick="goToProfile()">👤</button>
-  </nav>
-  <div class="account">
-    <button class="account-btn" id="loginButton" onclick="handleAccountClick()"><span id="navAvatar" class="avatar">?</span><span>Login</span></button>
-    <div id="accountMenu" class="account-menu">
-      <button onclick="goToProfile()">My Profile</button><button onclick="goToFriends()">My Friends</button>
-      <button class="logout" onclick="logout()">Logout</button>
-    </div>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>YouRemo - Messages</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    .messages-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 25px 60px;
+    }
+
+    .messages-header {
+      margin-bottom: 20px;
+    }
+
+    .messages-header h1 {
+      margin: 0 0 7px;
+      font-size: 32px;
+    }
+
+    .messages-header p {
+      margin: 0;
+      color: #737b8d;
+    }
+
+    .messages-layout {
+      display: flex;
+      width: 100%;
+      height: calc(100vh - 210px);
+      min-height: 500px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(30,35,65,0.08);
+    }
+
+    .conversation-list {
+      width: 320px;
+      min-width: 320px;
+      height: 100%;
+      background: #fafbff;
+      border-right: 1px solid #e5e7eb;
+      overflow-y: auto;
+    }
+
+    .conversation-search {
+      padding: 15px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .conversation-search input {
+      width: 100%;
+      height: 42px;
+      padding: 0 13px;
+      border: 1px solid #dfe2ea;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .conversation-search input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+    }
+
+    .conversation {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #eeeeee;
+      transition: background 0.2s ease;
+    }
+
+    .conversation:hover {
+      background: #f0f1ff;
+    }
+
+    .conversation.selected {
+      background: #eef2ff;
+    }
+
+    .conversation-avatar {
+      width: 48px !important;
+      height: 48px !important;
+      min-width: 48px !important;
+      max-width: 48px !important;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .conversation-avatar img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .conversation-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .conversation-info strong {
+      display: block;
+      font-size: 15px;
+      color: #202124;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .conversation-info p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #777d8a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .empty-conversation {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 25px 18px;
+      color: #737b8d;
+    }
+
+    .conversation-icon {
+      width: 45px;
+      height: 45px;
+      min-width: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #eeeeff;
+      font-size: 21px;
+    }
+
+    .chat-area {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .chat-header {
+      min-height: 72px;
+      flex: 0 0 72px;
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    .chat-empty-title {
+      color: #737b8d;
+      font-size: 15px;
+    }
+
+    .chat-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-user .conversation-avatar {
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      max-width: 44px !important;
+    }
+
+    .chat-user strong {
+      display: block;
+      font-size: 15px;
+      color: #202124;
+    }
+
+    .chat-user p {
+      margin: 3px 0 0;
+      font-size: 12px;
+      color: #777d8a;
+    }
+
+    .chat-messages {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f8f9fc;
+      scroll-behavior: smooth;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+
+    .message-row.mine {
+      justify-content: flex-end;
+    }
+
+    .message-row.theirs {
+      justify-content: flex-start;
+    }
+
+    .message-content {
+      max-width: 65%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-row.mine .message-content {
+      align-items: flex-end;
+    }
+
+    .message-row.theirs .message-content {
+      align-items: flex-start;
+    }
+
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      color: #202124;
+      font-size: 14px;
+      line-height: 1.45;
+      word-break: break-word;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.04);
+    }
+
+    .message-row.mine .message-bubble {
+      background: #4f46e5;
+      color: #fff;
+      border-color: #4f46e5;
+    }
+
+    .message-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+      font-size: 10px;
+      color: #858b98;
+    }
+
+    .message-row.mine .message-meta {
+      justify-content: flex-end;
+    }
+
+    .message-sent {
+      font-size: 10px;
+      color: #4f46e5;
+      font-weight: 600;
+    }
+
+    .message-seen {
+      font-size: 10px;
+      color: #4f46e5;
+      font-weight: 700;
+    }
+
+    .message-input-area {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 10px;
+      padding: 13px 16px;
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
+    }
+
+    .message-input-area input {
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid #dfe2ea;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .message-input-area input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.08);
+    }
+
+    .message-input-area button {
+      height: 44px;
+      padding: 0 20px;
+      border: none;
+      border-radius: 10px;
+      background: #4f46e5;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .message-input-area button:hover {
+      background: #4338ca;
+    }
+
+    .message-input-area button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .empty-state > div {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state h2 {
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: #777d8a;
+    }
+
+    .loading-conversations {
+      padding: 30px 20px;
+      text-align: center;
+      color: #777d8a;
+      font-size: 14px;
+    }
+
+    @media (max-width:750px) {
+
+      .messages-page {
+        padding: 25px 12px 40px;
+      }
+
+      .messages-layout {
+        flex-direction: column;
+        height: calc(100vh - 170px);
+        min-height: 550px;
+      }
+
+      .conversation-list {
+        width: 100%;
+        min-width: 0;
+        height: 230px;
+        flex: 0 0 230px;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .chat-area {
+        height: auto;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .message-content {
+        max-width: 80%;
+      }
+
+      .message-bubble {
+        font-size: 13px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+  <div class="logo">
+    YouRemo
   </div>
+
+
+  <nav class="main-nav">
+
+    <a href="index.html" title="Home">🏠</a>
+
+    <a href="friends.html" title="Find Friends">🔎</a>
+
+    <a href="requests.html" title="Requests">🤝</a>
+
+    <a href="myfriends.html" title="My Friends">👥</a>
+
+    <a
+      href="messages.html"
+      title="Messages"
+      class="active">
+      💬
+    </a>
+
+    <a href="profile.html" title="Profile">👤</a>
+
+  </nav>
+
+
+  <div
+    id="accountButton"
+    class="account-button"
+    onclick="handleAccountClick()">
+
+    <div
+      id="navAvatar"
+      class="nav-avatar">
+      ?
+    </div>
+
+    <span id="loginButton">
+      Login
+    </span>
+
+  </div>
+
+
+  <div
+    id="accountMenu"
+    class="account-menu">
+
+    <button onclick="goToMyProfile()">
+      My Profile
+    </button>
+
+    <button onclick="openEditProfile()">
+      Edit Profile
+    </button>
+
+    <button onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
 </header>
 
-<main class="container page"><div class="page-head"><h1>💬 Messages</h1><p>Chat with your friends and connections.</p></div>
-<div class="messages-layout">
-<aside class="conversations"><div class="conversation-search"><input id="messageFriendSearch" placeholder="Search friends..."></div><div id="conversationList" class="conversation-list"></div></aside>
-<section class="chat-panel">
-<div class="chat-header"><div id="chatFriendAvatar" class="avatar">?</div><div><h3 id="chatFriendName">Select a friend</h3><p id="chatFriendUsername"></p></div></div>
-<div id="chatMessages" class="chat-messages"><div class="empty-state"><div>💬</div><h2>Your Messages</h2><p>Select a friend to start chatting.</p></div></div>
-<div class="message-compose"><input id="messageInput" class="message-input" placeholder="Type a message..."><button id="sendMessageButton" class="primary-btn" onclick="sendMessage()">Send</button></div>
-</section></div></main>
 
-<div id="authModal" class="modal">
-  <div class="modal-card">
-    <button class="modal-close" onclick="closeAuth()">×</button>
-    <form class="auth-form" onsubmit="event.preventDefault(); document.querySelector('.auth-submit').click();">
-      <h2 id="authTitle">Welcome Back</h2><p id="authSubtitle">Login to your YouRemo account</p>
-      <input id="authName" style="display:none" placeholder="Full name" autocomplete="name">
-      <input id="authUsername" style="display:none" placeholder="Username" autocomplete="username">
-      <input id="authEmail" type="email" placeholder="Email" autocomplete="email">
-      <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
-      <button class="primary-btn auth-submit" type="button" onclick="login()">Login</button>
-      <button id="authSwitch" class="auth-switch" type="button" onclick="showSignup()">Create an account</button>
-    </form>
+
+<main class="messages-page">
+
+
+  <div class="messages-header">
+
+    <h1>
+      💬 Messages
+    </h1>
+
+    <p>
+      Chat with your friends and connections.
+    </p>
+
   </div>
-</div>
-<div id="toast" class="toast"></div>
-<script src="script.js"></script></body></html>
+
+
+
+  <div class="messages-layout">
+
+
+    <aside class="conversation-list">
+
+
+      <div class="conversation-search">
+
+        <input
+          id="messageFriendSearch"
+          type="text"
+          placeholder="Search friends..."
+          autocomplete="off">
+
+      </div>
+
+
+      <div id="conversationList">
+
+        <div class="loading-conversations">
+          Loading friends...
+        </div>
+
+      </div>
+
+
+    </aside>
+
+
+
+    <section class="chat-area">
+
+
+      <div
+        id="chatHeader"
+        class="chat-header">
+
+        <div class="chat-empty-title">
+          💬 Select a friend
+        </div>
+
+      </div>
+
+
+
+      <div
+        id="chatMessages"
+        class="chat-messages">
+
+        <div class="empty-state">
+
+          <div>
+            💬
+          </div>
+
+          <h2>
+            Your Messages
+          </h2>
+
+          <p>
+            Select a friend to start chatting.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <div
+        id="messageInputArea"
+        class="message-input-area"
+        style="display:none;">
+
+        <input
+          id="messageInput"
+          type="text"
+          placeholder="Type a message..."
+          autocomplete="off">
+
+        <button
+          id="sendMessageButton"
+          type="button">
+          Send
+        </button>
+
+      </div>
+
+
+    </section>
+
+
+  </div>
+
+
+</main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="script.js"></script>
+
+
+
+<script>
+
+/* =========================================================
+   YOUREMO MESSAGE SYSTEM
+   IMPORTANT:
+   There is ONLY ONE copy of this system.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   PAGE STATE
+   --------------------------------------------------------- */
+
+let messageFriends = [];
+
+let selectedMessageFriend = null;
+
+let currentMessageUser = null;
+
+let messageSending = false;
+
+
+/*
+ * IMPORTANT:
+ * Put the realtime channel on window.
+ *
+ * This prevents:
+ *
+ * Identifier 'messageRealtimeChannel'
+ * has already been declared
+ *
+ * even if an old cached script exists.
+ */
+
+window.youRemoMessagesChannel = null;
+
+
+
+/* =========================================================
+   GET CURRENT USER
+   ========================================================= */
+
+async function getMessageUser() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (error) {
+
+      console.error(
+        "Message user error:",
+        error
+      );
+
+      return null;
+
+    }
+
+
+    return data.user || null;
+
+  } catch (error) {
+
+    console.error(
+      "Get message user error:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   LOAD FRIENDS
+   ========================================================= */
+
+async function loadMessageFriends() {
+
+  const container =
+    document.getElementById(
+      "conversationList"
+    );
+
+
+  if (!container) return;
+
+
+  container.innerHTML = `
+    <div class="loading-conversations">
+      Loading friends...
+    </div>
+  `;
+
+
+  const user =
+    await getMessageUser();
+
+
+  currentMessageUser =
+    user;
+
+
+  if (!user) {
+
+    container.innerHTML = `
+      <div class="empty-conversation">
+
+        <div class="conversation-icon">
+          🔐
+        </div>
+
+        <div>
+
+          <strong>
+            Login required
+          </strong>
+
+          <p>
+            Login to see your friends.
+          </p>
+
+        </div>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("friendships")
+        .select("*")
+        .or(
+          `user_id.eq.${user.id},friend_id.eq.${user.id}`
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Friendship loading error:",
+        error
+      );
+
+      container.innerHTML = `
+        <div class="empty-conversation">
+
+          <div class="conversation-icon">
+            ⚠️
+          </div>
+
+          <div>
+
+            <strong>
+              Could not load friends
+            </strong>
+
+            <p>
+              ${escapeMessageHtml(error.message)}
+            </p>
+
+          </div>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    const friendIds =
+      (data || [])
+        .map(
+          friendship => {
+
+            if (
+              String(friendship.user_id) ===
+              String(user.id)
+            ) {
+
+              return friendship.friend_id;
+
+            }
+
+            return friendship.user_id;
+
+          }
+        )
+        .filter(Boolean);
+
+
+    const uniqueFriendIds =
+      [...new Set(friendIds)];
+
+
+    if (!uniqueFriendIds.length) {
+
+      messageFriends = [];
+
+      renderMessageFriends();
+
+      return;
+
+    }
+
+
+    const {
+      data: profiles,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id,full_name,username,avatar_url"
+        )
+        .in(
+          "id",
+          uniqueFriendIds
+        );
+
+
+    if (profileError) {
+
+      console.error(
+        "Profile loading error:",
+        profileError
+      );
+
+      return;
+
+    }
+
+
+    messageFriends =
+      profiles || [];
+
+
+    renderMessageFriends();
+
+  } catch (error) {
+
+    console.error(
+      "Load friends exception:",
+      error
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   RENDER FRIENDS
+   ========================================================= */
+
+function renderMessageFriends(
+  searchText = ""
+) {
+
+  const container =
+    document.getElementById(
+      "conversationList"
+    );
+
+
+  if (!container) return;
+
+
+  const search =
+    String(searchText)
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    messageFriends.filter(
+      friend => {
+
+        const name =
+          String(
+            friend.full_name ||
+            friend.name ||
+            friend.username ||
+            ""
+          )
+            .toLowerCase();
+
+
+        const username =
+          String(
+            friend.username ||
+            ""
+          )
+            .toLowerCase();
+
+
+        return (
+          name.includes(search) ||
+          username.includes(search)
+        );
+
+      }
+    );
+
+
+  if (!filtered.length) {
+
+    container.innerHTML = `
+      <div class="empty-conversation">
+
+        <div class="conversation-icon">
+          🔎
+        </div>
+
+        <div>
+
+          <strong>
+            No friends found
+          </strong>
+
+          <p>
+            Try another search.
+          </p>
+
+        </div>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    filtered
+      .map(
+        friend => {
+
+          const name =
+            friend.full_name ||
+            friend.name ||
+            friend.username ||
+            "Friend";
+
+
+          const initial =
+            name
+              .charAt(0)
+              .toUpperCase();
+
+
+          const avatar =
+            friend.avatar_url ||
+            friend.profile_photo ||
+            friend.photo_url ||
+            "";
+
+
+          const selected =
+            selectedMessageFriend &&
+            String(
+              selectedMessageFriend.id
+            ) ===
+            String(friend.id)
+              ? "selected"
+              : "";
+
+
+          return `
+
+            <div
+              class="conversation ${selected}"
+              data-friend-id="${escapeMessageHtml(friend.id)}">
+
+              <div class="conversation-avatar">
+
+                ${
+                  avatar
+
+                    ? `
+                      <img
+                        src="${escapeMessageHtml(avatar)}"
+                        alt="${escapeMessageHtml(name)}">
+                    `
+
+                    : escapeMessageHtml(initial)
+                }
+
+              </div>
+
+
+              <div class="conversation-info">
+
+                <strong>
+                  ${escapeMessageHtml(name)}
+                </strong>
+
+                <p>
+
+                  ${
+                    friend.username
+                      ? "@" +
+                        escapeMessageHtml(
+                          friend.username
+                        )
+                      : "Start a conversation"
+                  }
+
+                </p>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("");
+
+
+  container
+    .querySelectorAll(".conversation")
+    .forEach(
+      element => {
+
+        element.addEventListener(
+          "click",
+          function() {
+
+            openMessageConversation(
+              element.dataset.friendId
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+
+/* =========================================================
+   SEARCH FRIENDS
+   ========================================================= */
+
+function filterMessageFriends() {
+
+  const input =
+    document.getElementById(
+      "messageFriendSearch"
+    );
+
+
+  if (!input) return;
+
+
+  renderMessageFriends(
+    input.value
+  );
+
+}
+
+
+
+/* =========================================================
+   OPEN CONVERSATION
+   ========================================================= */
+
+async function openMessageConversation(
+  friendId
+) {
+
+  const friend =
+    messageFriends.find(
+      person =>
+        String(person.id) ===
+        String(friendId)
+    );
+
+
+  if (!friend) {
+
+    console.error(
+      "Friend not found:",
+      friendId
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * THIS is the important point.
+   *
+   * Simply being on messages.html
+   * DOES NOT call markMessagesAsSeen().
+   *
+   * It happens ONLY here,
+   * when the user clicks a friend.
+   */
+
+  selectedMessageFriend =
+    friend;
+
+
+  renderMessageFriends(
+    document.getElementById(
+      "messageFriendSearch"
+    )?.value || ""
+  );
+
+
+  const name =
+    friend.full_name ||
+    friend.name ||
+    friend.username ||
+    "Friend";
+
+
+  const avatar =
+    friend.avatar_url ||
+    friend.profile_photo ||
+    friend.photo_url ||
+    "";
+
+
+  const header =
+    document.getElementById(
+      "chatHeader"
+    );
+
+
+  const inputArea =
+    document.getElementById(
+      "messageInputArea"
+    );
+
+
+  if (header) {
+
+    header.innerHTML = `
+
+      <div class="chat-user">
+
+        <div class="conversation-avatar">
+
+          ${
+            avatar
+
+              ? `
+                <img
+                  src="${escapeMessageHtml(avatar)}"
+                  alt="${escapeMessageHtml(name)}">
+              `
+
+              : escapeMessageHtml(
+                  name
+                    .charAt(0)
+                    .toUpperCase()
+                )
+          }
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            ${escapeMessageHtml(name)}
+          </strong>
+
+          <p>
+
+            ${
+              friend.username
+                ? "@" +
+                  escapeMessageHtml(
+                    friend.username
+                  )
+                : ""
+            }
+
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (inputArea) {
+
+    inputArea.style.display =
+      "flex";
+
+  }
+
+
+  /*
+   * First load the conversation.
+   */
+
+  await loadMessageConversation(
+    friend.id
+  );
+
+
+  /*
+   * NOW mark incoming unread messages
+   * as seen.
+   *
+   * This only runs after the friend
+   * was clicked.
+   */
+
+  await markIncomingMessagesSeen(
+    friend.id
+  );
+
+
+  /*
+   * Reload after UPDATE so the receiver
+   * immediately sees the correct state.
+   */
+
+  await loadMessageConversation(
+    friend.id
+  );
+
+
+  setTimeout(
+    () => {
+
+      const input =
+        document.getElementById(
+          "messageInput"
+        );
+
+
+      if (input) {
+
+        input.focus();
+
+      }
+
+    },
+    100
+  );
+
+}
+
+
+
+/* =========================================================
+   MARK RECEIVED MESSAGES AS SEEN
+   ========================================================= */
+
+async function markIncomingMessagesSeen(
+  friendId
+) {
+
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
+
+
+  if (!user) return;
+
+
+  try {
+
+    /*
+     * VERY IMPORTANT:
+     *
+     * sender_id = friend
+     * receiver_id = current user
+     * seen = false
+     *
+     * Only these messages are changed.
+     */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .update({
+          seen: true
+        })
+        .eq(
+          "sender_id",
+          friendId
+        )
+        .eq(
+          "receiver_id",
+          user.id
+        )
+        .eq(
+          "seen",
+          false
+        )
+        .select("id");
+
+
+    if (error) {
+
+      console.error(
+        "❌ Mark seen error:",
+        error
+      );
+
+      return;
+
+    }
+
+
+    console.log(
+      "👀 Messages marked seen:",
+      data || []
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Mark seen exception:",
+      error
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   LOAD CONVERSATION
+   ========================================================= */
+
+async function loadMessageConversation(
+  friendId
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
+
+
+  if (!user) return;
+
+
+  currentMessageUser =
+    user;
+
+
+  chat.innerHTML = `
+    <div class="loading-conversations">
+      Loading messages...
+    </div>
+  `;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .select(
+          "id,sender_id,receiver_id,message,seen,created_at"
+        )
+        .or(
+          `and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Message loading error:",
+        error
+      );
+
+      chat.innerHTML = `
+        <div class="empty-state">
+
+          <div>
+            ⚠️
+          </div>
+
+          <h2>
+            Unable to load messages
+          </h2>
+
+          <p>
+            ${escapeMessageHtml(error.message)}
+          </p>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      chat.innerHTML = `
+        <div class="empty-state">
+
+          <div>
+            👋
+          </div>
+
+          <h2>
+            Start chatting
+          </h2>
+
+          <p>
+            Send your first message to this friend.
+          </p>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    renderMessageList(
+      data,
+      user.id
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Conversation loading exception:",
+      error
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   RENDER MESSAGES
+   ========================================================= */
+
+function renderMessageList(
+  messages,
+  userId
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  chat.innerHTML =
+    messages
+      .map(
+        message => {
+
+          const mine =
+            String(
+              message.sender_id
+            ) ===
+            String(userId);
+
+
+          const seen =
+            message.seen === true;
+
+
+          const time =
+            formatMessageTime(
+              message.created_at
+            );
+
+
+          return `
+
+            <div
+              class="message-row ${mine ? "mine" : "theirs"}"
+              data-message-id="${escapeMessageHtml(message.id)}">
+
+              <div class="message-content">
+
+                <div class="message-bubble">
+                  ${escapeMessageHtml(
+                    message.message || ""
+                  )}
+                </div>
+
+
+                <div class="message-meta">
+
+                  <span>
+                    ${time}
+                  </span>
+
+
+                  ${
+                    mine
+
+                      ? seen
+
+                        ? `
+                          <span class="message-seen">
+                            ✓✓ Seen
+                          </span>
+                        `
+
+                        : `
+                          <span class="message-sent">
+                            ✓ Sent
+                          </span>
+                        `
+
+                      : ""
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("");
+
+
+  scrollMessageChat();
+
+}
+
+
+
+/* =========================================================
+   SEND MESSAGE
+   ========================================================= */
+
+async function sendMessage() {
+
+  if (messageSending) return;
+
+
+  if (!selectedMessageFriend) {
+
+    alert(
+      "Select a friend first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
+
+
+  const button =
+    document.getElementById(
+      "sendMessageButton"
+    );
+
+
+  if (!input) return;
+
+
+  const text =
+    input.value.trim();
+
+
+  if (!text) return;
+
+
+  const user =
+    currentMessageUser ||
+    await getMessageUser();
+
+
+  if (!user) {
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  currentMessageUser =
+    user;
+
+
+  messageSending =
+    true;
+
+
+  input.disabled =
+    true;
+
+
+  if (button) {
+
+    button.disabled =
+      true;
+
+    button.textContent =
+      "Sending...";
+
+  }
+
+
+  try {
+
+    /*
+     * Every NEW message starts as:
+     *
+     * seen = false
+     *
+     * Therefore sender gets:
+     * ✓ Sent
+     */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .insert({
+
+          sender_id:
+            user.id,
+
+          receiver_id:
+            selectedMessageFriend.id,
+
+          message:
+            text,
+
+          seen:
+            false
+
+        })
+        .select(
+          "id,sender_id,receiver_id,message,seen,created_at"
+        )
+        .single();
+
+
+    if (error) {
+
+      console.error(
+        "Send message error:",
+        error
+      );
+
+      alert(
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    input.value = "";
+
+
+    if (data) {
+
+      addMessageToScreen(
+        data,
+        user.id
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Send message exception:",
+      error
+    );
+
+  } finally {
+
+    messageSending =
+      false;
+
+
+    input.disabled =
+      false;
+
+
+    if (button) {
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "Send";
+
+    }
+
+
+    input.focus();
+
+  }
+
+}
+
+
+
+/* =========================================================
+   ADD NEW MESSAGE
+   ========================================================= */
+
+function addMessageToScreen(
+  message,
+  userId
+) {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  /*
+   * Do not add the same message twice.
+   */
+
+  if (message.id) {
+
+    const existing =
+      chat.querySelector(
+        `[data-message-id="${message.id}"]`
+      );
+
+
+    if (existing) return;
+
+  }
+
+
+  const empty =
+    chat.querySelector(
+      ".empty-state"
+    );
+
+
+  if (empty) {
+
+    chat.innerHTML = "";
+
+  }
+
+
+  const mine =
+    String(
+      message.sender_id
+    ) ===
+    String(userId);
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    mine
+      ? "message-row mine"
+      : "message-row theirs";
+
+
+  if (message.id) {
+
+    row.dataset.messageId =
+      message.id;
+
+  }
+
+
+  const content =
+    document.createElement(
+      "div"
+    );
+
+
+  content.className =
+    "message-content";
+
+
+  const bubble =
+    document.createElement(
+      "div"
+    );
+
+
+  bubble.className =
+    "message-bubble";
+
+
+  bubble.textContent =
+    message.message || "";
+
+
+  const meta =
+    document.createElement(
+      "div"
+    );
+
+
+  meta.className =
+    "message-meta";
+
+
+  const time =
+    document.createElement(
+      "span"
+    );
+
+
+  time.textContent =
+    formatMessageTime(
+      message.created_at
+    );
+
+
+  meta.appendChild(
+    time
+  );
+
+
+  if (mine) {
+
+    const status =
+      document.createElement(
+        "span"
+      );
+
+
+    if (
+      message.seen === true
+    ) {
+
+      status.className =
+        "message-seen";
+
+      status.textContent =
+        "✓✓ Seen";
+
+    } else {
+
+      status.className =
+        "message-sent";
+
+      status.textContent =
+        "✓ Sent";
+
+    }
+
+
+    meta.appendChild(
+      status
+    );
+
+  }
+
+
+  content.appendChild(
+    bubble
+  );
+
+
+  content.appendChild(
+    meta
+  );
+
+
+  row.appendChild(
+    content
+  );
+
+
+  chat.appendChild(
+    row
+  );
+
+
+  scrollMessageChat();
+
+}
+
+
+
+/* =========================================================
+   REALTIME
+   ========================================================= */
+
+function startCleanMessageRealtime() {
+
+  /*
+   * Remove an existing channel first.
+   */
+
+  if (
+    window.youRemoMessagesChannel
+  ) {
+
+    console.log(
+      "Removing old message realtime channel..."
+    );
+
+
+    supabaseClient.removeChannel(
+      window.youRemoMessagesChannel
+    );
+
+
+    window.youRemoMessagesChannel =
+      null;
+
+  }
+
+
+  if (!currentMessageUser) {
+
+    console.log(
+      "Realtime: no current user."
+    );
+
+    return;
+
+  }
+
+
+  const channelName =
+    "youremo-message-realtime-" +
+    currentMessageUser.id +
+    "-" +
+    Date.now();
+
+
+  console.log(
+    "Starting realtime:",
+    channelName
+  );
+
+
+  window.youRemoMessagesChannel =
+    supabaseClient
+      .channel(
+        channelName
+      )
+
+
+      /* ---------------------------------------------------
+         NEW MESSAGE
+         --------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          const message =
+            payload.new;
+
+
+          if (!message) return;
+
+
+          if (!currentMessageUser) {
+            return;
+          }
+
+
+          /*
+           * Ignore unrelated messages.
+           */
+
+          const belongsToUser =
+            String(
+              message.sender_id
+            ) ===
+            String(
+              currentMessageUser.id
+            )
+            ||
+            String(
+              message.receiver_id
+            ) ===
+            String(
+              currentMessageUser.id
+            );
+
+
+          if (!belongsToUser) {
+            return;
+          }
+
+
+          /*
+           * Only show realtime messages
+           * inside the currently selected
+           * conversation.
+           */
+
+          if (
+            !selectedMessageFriend
+          ) {
+            return;
+          }
+
+
+          const friendId =
+            selectedMessageFriend.id;
+
+
+          const belongsToOpenChat =
+            (
+              String(message.sender_id) ===
+              String(currentMessageUser.id)
+              &&
+              String(message.receiver_id) ===
+              String(friendId)
+            )
+            ||
+            (
+              String(message.sender_id) ===
+              String(friendId)
+              &&
+              String(message.receiver_id) ===
+              String(currentMessageUser.id)
+            );
+
+
+          if (!belongsToOpenChat) {
+            return;
+          }
+
+
+          addMessageToScreen(
+            message,
+            currentMessageUser.id
+          );
+
+
+          /*
+           * IMPORTANT:
+           *
+           * We DO NOT set seen=true here.
+           *
+           * A new message received by realtime
+           * remains unseen until the conversation
+           * was actually opened by the receiver.
+           */
+
+        }
+      )
+
+
+      /* ---------------------------------------------------
+         MESSAGE UPDATED
+         --------------------------------------------------- */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages"
+        },
+        function(payload) {
+
+          const message =
+            payload.new;
+
+
+          if (!message) return;
+
+
+          console.log(
+            "👀 Message UPDATE:",
+            message.id,
+            "seen:",
+            message.seen
+          );
+
+
+          /*
+           * Only react to actual seen=true.
+           */
+
+          if (
+            message.seen !== true
+          ) {
+
+            return;
+
+          }
+
+
+          /*
+           * Update the visible message
+           * immediately.
+           */
+
+          updateVisibleMessageSeen(
+            message.id
+          );
+
+        }
+      )
+
+
+      .subscribe(
+        function(status) {
+
+          console.log(
+            "Message realtime status:",
+            status
+          );
+
+        }
+      );
+
+}
+
+
+
+/* =========================================================
+   UPDATE VISIBLE MESSAGE TO SEEN
+   ========================================================= */
+
+function updateVisibleMessageSeen(
+  messageId
+) {
+
+  const row =
+    document.querySelector(
+      `[data-message-id="${messageId}"]`
+    );
+
+
+  if (!row) {
+
+    /*
+     * It may not be visible because
+     * another conversation is selected.
+     */
+
+    return;
+
+  }
+
+
+  const meta =
+    row.querySelector(
+      ".message-meta"
+    );
+
+
+  if (!meta) return;
+
+
+  /*
+   * Already Seen.
+   */
+
+  if (
+    meta.querySelector(
+      ".message-seen"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+   * Remove Sent.
+   */
+
+  const sent =
+    meta.querySelector(
+      ".message-sent"
+    );
+
+
+  if (sent) {
+
+    sent.remove();
+
+  }
+
+
+  /*
+   * Add Seen.
+   */
+
+  const seen =
+    document.createElement(
+      "span"
+    );
+
+
+  seen.className =
+    "message-seen";
+
+
+  seen.textContent =
+    "✓✓ Seen";
+
+
+  meta.appendChild(
+    seen
+  );
+
+
+  console.log(
+    "✓✓ Seen displayed:",
+    messageId
+  );
+
+}
+
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+function formatMessageTime(
+  timestamp
+) {
+
+  if (!timestamp) {
+    return "";
+  }
+
+
+  const date =
+    new Date(timestamp);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return "";
+
+  }
+
+
+  return date.toLocaleTimeString(
+    [],
+    {
+      hour: "numeric",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+function scrollMessageChat() {
+
+  const chat =
+    document.getElementById(
+      "chatMessages"
+    );
+
+
+  if (!chat) return;
+
+
+  requestAnimationFrame(
+    function() {
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+    }
+  );
+
+}
+
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeMessageHtml(
+  value
+) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.textContent =
+    String(
+      value ?? ""
+    );
+
+
+  return div.innerHTML;
+
+}
+
+
+
+/* =========================================================
+   PAGE INITIALIZATION
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+    console.log(
+      "💬 YouRemo Messages page starting..."
+    );
+
+
+    const searchInput =
+      document.getElementById(
+        "messageFriendSearch"
+      );
+
+
+    const sendButton =
+      document.getElementById(
+        "sendMessageButton"
+      );
+
+
+    const messageInput =
+      document.getElementById(
+        "messageInput"
+      );
+
+
+    if (searchInput) {
+
+      searchInput.addEventListener(
+        "input",
+        filterMessageFriends
+      );
+
+    }
+
+
+    if (sendButton) {
+
+      sendButton.addEventListener(
+        "click",
+        sendMessage
+      );
+
+    }
+
+
+    if (messageInput) {
+
+      messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter" &&
+            !event.shiftKey
+          ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /*
+     * Get current user.
+     */
+
+    currentMessageUser =
+      await getMessageUser();
+
+
+    if (!currentMessageUser) {
+
+      await loadMessageFriends();
+
+      return;
+
+    }
+
+
+    /*
+     * Start ONE realtime channel.
+     */
+
+    startCleanMessageRealtime();
+
+
+    /*
+     * Load friends.
+     *
+     * IMPORTANT:
+     * This does NOT mark any message as seen.
+     */
+
+    await loadMessageFriends();
+
+  }
+);
+
+</script>
+
+
+</body>
+
+</html>
